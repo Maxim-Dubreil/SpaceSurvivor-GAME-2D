@@ -13,7 +13,7 @@ public class Main extends ApplicationAdapter {
 
     @Override
     public void create() {
-        player1 = new Player(100, 100, 50, 50, new float[] { 0, 1, 0, 1 }, 150);
+        player1 = new Player(100, 100, 50, 50, new float[] { 1, 0, 1, 0 }, 150);
 
     }
 
