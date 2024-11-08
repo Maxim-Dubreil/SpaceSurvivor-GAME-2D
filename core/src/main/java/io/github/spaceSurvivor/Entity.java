@@ -1,37 +1,39 @@
 package io.github.spaceSurvivor;
 
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public abstract class Entity {
-    protected ShapeRenderer shapeRenderer;
+
+    protected Sprite sprite;
+    protected SpriteBatch batch;
+    protected Texture texture;
+
     protected float posX;
     protected float posY;
     protected int sizeX;
     protected int sizeY;
-    protected float[] color;
 
-    public Entity(int posX, int posY, int sizeX, int sizeY, float[] color) {
+    public Entity(Texture texture, int posX, int posY, int sizeX, int sizeY) {
         this.posX = posX;
         this.posY = posY;
         this.sizeX = sizeX;
         this.sizeY = sizeY;
-        this.color = color;
-        createShape();
+        this.texture = texture;
+        this.sprite = new Sprite(texture);
+        this.sprite.setSize(sizeX, sizeY);
+        this.sprite.setPosition(posX, posY);
+
     }
 
-    public void createShape() {
-        shapeRenderer = new ShapeRenderer();
-    }
-
-    public void renderShape() {
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(this.color[0], this.color[1], this.color[2], this.color[3]);
-        shapeRenderer.rect(this.posX, this.posY, this.sizeX, this.sizeY);
-        shapeRenderer.end();
+    public void renderEntity(SpriteBatch batch) {
+        this.sprite.setPosition(this.posX, this.posY);
+        this.sprite.draw(batch);
     }
 
     public void dispose() {
-        shapeRenderer.dispose();
+        this.sprite.getTexture().dispose();
     }
 
     // ====================== SETTERS ======================
@@ -61,11 +63,11 @@ public abstract class Entity {
         return this.sizeY;
     }
 
-    public float[] getColor() {
-        return this.color;
+    public Texture getTexture() {
+        return this.texture;
     }
 
-    public int getSquareSize() {
+    public int getHitbox() {
         return (sizeX + sizeY) / 2;
     }
 }
