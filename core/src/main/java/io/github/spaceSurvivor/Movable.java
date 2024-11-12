@@ -1,37 +1,32 @@
 package io.github.spaceSurvivor;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.Texture;
 
 public abstract class Movable extends Entity {
 
     protected float speed;
 
-    public Movable(int posX, int posY, int sizeX, int sizeY, float[] color, float speed) {
-        super(posX, posY, sizeX, sizeY, color);
+    public Movable(Texture texture, int posX, int posY, int sizeX, int sizeY, float speed) {
+        super(texture, posX, posY, sizeX, sizeY);
         this.speed = speed;
     }
 
-    public void move() {
+    public void move(Player target) {
         float deltaTime = Gdx.graphics.getDeltaTime();
 
-        if (Gdx.input.isKeyPressed(Keys.LEFT)) {
-            this.setPosX(this.getPosX() - this.getSpeed() * deltaTime);
-        }
-        if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
-            this.setPosX(this.getPosX() + this.getSpeed() * deltaTime);
-        }
-        if (Gdx.input.isKeyPressed(Keys.UP)) {
-            this.setPosY(this.getPosY() + this.getSpeed() * deltaTime);
-        }
-        if (Gdx.input.isKeyPressed(Keys.DOWN)) {
-            this.setPosY(this.getPosY() - this.getSpeed() * deltaTime);
+        float directionX = target.getPosX() - this.getPosX();
+        float directionY = target.getPosY() - this.getPosY();
+
+        float length = (float) Math.sqrt(directionX * directionX + directionY * directionY);
+
+        if (length != 0) { // norm
+            directionX /= length;
+            directionY /= length;
         }
 
-        this.setPosX(Math.max(0, Math.min(this.getPosX(), 800 -
-                this.getSquareSize())));
-        this.setPosY(Math.max(0, Math.min(this.getPosY(), 600 -
-                this.getSquareSize())));
+        this.setPosX(this.getPosX() + directionX * this.getSpeed() * deltaTime);
+        this.setPosY(this.getPosY() + directionY * this.getSpeed() * deltaTime);
     }
 
     public float getSpeed() {
