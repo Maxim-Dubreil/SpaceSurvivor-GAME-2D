@@ -1,8 +1,12 @@
 package io.github.spaceSurvivor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 
 public abstract class Entity {
 
@@ -15,6 +19,8 @@ public abstract class Entity {
     protected int sizeX;
     protected int sizeY;
 
+    public static List<Entity> entities = new ArrayList<>();
+
     public Entity(Texture texture, int posX, int posY, int sizeX, int sizeY) {
         this.posX = posX;
         this.posY = posY;
@@ -25,6 +31,7 @@ public abstract class Entity {
         this.sprite.setSize(sizeX, sizeY);
         this.sprite.setPosition(posX, posY);
 
+        entities.add(this);
     }
 
     public void renderEntity(SpriteBatch batch) {
@@ -46,6 +53,10 @@ public abstract class Entity {
     }
 
     // ====================== GETTERS ======================
+
+    public Rectangle getBoundingBox() {
+        return new Rectangle(posX, posY, sizeX, sizeY);
+    }
 
     public float getPosX() {
         return this.posX;

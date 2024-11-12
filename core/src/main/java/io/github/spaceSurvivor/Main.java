@@ -1,5 +1,6 @@
 package io.github.spaceSurvivor;
 
+import io.github.spaceSurvivor.monsters.Monster;
 import io.github.spaceSurvivor.monsters.Trouille;
 import io.github.spaceSurvivor.monsters.Xela;
 
@@ -7,10 +8,6 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-/**
- * {@link com.badlogic.gdx.ApplicationListener} implementation shared by all
- * platforms.
- */
 public class Main extends ApplicationAdapter {
 
     private SpriteBatch batch;
@@ -21,6 +18,7 @@ public class Main extends ApplicationAdapter {
     @Override
     public void create() {
         batch = new SpriteBatch();
+
         player = new Player();
         trouille = new Trouille();
         xela = new Xela();
@@ -29,21 +27,55 @@ public class Main extends ApplicationAdapter {
     @Override
     public void render() {
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
+
         player.move();
         xela.move(player);
         trouille.move(player);
+
         batch.begin();
-        player.renderEntity(batch);
-        xela.renderEntity(batch);
-        trouille.renderEntity(batch);
+        for (Entity entity : Entity.entities) {
+            entity.renderEntity(batch);
+        }
         batch.end();
+
+        checkAllCollisions();
+    }
+
+    private void checkAllCollisions() {
+        for (int i = 0; i < Entity.entities.size(); i++) {
+            for (int j = i + 1; j < Entity.entities.size(); j++) {
+                Entity entityA = Entity.entities.get(i);
+                Entity entityB = Entity.entities.get(j);
+
+                if (entityA.getBoundingBox().overlaps(entityB.getBoundingBox())) {
+                    handleCollision(entityA, entityB);
+                }
+            }
+        }
+    }
+
+    private void handleCollision(Entity entityA, Entity entityB) {
+        if (entityA instanceof Player && entityB instanceof Monster
+                || entityA instanceof Monster && entityB instanceof Player) {
+            handlePlayerMonsterCollision();
+        } else if (entityA instanceof Monster && entityB instanceof Monster) {
+            handleMonsterMonsterCollision();
+        }
+    }
+
+    private void handlePlayerMonsterCollision() {
+        System.out.println("Player collided with a Monster!");
+    }
+
+    private void handleMonsterMonsterCollision() {
+        System.out.println("Monster and Monster collided !");
     }
 
     @Override
     public void dispose() {
         batch.dispose();
-        player.dispose();
-        xela.dispose();
-        trouille.dispose();
+        for (Entity entity : Entity.entities) {
+            entity.dispose();
+        }
     }
 }
