@@ -4,30 +4,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
 public abstract class Entity {
 
-    protected Sprite sprite;
-    protected SpriteBatch batch;
-    protected Texture texture;
+    public static List<Entity> entities = new ArrayList<>();
 
     protected float posX;
     protected float posY;
     protected int sizeX;
     protected int sizeY;
+    protected Texture texture;
+    protected SpriteBatch batch;
 
-    public static List<Entity> entities = new ArrayList<>();
+    protected com.badlogic.gdx.graphics.g2d.Sprite sprite;
 
-    public Entity(Texture texture, int posX, int posY, int sizeX, int sizeY) {
+    public Entity(Texture texture, float posX, float posY, int sizeX, int sizeY) {
+        this.texture = texture;
         this.posX = posX;
         this.posY = posY;
         this.sizeX = sizeX;
         this.sizeY = sizeY;
-        this.texture = texture;
-        this.sprite = new Sprite(texture);
+
+        this.sprite = new com.badlogic.gdx.graphics.g2d.Sprite(texture);
         this.sprite.setSize(sizeX, sizeY);
         this.sprite.setPosition(posX, posY);
 
@@ -40,10 +40,11 @@ public abstract class Entity {
     }
 
     public void dispose() {
-        this.sprite.getTexture().dispose();
+        this.texture.dispose();
     }
 
     // ====================== SETTERS ======================
+
     public void setPosX(float posX) {
         this.posX = posX;
     }
@@ -53,10 +54,6 @@ public abstract class Entity {
     }
 
     // ====================== GETTERS ======================
-
-    public Rectangle getBoundingBox() {
-        return new Rectangle(posX, posY, sizeX, sizeY);
-    }
 
     public float getPosX() {
         return this.posX;
@@ -78,7 +75,11 @@ public abstract class Entity {
         return this.texture;
     }
 
-    public int getHitbox() {
-        return (sizeX + sizeY) / 2;
+    public Rectangle getHitBox() {
+        return new Rectangle(posX, posY, sizeX, sizeY);
     }
+
+    // public int getHitbox() {
+    // return (sizeX + sizeY) / 2;
+    // }
 }

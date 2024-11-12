@@ -26,10 +26,10 @@ public class Player extends Movable {
             this.setPosY(this.getPosY() - this.getSpeed() * deltaTime);
         }
 
-        this.setPosX(Math.max(0, Math.min(this.getPosX(), 1920 -
-                this.getHitbox())));
-        this.setPosY(Math.max(0, Math.min(this.getPosY(), 1080 -
-                this.getHitbox())));
+        // this.setPosX(Math.max(0, Math.min(this.getPosX(), 1920 -
+        // this.getHitBox())));
+        // this.setPosY(Math.max(0, Math.min(this.getPosY(), 1080 -
+        // this.getHitBox())));
     }
 
 }
