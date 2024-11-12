@@ -1,13 +1,14 @@
 package io.github.spaceSurvivor;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 
 public abstract class Movable extends Entity {
 
     protected float speed;
 
-    public Movable(int posX, int posY, int sizeX, int sizeY, float[] color, float speed) {
-        super(posX, posY, sizeX, sizeY, color);
+    public Movable(Texture texture, int posX, int posY, int sizeX, int sizeY, float speed) {
+        super(texture, posX, posY, sizeX, sizeY);
         this.speed = speed;
     }
 

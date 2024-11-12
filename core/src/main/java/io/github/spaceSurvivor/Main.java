@@ -1,52 +1,81 @@
 package io.github.spaceSurvivor;
 
+import io.github.spaceSurvivor.monsters.Monster;
+import io.github.spaceSurvivor.monsters.Trouille;
+import io.github.spaceSurvivor.monsters.Xela;
+
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-/**
- * {@link com.badlogic.gdx.ApplicationListener} implementation shared by all
- * platforms.
- */
 public class Main extends ApplicationAdapter {
 
-    private Player player1;
-    private Monster monster1;
-    private Monster monster2;
-    private Monster monster3;
-    private Monster monster4;
-    private Monster monster5;
+    private SpriteBatch batch;
+    private Player player;
+    private Xela xela;
+    private Trouille trouille;
 
     @Override
     public void create() {
-        player1 = new Player(100, 100, 50, 50, 150);
-        monster1 = new Monster(500, 500, 35, 35, 100);
-        monster2 = new Monster(650, 650, 35, 35, 100);
-        monster3 = new Monster(580, 580, 35, 35, 100);
-        monster4 = new Monster(420, 420, 35, 35, 100);
-        monster5 = new Monster(310, 310, 35, 35, 100);
+        batch = new SpriteBatch();
 
+        player = new Player();
+        trouille = new Trouille();
+        xela = new Xela();
     }
 
     @Override
     public void render() {
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
-        player1.renderShape();
-        player1.move();
-        monster1.renderShape();
-        monster1.move(player1);
-        monster2.renderShape();
-        monster2.move(player1);
-        monster3.renderShape();
-        monster3.move(player1);
-        monster4.renderShape();
-        monster4.move(player1);
-        monster5.renderShape();
-        monster5.move(player1);
+
+        player.move();
+        xela.move(player);
+        trouille.move(player);
+
+        batch.begin();
+        for (Entity entity : Entity.entities) {
+            entity.renderEntity(batch);
+        }
+        batch.end();
+
+        checkAllCollisions();
+    }
+
+    private void checkAllCollisions() {
+        for (int i = 0; i < Entity.entities.size(); i++) {
+            for (int j = i + 1; j < Entity.entities.size(); j++) {
+                Entity entityA = Entity.entities.get(i);
+                Entity entityB = Entity.entities.get(j);
+
+                if (entityA.getBoundingBox().overlaps(entityB.getBoundingBox())) {
+                    handleCollision(entityA, entityB);
+                }
+            }
+        }
+    }
+
+    private void handleCollision(Entity entityA, Entity entityB) {
+        if (entityA instanceof Player && entityB instanceof Monster
+                || entityA instanceof Monster && entityB instanceof Player) {
+            handlePlayerMonsterCollision();
+        } else if (entityA instanceof Monster && entityB instanceof Monster) {
+            handleMonsterMonsterCollision();
+        }
+    }
+
+    private void handlePlayerMonsterCollision() {
+        System.out.println("Player collided with a Monster!");
+    }
+
+    private void handleMonsterMonsterCollision() {
+        System.out.println("Monster and Monster collided !");
     }
 
     @Override
     public void dispose() {
-        player1.dispose();
-        monster1.dispose();
+        batch.dispose();
+        for (Entity entity : Entity.entities) {
+            entity.dispose();
+        }
     }
 }

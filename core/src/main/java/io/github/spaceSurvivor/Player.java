@@ -2,11 +2,12 @@ package io.github.spaceSurvivor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.Texture;
 
 public class Player extends Movable {
 
-    public Player(int posX, int posY, int sizeX, int sizeY, float speed) {
-        super(posX, posY, sizeX, sizeY, new float[] { 1, 0, 1, 0 }, speed);
+    public Player() {
+        super(new Texture("Player/player1.png"), 100, 100, 50, 50, 150);
     }
 
     public void move() {
@@ -26,9 +27,9 @@ public class Player extends Movable {
         }
 
         this.setPosX(Math.max(0, Math.min(this.getPosX(), 1920 -
-                this.getSquareSize())));
+                this.getHitbox())));
         this.setPosY(Math.max(0, Math.min(this.getPosY(), 1080 -
-                this.getSquareSize())));
+                this.getHitbox())));
     }
 
 }
