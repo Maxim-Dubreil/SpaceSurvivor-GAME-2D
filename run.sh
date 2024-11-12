@@ -28,4 +28,4 @@ cd - >/dev/null
 sleep 10
 
 # Lancer le jeu en utilisant Gradle
-./gradlew run
+sudo ./gradlew run

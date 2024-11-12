@@ -1,40 +1,50 @@
 package io.github.spaceSurvivor;
 
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 
 public abstract class Entity {
-    protected ShapeRenderer shapeRenderer;
+
+    public static List<Entity> entities = new ArrayList<>();
+
     protected float posX;
     protected float posY;
     protected int sizeX;
     protected int sizeY;
-    protected float[] color;
+    protected Texture texture;
+    protected SpriteBatch batch;
 
-    public Entity(int posX, int posY, int sizeX, int sizeY, float[] color) {
+    protected com.badlogic.gdx.graphics.g2d.Sprite sprite;
+
+    public Entity(Texture texture, float posX, float posY, int sizeX, int sizeY) {
+        this.texture = texture;
         this.posX = posX;
         this.posY = posY;
         this.sizeX = sizeX;
         this.sizeY = sizeY;
-        this.color = color;
-        createShape();
+
+        this.sprite = new com.badlogic.gdx.graphics.g2d.Sprite(texture);
+        this.sprite.setSize(sizeX, sizeY);
+        this.sprite.setPosition(posX, posY);
+
+        entities.add(this);
     }
 
-    public void createShape() {
-        shapeRenderer = new ShapeRenderer();
-    }
-
-    public void renderShape() {
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(this.color[0], this.color[1], this.color[2], this.color[3]);
-        shapeRenderer.rect(this.posX, this.posY, this.sizeX, this.sizeY);
-        shapeRenderer.end();
+    public void renderEntity(SpriteBatch batch) {
+        this.sprite.setPosition(this.posX, this.posY);
+        this.sprite.draw(batch);
     }
 
     public void dispose() {
-        shapeRenderer.dispose();
+        this.texture.dispose();
     }
 
     // ====================== SETTERS ======================
+
     public void setPosX(float posX) {
         this.posX = posX;
     }
@@ -61,11 +71,15 @@ public abstract class Entity {
         return this.sizeY;
     }
 
-    public float[] getColor() {
-        return this.color;
+    public Texture getTexture() {
+        return this.texture;
     }
 
-    public int getSquareSize() {
-        return (sizeX + sizeY) / 2;
+    public Rectangle getHitBox() {
+        return new Rectangle(posX, posY, sizeX, sizeY);
     }
+
+    // public int getHitbox() {
+    // return (sizeX + sizeY) / 2;
+    // }
 }
