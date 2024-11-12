@@ -10,14 +10,14 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 public class GameScreen implements Screen {
 
-    private final Main game;
+    // private final Main game;
     private final SpriteBatch batch;
     private Player player;
     private Trouille trouille;
     private Xela xela;
 
-    public GameScreen(Main game, SpriteBatch batch) {
-        this.game = game;
+    public GameScreen(SpriteBatch batch) {
+        // this.game = game;
         this.batch = batch;
 
         player = new Player();

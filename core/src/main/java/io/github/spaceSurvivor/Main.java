@@ -14,7 +14,7 @@ public class Main extends Game {
     }
 
     public void startGame() {
-        GameScreen gameScreen = new GameScreen(this, batch);
+        GameScreen gameScreen = new GameScreen(batch);
         this.setScreen(gameScreen);
     }
 

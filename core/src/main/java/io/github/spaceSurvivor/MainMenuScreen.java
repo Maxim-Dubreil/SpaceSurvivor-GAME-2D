@@ -13,8 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class MainMenuScreen implements Screen {
 
@@ -32,10 +30,9 @@ public class MainMenuScreen implements Screen {
         skin = new Skin(Gdx.files.internal("uiskin.json"));
         backgroundTexture = new Texture("background.png");
 
-        //Initialisation BitmapFont et SpriteBatch
+        // Initialisation BitmapFont et SpriteBatch
         font = new BitmapFont();
         batch = new SpriteBatch();
-
 
         // Initialisation des boutons
         TextButton playButton = new TextButton("Play", skin);
@@ -85,11 +82,18 @@ public class MainMenuScreen implements Screen {
         batch.begin();
 
         // Affichage de l'image de fond
-        batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()); // Dessine l'image en fond
+        batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()); // Dessine l'image en
+                                                                                                // fond
 
         // Dessiner le titre
         font.getData().setScale(3f); // Vous pouvez ajuster la taille de la police ici
-        font.draw(batch, "Space Survivor", Gdx.graphics.getWidth() / 2 - 150, Gdx.graphics.getHeight() - 50); // Dessiner le texte au centre de l'écran
+        font.draw(batch, "Space Survivor", Gdx.graphics.getWidth() / 2 - 150, Gdx.graphics.getHeight() - 50); // Dessiner
+                                                                                                              // le
+                                                                                                              // texte
+                                                                                                              // au
+                                                                                                              // centre
+                                                                                                              // de
+                                                                                                              // l'écran
 
         // Terminer le dessin avec SpriteBatch
         batch.end();
@@ -99,20 +103,22 @@ public class MainMenuScreen implements Screen {
         stage.draw();
     }
 
-
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
     }
 
     @Override
-    public void pause() {}
+    public void pause() {
+    }
 
     @Override
-    public void resume() {}
+    public void resume() {
+    }
 
     @Override
-    public void hide() {}
+    public void hide() {
+    }
 
     @Override
     public void dispose() {

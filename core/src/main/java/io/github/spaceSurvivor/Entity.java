@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
@@ -18,7 +19,7 @@ public abstract class Entity {
     protected Texture texture;
     protected SpriteBatch batch;
 
-    protected com.badlogic.gdx.graphics.g2d.Sprite sprite;
+    protected Sprite sprite;
 
     public Entity(Texture texture, float posX, float posY, int sizeX, int sizeY) {
         this.texture = texture;
