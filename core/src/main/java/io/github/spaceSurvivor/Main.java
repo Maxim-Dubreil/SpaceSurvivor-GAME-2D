@@ -1,32 +1,35 @@
 package io.github.spaceSurvivor;
 
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.utils.ScreenUtils;
-
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.Game;
 /**
  * {@link com.badlogic.gdx.ApplicationListener} implementation shared by all
  * platforms.
  */
-public class Main extends ApplicationAdapter {
 
-    private Player player1;
+public class Main extends Game {
+
+    public SpriteBatch batch;
 
     @Override
     public void create() {
-        player1 = new Player(100, 100, 50, 50, new float[] { 0, 1, 0, 1 }, 150);
-
+        batch = new SpriteBatch();
+        // Démarre avec l'écran du menu principal
+        this.setScreen(new MainMenuScreen(this));
     }
 
+    public void startGame() {
+        // Méthode appelée depuis MainMenuScreen pour passer au jeu
+        Player player1 = new Player(100, 100, 50, 50, new float[] { 0, 1, 0, 1 }, 150);
+        this.setScreen(new GameScreen(player1));
+    }
     @Override
     public void render() {
-        ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
-
-        player1.renderShape();
-        player1.move();
+        super.render();
     }
 
     @Override
     public void dispose() {
-        player1.dispose();
+        batch.dispose();
     }
 }
