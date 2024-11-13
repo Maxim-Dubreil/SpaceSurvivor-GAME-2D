@@ -6,7 +6,7 @@ import io.github.spaceSurvivor.Movable;
 
 public abstract class Projectile extends Movable {
 
-    public Projectile(Texture texture, float posX, float posY, int sizeX, int sizeY, float speed) {
+    public Projectile(Texture texture, float posX, float posY, float sizeX, float sizeY, float speed) {
         super(texture, posX, posY, sizeX, sizeY, speed);
     }
 

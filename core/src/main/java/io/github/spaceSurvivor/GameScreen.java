@@ -113,7 +113,6 @@ public class GameScreen implements Screen {
 
     private void handleMonsterMonsterCollision(Monster monster1, Monster monster2) {
         System.out.println("Monster and Monster collided!");
-        // Implémentez la logique pour gérer la collision entre deux monstres
     }
 
     @Override

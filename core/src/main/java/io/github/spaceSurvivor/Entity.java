@@ -28,10 +28,9 @@ public abstract class Entity {
         this.sizeX = sizeX * Map.getUnitScale();
         this.sizeY = sizeY * Map.getUnitScale();
 
-
         this.sprite = new Sprite(texture);
-        this.sprite.setSize(sizeX, sizeY);
-        this.sprite.setPosition(posX, posY);
+        this.sprite.setSize(this.sizeX, this.sizeY);
+        this.sprite.setPosition(this.posX, this.posY);
 
         entities.add(this);
     }
