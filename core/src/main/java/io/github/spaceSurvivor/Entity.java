@@ -14,19 +14,20 @@ public abstract class Entity {
 
     protected float posX;
     protected float posY;
-    protected int sizeX;
-    protected int sizeY;
+    protected float sizeX;
+    protected float sizeY;
     protected Texture texture;
     protected SpriteBatch batch;
 
     protected Sprite sprite;
 
-    public Entity(Texture texture, float posX, float posY, int sizeX, int sizeY) {
+    public Entity(Texture texture, float posX, float posY, float sizeX, float sizeY) {
         this.texture = texture;
-        this.posX = posX;
-        this.posY = posY;
-        this.sizeX = sizeX;
-        this.sizeY = sizeY;
+        this.posX = posX * Map.getUnitScale();
+        this.posY = posY * Map.getUnitScale();
+        this.sizeX = sizeX * Map.getUnitScale();
+        this.sizeY = sizeY * Map.getUnitScale();
+
 
         this.sprite = new Sprite(texture);
         this.sprite.setSize(sizeX, sizeY);
@@ -64,11 +65,11 @@ public abstract class Entity {
         return this.posY;
     }
 
-    public int getSizeX() {
+    public float getSizeX() {
         return this.sizeX;
     }
 
-    public int getSizeY() {
+    public float getSizeY() {
         return this.sizeY;
     }
 

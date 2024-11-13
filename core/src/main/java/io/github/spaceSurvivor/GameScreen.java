@@ -19,6 +19,7 @@ public class GameScreen implements Screen {
     private Player player;
     private Trouille trouille;
     private Xela xela;
+    private Map map;
 
     public GameScreen(SpriteBatch batch) {
         // this.game = game;
@@ -27,6 +28,8 @@ public class GameScreen implements Screen {
         player = new Player();
         trouille = new Trouille();
         xela = new Xela();
+        map = new Map("Map/SpaceSurvivorMapTemple.tmx");
+        map.initCamera();
     }
 
     @Override
@@ -38,6 +41,9 @@ public class GameScreen implements Screen {
     public void render(float delta) {
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
 
+        map.render();
+        map.UpdateCamera(player.getPosX(), player.getPosY());
+
         player.move();
         xela.move(player);
         trouille.move(player);
@@ -48,6 +54,8 @@ public class GameScreen implements Screen {
                 ((Projectile) entity).update();
             }
         }
+
+        batch.setProjectionMatrix(map.getCamera().combined);
 
         batch.begin();
         for (Entity entity : Entity.entities) {
