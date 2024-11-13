@@ -28,7 +28,7 @@ public abstract class Entity {
         this.sizeX = sizeX;
         this.sizeY = sizeY;
 
-        this.sprite = new com.badlogic.gdx.graphics.g2d.Sprite(texture);
+        this.sprite = new Sprite(texture);
         this.sprite.setSize(sizeX, sizeY);
         this.sprite.setPosition(posX, posY);
 

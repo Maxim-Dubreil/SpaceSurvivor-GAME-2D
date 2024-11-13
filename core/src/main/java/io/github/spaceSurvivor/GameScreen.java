@@ -3,6 +3,10 @@ package io.github.spaceSurvivor;
 import io.github.spaceSurvivor.monsters.Monster;
 import io.github.spaceSurvivor.monsters.Trouille;
 import io.github.spaceSurvivor.monsters.Xela;
+import io.github.spaceSurvivor.projectiles.Projectile;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -38,6 +42,13 @@ public class GameScreen implements Screen {
         xela.move(player);
         trouille.move(player);
 
+        List<Entity> entitiesCopy = new ArrayList<>(Entity.entities);
+        for (Entity entity : entitiesCopy) {
+            if (entity instanceof Projectile) {
+                ((Projectile) entity).update();
+            }
+        }
+
         batch.begin();
         for (Entity entity : Entity.entities) {
             entity.renderEntity(batch);
@@ -66,6 +77,11 @@ public class GameScreen implements Screen {
             Player player = (entityA instanceof Player) ? (Player) entityA : (Player) entityB;
             Monster monster = (entityA instanceof Monster) ? (Monster) entityA : (Monster) entityB;
             handlePlayerMonsterCollision(player, monster);
+        } else if ((entityA instanceof Projectile && entityB instanceof Monster) ||
+                (entityA instanceof Monster && entityB instanceof Projectile)) {
+            Projectile projectile = (entityA instanceof Projectile) ? (Projectile) entityA : (Projectile) entityB;
+            Monster monster = (entityA instanceof Monster) ? (Monster) entityA : (Monster) entityB;
+            handleProjectileMonsterCollision(projectile, monster);
         } else if (entityA instanceof Monster && entityB instanceof Monster) {
             Monster monster1 = (Monster) entityA;
             Monster monster2 = (Monster) entityB;
@@ -75,10 +91,21 @@ public class GameScreen implements Screen {
 
     private void handlePlayerMonsterCollision(Player player, Monster monster) {
         System.out.println("Player collided with a Monster!");
+        // player.takeDamage(monster.getDamage());
+    }
+
+    private void handleProjectileMonsterCollision(Projectile projectile, Monster monster) {
+        System.out.println("Projectile a touché le Monster!");
+        // monster.takeDamage(projectile.getDamages());
+        Entity.entities.remove(projectile);
+        projectile.dispose();
+        Entity.entities.remove(monster);
+        monster.dispose();
     }
 
     private void handleMonsterMonsterCollision(Monster monster1, Monster monster2) {
         System.out.println("Monster and Monster collided!");
+        // Implémentez la logique pour gérer la collision entre deux monstres
     }
 
     @Override
