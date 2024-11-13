@@ -28,9 +28,10 @@ public abstract class Entity {
         this.sizeX = sizeX * Map.getUnitScale();
         this.sizeY = sizeY * Map.getUnitScale();
 
-        this.sprite = new com.badlogic.gdx.graphics.g2d.Sprite(texture);
-        this.sprite.setSize(this.sizeX, this.sizeY);
-        this.sprite.setPosition(this.posX, this.posY);
+
+        this.sprite = new Sprite(texture);
+        this.sprite.setSize(sizeX, sizeY);
+        this.sprite.setPosition(posX, posY);
 
         entities.add(this);
     }
