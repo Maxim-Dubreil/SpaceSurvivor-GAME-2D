@@ -7,7 +7,10 @@ import com.badlogic.gdx.graphics.Texture;
 public class Player extends Movable {
 
     public Player() {
-        super(new Texture("Player/player1.png"), 100, 100, 50, 50, 150);
+        super(new Texture("Player/player1.png"),
+            100, 100,
+            50, 50,
+            150);
     }
 
     public void move() {

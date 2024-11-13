@@ -9,7 +9,7 @@ public abstract class Movable extends Entity {
 
     public Movable(Texture texture, int posX, int posY, int sizeX, int sizeY, float speed) {
         super(texture, posX, posY, sizeX, sizeY);
-        this.speed = speed;
+        this.speed = speed * Map.getUnitScale(); // pixels per second
     }
 
     public void move(Player target) {
