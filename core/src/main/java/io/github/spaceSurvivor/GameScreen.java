@@ -51,7 +51,7 @@ public class GameScreen implements Screen {
         List<Entity> entitiesCopy = new ArrayList<>(Entity.entities);
         for (Entity entity : entitiesCopy) {
             if (entity instanceof Projectile) {
-                ((Projectile) entity).update();
+                ((Projectile) entity).move(player);
             }
         }
 

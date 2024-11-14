@@ -36,6 +36,7 @@ public abstract class Entity {
     }
 
     public void renderEntity(SpriteBatch batch) {
+
         this.sprite.setPosition(this.posX, this.posY);
         this.sprite.draw(batch);
     }
