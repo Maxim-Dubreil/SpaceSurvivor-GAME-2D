@@ -1,19 +1,14 @@
 package io.github.spaceSurvivor.managers;
 
 import io.github.spaceSurvivor.Entity;
-import io.github.spaceSurvivor.GameScreen;
 import io.github.spaceSurvivor.Player;
 import io.github.spaceSurvivor.monsters.Monster;
 import io.github.spaceSurvivor.projectiles.Projectile;
 
 public class CollisionManager {
 
-    // private Entity entityA;
-    // private Entity entityB;
-
     public CollisionManager() {
-        // this.entityA = entityA;
-        // this.entityB = entityB;
+
     }
 
     public boolean isColliding(Entity entityA, Entity entityB) {
@@ -67,13 +62,5 @@ public class CollisionManager {
             handleMonsterMonsterCollision(monster1, monster2);
         }
     }
-
-    // public Entity getEntityA() {
-    // return this.entityA;
-    // }
-
-    // public Entity getEntityB() {
-    // return this.entityB;
-    // }
 
 }

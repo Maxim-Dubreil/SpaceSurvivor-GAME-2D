@@ -15,7 +15,6 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 public class GameScreen implements Screen {
 
-    // private final Main game;
     private final SpriteBatch batch;
     private Player player;
     private Map map;
@@ -99,48 +98,6 @@ public class GameScreen implements Screen {
             }
         }
     }
-
-    // private void handleCollision(Entity entityA, Entity entityB) {
-    // if ((entityA instanceof Player && entityB instanceof Monster) ||
-    // (entityA instanceof Monster && entityB instanceof Player)) {
-    // Player player = (entityA instanceof Player) ? (Player) entityA : (Player)
-    // entityB;
-    // Monster monster = (entityA instanceof Monster) ? (Monster) entityA :
-    // (Monster) entityB;
-    // handlePlayerMonsterCollision(player, monster);
-    // } else if ((entityA instanceof Projectile && entityB instanceof Monster) ||
-    // (entityA instanceof Monster && entityB instanceof Projectile)) {
-    // Projectile projectile = (entityA instanceof Projectile) ? (Projectile)
-    // entityA : (Projectile) entityB;
-    // Monster monster = (entityA instanceof Monster) ? (Monster) entityA :
-    // (Monster) entityB;
-    // handleProjectileMonsterCollision(projectile, monster);
-    // } else if (entityA instanceof Monster && entityB instanceof Monster) {
-    // Monster monster1 = (Monster) entityA;
-    // Monster monster2 = (Monster) entityB;
-    // handleMonsterMonsterCollision(monster1, monster2);
-    // }
-    // }
-
-    // private void handlePlayerMonsterCollision(Player player, Monster monster) {
-    // System.out.println("Player collided with a Monster!");
-    // // player.takeDamage(monster.getDamage());
-    // }
-
-    // private void handleProjectileMonsterCollision(Projectile projectile, Monster
-    // monster) {
-    // System.out.println("Projectile a touché le Monster!");
-    // // monster.takeDamage(projectile.getDamages());
-    // Entity.entities.remove(projectile);
-    // projectile.dispose();
-    // Entity.entities.remove(monster);
-    // monster.dispose();
-    // }
-
-    // private void handleMonsterMonsterCollision(Monster monster1, Monster
-    // monster2) {
-    // System.out.println("Monster and Monster collided!");
-    // }
 
     @Override
     public void resize(int width, int height) {
