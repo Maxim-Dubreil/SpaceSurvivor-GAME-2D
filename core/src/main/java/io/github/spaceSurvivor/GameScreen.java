@@ -64,7 +64,7 @@ public class GameScreen implements Screen {
         map.render();
         map.UpdateCamera(player.getPosX(), player.getPosY());
 
-        player.move();
+        player.move(collisionManager,map);
 
         for (Entity entity : entitiesCopy) {
             if (entity instanceof Monster) {
@@ -91,6 +91,7 @@ public class GameScreen implements Screen {
             for (int j = i + 1; j < Entity.entities.size(); j++) {
                 Entity entityA = Entity.entities.get(i);
                 Entity entityB = Entity.entities.get(j);
+                collisionManager.handleMapCollision(player,map);
 
                 if (collisionManager.isColliding(entityA, entityB)) {
                     collisionManager.handleCollision(entityA, entityB);

@@ -1,9 +1,11 @@
 package io.github.spaceSurvivor.managers;
 
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import io.github.spaceSurvivor.Entity;
 import io.github.spaceSurvivor.Player;
 import io.github.spaceSurvivor.monsters.Monster;
 import io.github.spaceSurvivor.projectiles.Projectile;
+import io.github.spaceSurvivor.Map;
 
 public class CollisionManager {
 
@@ -37,8 +39,24 @@ public class CollisionManager {
         monster.dispose();
     }
 
-    private void handlePlayerMapCollision(Player player) {
+    public boolean handleMapCollision(Player player, Map map) {
+        TiledMapTileLayer temple = (TiledMapTileLayer) map.getMap().getLayers().get("Temple");
+        float x = player.getPosX();
+        float y = player.getPosY();
 
+        int tileX = (int) x;
+        int tileY = (int) y;
+
+        TiledMapTileLayer.Cell cell = temple.getCell(tileX, tileY);
+        if (cell != null){
+            int tileId = cell.getTile().getId();
+            if(tileId != 0){
+                System.out.println("Player collided with a wall!");
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private void handlePlayerObjectCollision(Player player) {
@@ -61,6 +79,7 @@ public class CollisionManager {
             Monster monster2 = (Monster) entityB;
             handleMonsterMonsterCollision(monster1, monster2);
         }
+
     }
 
 }

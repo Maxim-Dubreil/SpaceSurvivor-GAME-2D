@@ -13,7 +13,7 @@ public class Map {
     private static final int TILE_SIZE = 32;
     private static final int MAP_WIDTH = 100;
     private static final int MAP_HEIGHT = 100;
-    // assure une mise à l'échelle cohérente
+
     private static final float UNIT_SCALE = 1f / TILE_SIZE;
 
     private static final float VIEWPORT_WIDTH = 30;
@@ -79,6 +79,10 @@ public class Map {
 
     public void setCamera(OrthographicCamera camera) {
         this.camera = camera;
+    }
+
+    public TiledMap getMap() {
+        return map;
     }
 
 }
