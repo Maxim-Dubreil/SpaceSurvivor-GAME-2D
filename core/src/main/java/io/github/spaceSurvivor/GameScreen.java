@@ -17,19 +17,37 @@ public class GameScreen implements Screen {
     // private final Main game;
     private final SpriteBatch batch;
     private Player player;
-    private Trouille trouille;
-    private Xela xela;
     private Map map;
+    private List<Trouille> trouilles = new ArrayList<>();
+    private List<Xela> xelas = new ArrayList<>();
 
     public GameScreen(SpriteBatch batch) {
-        // this.game = game;
         this.batch = batch;
 
         player = new Player();
-        trouille = new Trouille();
-        xela = new Xela();
+        spawnMonstersInArc(20, 20, 500, 500, 680, 0, 180);
         map = new Map("Map/SpaceSurvivorMapTemple.tmx");
         map.initCamera();
+    }
+
+    public void spawnMonstersInArc(int numTrouilles, int numXelas, float centerX, float centerY, float radius,
+            float startAngle, float endAngle) {
+        float angleStepTrouille = (endAngle - startAngle) / (numTrouilles - 1); // Angle entre chaque Trouille
+        float angleStepXela = (endAngle - startAngle) / (numXelas - 1); // Angle entre chaque Xela
+
+        for (int i = 0; i < numTrouilles; i++) {
+            float angle = startAngle + i * angleStepTrouille;
+            float posX = centerX + (float) Math.cos(Math.toRadians(angle)) * radius;
+            float posY = centerY + (float) Math.sin(Math.toRadians(angle)) * radius;
+            trouilles.add(new Trouille(posX, posY));
+        }
+
+        for (int i = 0; i < numXelas; i++) {
+            float angle = startAngle + i * angleStepXela;
+            float posX = centerX + (float) Math.cos(Math.toRadians(angle)) * radius;
+            float posY = centerY + (float) Math.sin(Math.toRadians(angle)) * radius;
+            xelas.add(new Xela(posX, posY));
+        }
     }
 
     @Override
@@ -40,18 +58,19 @@ public class GameScreen implements Screen {
     @Override
     public void render(float delta) {
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
+        List<Entity> entitiesCopy = new ArrayList<>(Entity.entities);
 
         map.render();
         map.UpdateCamera(player.getPosX(), player.getPosY());
 
         player.move();
-        xela.move(player);
-        trouille.move(player);
 
-        List<Entity> entitiesCopy = new ArrayList<>(Entity.entities);
         for (Entity entity : entitiesCopy) {
+            if (entity instanceof Monster) {
+                ((Monster) entity).move(player);
+            }
             if (entity instanceof Projectile) {
-                ((Projectile) entity).move(player);
+                ((Projectile) entity).move();
             }
         }
 

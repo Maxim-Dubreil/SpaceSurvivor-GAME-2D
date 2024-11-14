@@ -13,6 +13,8 @@ import io.github.spaceSurvivor.weapons.Weapon;
 public class Player extends Movable {
 
     public static List<Weapon> weapons = new ArrayList<>();
+    private float lastDirectionX = 0;
+    private float lastDirectionY = 1;
 
     public Player() {
         super(new Texture("Player/player1.png"), 100, 100, 50, 50, 150);
@@ -21,30 +23,43 @@ public class Player extends Movable {
 
     public void move() {
         float deltaTime = Gdx.graphics.getDeltaTime();
+        boolean moved = false;
 
         if (Gdx.input.isKeyPressed(Keys.LEFT)) {
             this.setPosX(this.getPosX() - this.getSpeed() * deltaTime);
+            lastDirectionX = -1;
+            lastDirectionY = 0;
+            moved = true;
         }
         if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
             this.setPosX(this.getPosX() + this.getSpeed() * deltaTime);
+            lastDirectionX = 1;
+            lastDirectionY = 0;
+            moved = true;
         }
         if (Gdx.input.isKeyPressed(Keys.UP)) {
             this.setPosY(this.getPosY() + this.getSpeed() * deltaTime);
+            lastDirectionX = 0;
+            lastDirectionY = 1;
+            moved = true;
         }
         if (Gdx.input.isKeyPressed(Keys.DOWN)) {
             this.setPosY(this.getPosY() - this.getSpeed() * deltaTime);
+            lastDirectionX = 0;
+            lastDirectionY = -1;
+            moved = true;
         }
 
-        // this.setPosX(Math.max(0, Math.min(this.getPosX(), 1920 -
-        // this.getHitBox())));
-        // this.setPosY(Math.max(0, Math.min(this.getPosY(), 1080 -
-        // this.getHitBox())));
+        if (moved) {
+            float length = (float) Math.sqrt(lastDirectionX * lastDirectionX + lastDirectionY * lastDirectionY);
+            if (length != 0) {
+                lastDirectionX /= length;
+                lastDirectionY /= length;
+            }
+        }
     }
 
-    // public void attack() {
-    // for (Weapon weapon : weapons) {
-    // weapon.shot();
-    // }
-    // }
-
+    public float[] getPlayerDirection() {
+        return new float[] { lastDirectionX, lastDirectionY };
+    }
 }
