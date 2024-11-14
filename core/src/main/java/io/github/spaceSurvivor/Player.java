@@ -15,6 +15,7 @@ public class Player extends Movable {
     public static List<Weapon> weapons = new ArrayList<>();
     private float lastDirectionX = 0;
     private float lastDirectionY = 1;
+    private int hp = 100;
 
     public Player() {
         super(new Texture("Player/player1.png"), 100, 100, 50, 50, 150);
@@ -59,7 +60,15 @@ public class Player extends Movable {
         }
     }
 
-    public float[] getPlayerDirection() {
+    public float[] getDirection() {
         return new float[] { lastDirectionX, lastDirectionY };
+    }
+
+    public void setHp(int newHp) {
+        this.hp = newHp;
+    }
+
+    public int getHp() {
+        return this.hp;
     }
 }

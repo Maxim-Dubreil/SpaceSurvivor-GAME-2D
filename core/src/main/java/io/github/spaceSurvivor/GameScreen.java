@@ -1,5 +1,6 @@
 package io.github.spaceSurvivor;
 
+import io.github.spaceSurvivor.managers.CollisionManager;
 import io.github.spaceSurvivor.monsters.Monster;
 import io.github.spaceSurvivor.monsters.Trouille;
 import io.github.spaceSurvivor.monsters.Xela;
@@ -18,12 +19,13 @@ public class GameScreen implements Screen {
     private final SpriteBatch batch;
     private Player player;
     private Map map;
+    private CollisionManager collisionManager;
     private List<Trouille> trouilles = new ArrayList<>();
     private List<Xela> xelas = new ArrayList<>();
 
     public GameScreen(SpriteBatch batch) {
         this.batch = batch;
-
+        collisionManager = new CollisionManager();
         player = new Player();
         spawnMonstersInArc(20, 20, 500, 500, 680, 0, 180);
         map = new Map("Map/SpaceSurvivorMapTemple.tmx");
@@ -91,48 +93,54 @@ public class GameScreen implements Screen {
                 Entity entityA = Entity.entities.get(i);
                 Entity entityB = Entity.entities.get(j);
 
-                if (entityA.getHitBox().overlaps(entityB.getHitBox())) {
-                    handleCollision(entityA, entityB);
+                if (collisionManager.isColliding(entityA, entityB)) {
+                    collisionManager.handleCollision(entityA, entityB);
                 }
             }
         }
     }
 
-    private void handleCollision(Entity entityA, Entity entityB) {
-        if ((entityA instanceof Player && entityB instanceof Monster) ||
-                (entityA instanceof Monster && entityB instanceof Player)) {
-            Player player = (entityA instanceof Player) ? (Player) entityA : (Player) entityB;
-            Monster monster = (entityA instanceof Monster) ? (Monster) entityA : (Monster) entityB;
-            handlePlayerMonsterCollision(player, monster);
-        } else if ((entityA instanceof Projectile && entityB instanceof Monster) ||
-                (entityA instanceof Monster && entityB instanceof Projectile)) {
-            Projectile projectile = (entityA instanceof Projectile) ? (Projectile) entityA : (Projectile) entityB;
-            Monster monster = (entityA instanceof Monster) ? (Monster) entityA : (Monster) entityB;
-            handleProjectileMonsterCollision(projectile, monster);
-        } else if (entityA instanceof Monster && entityB instanceof Monster) {
-            Monster monster1 = (Monster) entityA;
-            Monster monster2 = (Monster) entityB;
-            handleMonsterMonsterCollision(monster1, monster2);
-        }
-    }
+    // private void handleCollision(Entity entityA, Entity entityB) {
+    // if ((entityA instanceof Player && entityB instanceof Monster) ||
+    // (entityA instanceof Monster && entityB instanceof Player)) {
+    // Player player = (entityA instanceof Player) ? (Player) entityA : (Player)
+    // entityB;
+    // Monster monster = (entityA instanceof Monster) ? (Monster) entityA :
+    // (Monster) entityB;
+    // handlePlayerMonsterCollision(player, monster);
+    // } else if ((entityA instanceof Projectile && entityB instanceof Monster) ||
+    // (entityA instanceof Monster && entityB instanceof Projectile)) {
+    // Projectile projectile = (entityA instanceof Projectile) ? (Projectile)
+    // entityA : (Projectile) entityB;
+    // Monster monster = (entityA instanceof Monster) ? (Monster) entityA :
+    // (Monster) entityB;
+    // handleProjectileMonsterCollision(projectile, monster);
+    // } else if (entityA instanceof Monster && entityB instanceof Monster) {
+    // Monster monster1 = (Monster) entityA;
+    // Monster monster2 = (Monster) entityB;
+    // handleMonsterMonsterCollision(monster1, monster2);
+    // }
+    // }
 
-    private void handlePlayerMonsterCollision(Player player, Monster monster) {
-        System.out.println("Player collided with a Monster!");
-        // player.takeDamage(monster.getDamage());
-    }
+    // private void handlePlayerMonsterCollision(Player player, Monster monster) {
+    // System.out.println("Player collided with a Monster!");
+    // // player.takeDamage(monster.getDamage());
+    // }
 
-    private void handleProjectileMonsterCollision(Projectile projectile, Monster monster) {
-        System.out.println("Projectile a touché le Monster!");
-        // monster.takeDamage(projectile.getDamages());
-        Entity.entities.remove(projectile);
-        projectile.dispose();
-        Entity.entities.remove(monster);
-        monster.dispose();
-    }
+    // private void handleProjectileMonsterCollision(Projectile projectile, Monster
+    // monster) {
+    // System.out.println("Projectile a touché le Monster!");
+    // // monster.takeDamage(projectile.getDamages());
+    // Entity.entities.remove(projectile);
+    // projectile.dispose();
+    // Entity.entities.remove(monster);
+    // monster.dispose();
+    // }
 
-    private void handleMonsterMonsterCollision(Monster monster1, Monster monster2) {
-        System.out.println("Monster and Monster collided!");
-    }
+    // private void handleMonsterMonsterCollision(Monster monster1, Monster
+    // monster2) {
+    // System.out.println("Monster and Monster collided!");
+    // }
 
     @Override
     public void resize(int width, int height) {
