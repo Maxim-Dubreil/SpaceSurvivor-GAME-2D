@@ -9,7 +9,7 @@ public abstract class Monster extends Movable {
 
     protected Player target;
 
-    public Monster(Texture texture, int posX, int posY, int sizeX, int sizeY, float speed) {
+    public Monster(Texture texture, float posX, float posY, float sizeX, float sizeY, float speed) {
         super(texture, posX, posY, sizeX, sizeY, speed);
     }
 

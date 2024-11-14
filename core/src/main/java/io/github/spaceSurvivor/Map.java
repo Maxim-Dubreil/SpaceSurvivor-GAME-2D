@@ -1,6 +1,5 @@
 package io.github.spaceSurvivor;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -14,7 +13,7 @@ public class Map {
     private static final int TILE_SIZE = 32;
     private static final int MAP_WIDTH = 100;
     private static final int MAP_HEIGHT = 100;
-    //assure une mise à l'échelle cohérente
+    // assure une mise à l'échelle cohérente
     private static final float UNIT_SCALE = 1f / TILE_SIZE;
 
     private static final float VIEWPORT_WIDTH = 30;
@@ -34,7 +33,8 @@ public class Map {
 
     public void UpdateCamera(float playerX, float playerY) {
         float cameraX = Math.max(camera.viewportWidth / 2f, Math.min(playerX, MAP_WIDTH - (camera.viewportWidth / 2f)));
-        float cameraY = Math.max(camera.viewportHeight / 2f, Math.min(playerY, MAP_HEIGHT - (camera.viewportHeight / 2f)));
+        float cameraY = Math.max(camera.viewportHeight / 2f,
+                Math.min(playerY, MAP_HEIGHT - (camera.viewportHeight / 2f)));
         camera.position.set(cameraX, cameraY, 0);
         camera.update();
     }
@@ -80,8 +80,5 @@ public class Map {
     public void setCamera(OrthographicCamera camera) {
         this.camera = camera;
     }
-
-
-
 
 }

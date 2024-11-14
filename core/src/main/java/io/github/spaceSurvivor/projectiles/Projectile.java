@@ -9,6 +9,4 @@ public abstract class Projectile extends Movable {
     public Projectile(Texture texture, float posX, float posY, float sizeX, float sizeY, float speed) {
         super(texture, posX, posY, sizeX, sizeY, speed);
     }
-
-    public abstract void update();
 }
