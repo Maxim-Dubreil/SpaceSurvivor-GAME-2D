@@ -83,20 +83,7 @@ public class GameScreen implements Screen {
         }
         batch.end();
 
-        checkAllCollisions();
-    }
-
-    private void checkAllCollisions() {
-        for (int i = 0; i < Entity.entities.size(); i++) {
-            for (int j = i + 1; j < Entity.entities.size(); j++) {
-                Entity entityA = Entity.entities.get(i);
-                Entity entityB = Entity.entities.get(j);
-
-                if (collisionManager.isColliding(entityA, entityB)) {
-                    collisionManager.handleCollision(entityA, entityB);
-                }
-            }
-        }
+        collisionManager.checkAllCollisions();
     }
 
     @Override

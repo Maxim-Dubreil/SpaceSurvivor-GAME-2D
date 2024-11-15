@@ -9,7 +9,7 @@ public class Pewpew extends Weapon {
     private Player player;
 
     public Pewpew(Player player) {
-        super(player, 10, 80, false, 0.5f);
+        super(player, 80, 80, false, 0.5f);
         this.player = player;
 
     }
@@ -17,7 +17,7 @@ public class Pewpew extends Weapon {
     @Override
     public void shotProjectile(Player player) {
         PewpewProjectile projectile = new PewpewProjectile(player.getPosX(), player.getPosY(),
-                player.getDirection());
+                player.getDirection(), this);
     }
 
     public void stopShooting() {
