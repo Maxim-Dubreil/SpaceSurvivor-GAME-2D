@@ -13,9 +13,10 @@ import io.github.spaceSurvivor.weapons.Weapon;
 public class Player extends Movable {
 
     public static List<Weapon> weapons = new ArrayList<>();
+    protected boolean isDead = false;
     private float lastDirectionX = 0;
     private float lastDirectionY = 1;
-    private int hp = 100;
+    private float hp = 100;
 
     public Player() {
         super(new Texture("Player/player1.png"), 100, 100, 50, 50, 150);
@@ -60,15 +61,28 @@ public class Player extends Movable {
         }
     }
 
+    public void isDead() {
+        if (this.hp <= 0) {
+            entities.remove(this);
+            this.dispose();
+            this.isDead = true;
+        }
+    }
+
     public float[] getDirection() {
         return new float[] { lastDirectionX, lastDirectionY };
+    }
+
+    public void takeDamage(float damage) {
+        this.hp -= damage;
+        isDead();
     }
 
     public void setHp(int newHp) {
         this.hp = newHp;
     }
 
-    public int getHp() {
+    public float getHp() {
         return this.hp;
     }
 }

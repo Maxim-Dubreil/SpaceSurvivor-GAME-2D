@@ -5,17 +5,20 @@ import com.badlogic.gdx.graphics.Texture;
 
 import io.github.spaceSurvivor.Entity;
 import io.github.spaceSurvivor.Movable;
+import io.github.spaceSurvivor.weapons.Weapon;
 
 public abstract class Projectile extends Movable {
 
     private float directionX;
     private float directionY;
+    private Weapon weapon;
 
-    public Projectile(Texture texture, float posX, float posY, float sizeX, float sizeY, float speed,
+    public Projectile(Texture texture, float posX, float posY, float sizeX, float sizeY, float speed, Weapon weapon,
             float[] direction) {
         super(texture, posX, posY, sizeX, sizeY, speed);
         this.directionX = direction[0];
         this.directionY = direction[1];
+        this.weapon = weapon;
     }
 
     public void move() {
@@ -27,5 +30,13 @@ public abstract class Projectile extends Movable {
             Entity.entities.remove(this);
             this.dispose();
         }
+    }
+
+    public Weapon getWeapon() {
+        return this.weapon;
+    }
+
+    public float getDamage() {
+        return this.weapon.getDamages();
     }
 }
