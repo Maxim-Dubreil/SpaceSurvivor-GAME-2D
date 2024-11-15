@@ -68,10 +68,10 @@ public class GameScreen implements Screen {
 
         for (Entity entity : entitiesCopy) {
             if (entity instanceof Monster) {
-                ((Monster) entity).move(player);
+                ((Monster) entity).move(player,collisionManager,map);
             }
             if (entity instanceof Projectile) {
-                ((Projectile) entity).move();
+                ((Projectile) entity).move(collisionManager, map);
             }
         }
 
@@ -87,11 +87,20 @@ public class GameScreen implements Screen {
     }
 
     private void checkAllCollisions() {
+        collisionManager.handleEntityMapCollision(player, map);
+
+        for (Trouille trouille : trouilles) {
+            collisionManager.handleEntityMapCollision(trouille, map);
+        }
+
+        for (Xela xela : xelas) {
+            collisionManager.handleEntityMapCollision(xela, map);
+        }
+
         for (int i = 0; i < Entity.entities.size(); i++) {
             for (int j = i + 1; j < Entity.entities.size(); j++) {
                 Entity entityA = Entity.entities.get(i);
                 Entity entityB = Entity.entities.get(j);
-                collisionManager.handleMapCollision(player,map);
 
                 if (collisionManager.isColliding(entityA, entityB)) {
                     collisionManager.handleCollision(entityA, entityB);

@@ -55,7 +55,7 @@ public class Player extends Movable {
         }
 
         if (moved) {
-            if (collisionManager.handleMapCollision(this, map)) {
+            if (collisionManager.handleEntityMapCollision(this, map)) {
                 this.setPosX(oldX);
                 this.setPosY(oldY);
             }else {

@@ -5,6 +5,9 @@ import com.badlogic.gdx.graphics.Texture;
 
 import io.github.spaceSurvivor.Entity;
 import io.github.spaceSurvivor.Movable;
+import io.github.spaceSurvivor.managers.CollisionManager;
+import io.github.spaceSurvivor.Map;
+
 
 public abstract class Projectile extends Movable {
 
@@ -18,12 +21,15 @@ public abstract class Projectile extends Movable {
         this.directionY = direction[1];
     }
 
-    public void move() {
+    public void move(CollisionManager collisionManager, Map map) {
         float deltaTime = Gdx.graphics.getDeltaTime();
         this.setPosX(this.getPosX() + this.directionX * this.getSpeed() * deltaTime);
         this.setPosY(this.getPosY() + this.directionY * this.getSpeed() * deltaTime);
 
         if (this.getPosY() > 100 || this.getPosY() < -100 || this.getPosX() > 100 || this.getPosX() < -100) {
+            Entity.entities.remove(this);
+            this.dispose();
+        }else if (collisionManager.handleEntityMapCollision(this, map)) {
             Entity.entities.remove(this);
             this.dispose();
         }
