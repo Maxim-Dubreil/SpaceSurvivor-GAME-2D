@@ -13,7 +13,19 @@ import java.util.List;
 public class CollisionManager {
 
     public CollisionManager() {
+    }
 
+    public void checkAllCollisions() {
+        for (int i = 0; i < Entity.entities.size(); i++) {
+            for (int j = i + 1; j < Entity.entities.size(); j++) {
+                Entity entityA = Entity.entities.get(i);
+                Entity entityB = Entity.entities.get(j);
+
+                if (this.isColliding(entityA, entityB)) {
+                    this.handleCollision(entityA, entityB);
+                }
+            }
+        }
     }
 
     public boolean isColliding(Entity entityA, Entity entityB) {
@@ -25,21 +37,20 @@ public class CollisionManager {
     }
 
     private void handlePlayerMonsterCollision(Player player, Monster monster) {
+        player.takeDamage(monster.getDamages());
         System.out.println("Player collided with a Monster!");
 
     }
 
     private void handleMonsterMonsterCollision(Monster monsterA, Monster monsterB) {
-        System.out.println("Monster and Monster collided!");
 
     }
 
     private void handleProjectileMonsterCollision(Projectile projectile, Monster monster) {
-        System.out.println("Projectile a touché le Monster!");
+        monster.takeDamage(projectile.getDamage());
         Entity.entities.remove(projectile);
         projectile.dispose();
-        Entity.entities.remove(monster);
-        monster.dispose();
+        System.out.println("Projectile a touché le Monster!");
     }
 
     public boolean handleEntityMapCollision(Movable entity, Map map){
