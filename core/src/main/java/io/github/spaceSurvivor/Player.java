@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Texture;
 
 import io.github.spaceSurvivor.weapons.Pewpew;
 import io.github.spaceSurvivor.weapons.Weapon;
+import io.github.spaceSurvivor.managers.CollisionManager;
 
 public class Player extends Movable {
 
@@ -23,9 +24,11 @@ public class Player extends Movable {
         Player.weapons.add(new Pewpew(this));
     }
 
-    public void move() {
+    public void move(CollisionManager collisionManager, Map map) {
         float deltaTime = Gdx.graphics.getDeltaTime();
         boolean moved = false;
+        float oldX = this.getPosX();
+        float oldY = this.getPosY();
 
         if (Gdx.input.isKeyPressed(Keys.LEFT)) {
             this.setPosX(this.getPosX() - this.getSpeed() * deltaTime);
@@ -53,10 +56,16 @@ public class Player extends Movable {
         }
 
         if (moved) {
-            float length = (float) Math.sqrt(lastDirectionX * lastDirectionX + lastDirectionY * lastDirectionY);
-            if (length != 0) {
-                lastDirectionX /= length;
-                lastDirectionY /= length;
+            if (collisionManager.handleEntityMapCollision(this, map)) {
+                this.setPosX(oldX);
+                this.setPosY(oldY);
+            }else {
+                float length = (float) Math.sqrt(lastDirectionX * lastDirectionX + lastDirectionY * lastDirectionY);
+                if (length != 0) {
+                    lastDirectionX /= length;
+                    lastDirectionY /= length;
+            }
+
             }
         }
     }

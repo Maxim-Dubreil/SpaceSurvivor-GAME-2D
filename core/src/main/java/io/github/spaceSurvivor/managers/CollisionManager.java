@@ -1,9 +1,14 @@
 package io.github.spaceSurvivor.managers;
 
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import io.github.spaceSurvivor.Entity;
+import io.github.spaceSurvivor.Movable;
 import io.github.spaceSurvivor.Player;
 import io.github.spaceSurvivor.monsters.Monster;
 import io.github.spaceSurvivor.projectiles.Projectile;
+import io.github.spaceSurvivor.Map;
+
+import java.util.List;
 
 public class CollisionManager {
 
@@ -48,13 +53,29 @@ public class CollisionManager {
         System.out.println("Projectile a touché le Monster!");
     }
 
-    private void handlePlayerMapCollision(Player player) {
+    public boolean handleEntityMapCollision(Movable entity, Map map){
+
+        TiledMapTileLayer temple = (TiledMapTileLayer) map.getMap().getLayers().get("Temple");
+        float x = entity.getPosX();
+        float y = entity.getPosY();
+
+        int tileX = (int) x;
+        int tileY = (int) y;
+
+        TiledMapTileLayer.Cell cell = temple.getCell(tileX, tileY);
+        if (cell != null){
+            int tileId = cell.getTile().getId();
+            if(tileId != 0){
+                return true;
+            }
+        }
+
+
+
+        return false;
 
     }
 
-    private void handlePlayerObjectCollision(Player player) {
-
-    }
 
     public void handleCollision(Entity entityA, Entity entityB) {
         if ((entityA instanceof Player && entityB instanceof Monster) ||
@@ -72,6 +93,7 @@ public class CollisionManager {
             Monster monster2 = (Monster) entityB;
             handleMonsterMonsterCollision(monster1, monster2);
         }
+
     }
 
 }
