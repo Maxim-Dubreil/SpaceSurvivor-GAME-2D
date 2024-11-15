@@ -1,4 +1,4 @@
-package io.github.spaceSurvivor;
+package io.github.spaceSurvivor.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import io.github.spaceSurvivor.Main;
 
 public class MainMenuScreen implements Screen {
 
