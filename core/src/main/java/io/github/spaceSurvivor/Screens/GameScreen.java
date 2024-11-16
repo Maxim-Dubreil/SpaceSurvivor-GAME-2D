@@ -37,14 +37,15 @@ public class GameScreen implements Screen {
     private final Stage stage;
     private final Skin skin;
 
-    public GameScreen(Main game, SpriteBatch batch) { // Correction : ajout de Main dans le constructeur
+    public GameScreen(Main game, SpriteBatch batch) {
+        Gdx.app.log("GameScreen", "Nouvelle instance de GameScreen créée !");
+
         this.game = game;
         this.batch = batch;
         this.collisionManager = new CollisionManager();
         this.player = new Player();
         this.map = new Map("Map/SpaceSurvivorMapTemple.tmx");
         this.map.initCamera();
-
         this.stage = new Stage();
         this.skin = new Skin(Gdx.files.internal("uiskin.json"));
 
@@ -162,3 +163,4 @@ public class GameScreen implements Screen {
         skin.dispose();
     }
 }
+

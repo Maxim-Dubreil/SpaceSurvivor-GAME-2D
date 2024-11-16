@@ -26,6 +26,8 @@ public class MainMenuScreen implements Screen {
     private final SpriteBatch batch;
 
     public MainMenuScreen(Main game) {
+        Gdx.app.log("MainMenuScreen", "Nouvelle instance de MainMenuScreen créée !");
+
         this.game = game;
         stage = new Stage(new ScreenViewport());
         skin = new Skin(Gdx.files.internal("uiskin.json"));
@@ -72,6 +74,7 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void show() {
+        Gdx.input.setInputProcessor(stage); // S'assurer que le processeur est bien configuré
         Gdx.app.log("MainMenuScreen", "Menu displayed");
     }
 
@@ -88,13 +91,7 @@ public class MainMenuScreen implements Screen {
 
         // Dessiner le titre
         font.getData().setScale(3f); // Vous pouvez ajuster la taille de la police ici
-        font.draw(batch, "Space Survivor", Gdx.graphics.getWidth() / 2 - 150, Gdx.graphics.getHeight() - 50); // Dessiner
-                                                                                                              // le
-                                                                                                              // texte
-                                                                                                              // au
-                                                                                                              // centre
-                                                                                                              // de
-                                                                                                              // l'écran
+        font.draw(batch, "Space Survivor", Gdx.graphics.getWidth() / 2 - 150, Gdx.graphics.getHeight() - 50);
 
         // Terminer le dessin avec SpriteBatch
         batch.end();
@@ -119,6 +116,8 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void hide() {
+        Gdx.input.setInputProcessor(null); // Libérer l'entrée en quittant l'écran
+
     }
 
     @Override
