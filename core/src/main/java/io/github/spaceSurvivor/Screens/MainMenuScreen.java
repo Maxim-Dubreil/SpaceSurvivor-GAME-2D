@@ -2,18 +2,22 @@ package io.github.spaceSurvivor.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import io.github.spaceSurvivor.Main;
+import org.w3c.dom.Text;
 
 public class MainMenuScreen implements Screen {
 
@@ -37,10 +41,22 @@ public class MainMenuScreen implements Screen {
         font = new BitmapFont();
         batch = new SpriteBatch();
 
+        //Style des boutons
+        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
+        textButtonStyle.font = font;
+
+        textButtonStyle.up = new TextureRegionDrawable(new TextureRegion(new Texture("ui/Transparent.png")));
+        textButtonStyle.down = textButtonStyle.up;
+        textButtonStyle.over = textButtonStyle.up;
+
+        textButtonStyle.fontColor = Color.WHITE;
+        textButtonStyle.downFontColor = Color.GRAY;
+        textButtonStyle.overFontColor = Color.RED;
+
         // Initialisation des boutons
-        TextButton playButton = new TextButton("Play", skin);
-        TextButton optionsButton = new TextButton("Options", skin);
-        TextButton quitButton = new TextButton("Quit", skin);
+        TextButton playButton = new TextButton("Play", textButtonStyle);
+        TextButton optionsButton = new TextButton("Options", textButtonStyle);
+        TextButton quitButton = new TextButton("Quit", textButtonStyle);
 
         // Actions des boutons
         playButton.addListener(new ClickListener() {
@@ -61,11 +77,13 @@ public class MainMenuScreen implements Screen {
         // Configuration de la table pour positionner les boutons
         Table table = new Table();
         table.setFillParent(true);
-        table.add(playButton).fillX().uniformX();
-        table.row().pad(10, 0, 10, 0);
-        table.add(optionsButton).fillX().uniformX();
+        table.add(playButton).fillX().uniformX().pad(20).minHeight(100).minWidth(300);
+        table.row().pad(10, 0, 10, 0); // Espace entre les lignes
+        table.add(optionsButton).fillX().uniformX().pad(20).minHeight(100).minWidth(300);
         table.row();
-        table.add(quitButton).fillX().uniformX();
+        table.add(quitButton).fillX().uniformX().pad(20).minHeight(100).minWidth(300);
+
+
 
         // Ajoute la table avec les boutons à la scène
         stage.addActor(table);
