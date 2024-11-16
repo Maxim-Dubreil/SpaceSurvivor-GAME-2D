@@ -13,7 +13,12 @@ public class Lwjgl3Launcher {
     }
 
     private static Lwjgl3Application createApplication() {
-        return new Lwjgl3Application(new Main(), getDefaultConfiguration());
+       // return new Lwjgl3Application(new Main(), getDefaultConfiguration());
+
+        Lwjgl3ApplicationConfiguration config = getDefaultConfiguration();
+        config.setResizable(false);  // Empêche le redimensionnement de la fenêtre
+        //config.setDecorated(false);  // Supprime les décorations (barre de titre et bordures)
+        return new Lwjgl3Application(new Main(), config);
     }
 
     private static Lwjgl3ApplicationConfiguration getDefaultConfiguration() {
@@ -38,6 +43,7 @@ public class Lwjgl3Launcher {
         configuration.setWindowedMode(1920, 1080);
         //// You can change these files; they are in lwjgl3/src/main/resources/ .
         configuration.setWindowIcon("libgdx128.png", "libgdx64.png", "libgdx32.png", "libgdx16.png");
+
         return configuration;
     }
 }
