@@ -15,10 +15,6 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import io.github.spaceSurvivor.Main;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Align;
 
@@ -35,12 +31,10 @@ public class PauseScreen implements Screen {
         this.stage = new Stage(new ScreenViewport());
         this.skin = new Skin(Gdx.files.internal("uiskin.json"));
 
-        // Create the buttons
         TextButton optionsButton = new TextButton("Settings", skin);
         TextButton resumeButton = new TextButton("Resume", skin);
         TextButton returnMenuButton = new TextButton("Return to menu", skin);
 
-        // Add click listeners to the buttons
         resumeButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -63,45 +57,42 @@ public class PauseScreen implements Screen {
             }
         });
 
-        // Create a Table to organize the buttons and title
-        // Create a Table to organize the buttons and title
-        // Créez un Table pour organiser les boutons et le titre
         Table table = new Table();
-        table.center();  // Centre le contenu du Table horizontalement et verticalement
+        table.center(); // Centre le tableau
 
-        // Ajoutez un titre centré
+        //TITRE
         Label titleLabel = new Label("Game Pause", skin);
-        titleLabel.setAlignment(Align.center);  // Centrer le texte du titre
+        titleLabel.setAlignment(Align.center);
         table.add(titleLabel).expandX().fillX().padBottom(20);
         table.row();
 
-        // Ajoutez des boutons à la table
+        //AJOUT BOUTON DANS TABLE
         table.add(resumeButton).fillX().uniformX().height(60).pad(10);
         table.row();
         table.add(optionsButton).fillX().uniformX().height(60).pad(10);
         table.row();
         table.add(returnMenuButton).fillX().uniformX().height(60).pad(10);
 
-        // Créez une fenêtre et ajoutez le tableau à la fenêtre
+        //WINDOW
         Window pauseWindow = new Window("", skin);
-        pauseWindow.setModal(true); // Rendre la fenêtre modale
-        pauseWindow.center();  // Centrer la fenêtre
+        pauseWindow.setModal(true);
+        pauseWindow.center();
 
-        // Définir la taille de la fenêtre
+        //TAILLE WINDOW
         pauseWindow.setSize(500, 400);
 
-        // Utilisez un fond transparent
+        //BACKGROUND WINDOW
         Texture transparentTexture = new Texture(Gdx.files.internal("ui/backgroundPauseScreen.png"));
         TextureRegionDrawable transparentDrawable = new TextureRegionDrawable(new TextureRegion(transparentTexture));
         pauseWindow.setBackground(transparentDrawable);
 
-        // Ajoutez la table à la fenêtre
+        //AJOUT TABLE DANS WINDOW
         pauseWindow.add(table).pad(20).fill();
 
-        // Ajoutez la fenêtre au Stage
+        //AJOUT WINDOW DANS STAGE
         stage.addActor(pauseWindow);
 
-        // Centrage manuel de la fenêtre
+        //CENTRANGE WINDOW
         centerWindow(pauseWindow);
     }
 
@@ -117,10 +108,7 @@ public class PauseScreen implements Screen {
         // Calculer la position pour centrer la fenêtre
         float x = (stageWidth - windowWidth) / 2;
         float y = (stageHeight - windowHeight) / 2;
-
-        // Appliquez la position calculée
         pauseWindow.setPosition(x, y);
-
     }
 
     @Override
@@ -134,7 +122,6 @@ public class PauseScreen implements Screen {
         stage.act(delta);
         stage.draw();
 
-        // Listen for the ESC key to resume the game
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             resume();
         }
