@@ -3,13 +3,17 @@ package io.github.spaceSurvivor.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import io.github.spaceSurvivor.Entity;
 import io.github.spaceSurvivor.Main;
@@ -20,6 +24,7 @@ import io.github.spaceSurvivor.monsters.Monster;
 import io.github.spaceSurvivor.monsters.Trouille;
 import io.github.spaceSurvivor.monsters.Xela;
 import io.github.spaceSurvivor.projectiles.Projectile;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +54,15 @@ public class GameScreen implements Screen {
         this.stage = new Stage();
         this.skin = new Skin(Gdx.files.internal("uiskin.json"));
 
-        TextButton pauseButton = new TextButton("Pause", skin);
+        ImageButtonStyle style = new ImageButtonStyle();
+
+        Texture pauseTextureNormal = new Texture(Gdx.files.internal("ui/pauseButton.png"));
+        Texture pauseTextureHover = new Texture(Gdx.files.internal("ui/pauseButtonHover.png"));
+
+        style.up = new TextureRegionDrawable(new TextureRegion(pauseTextureNormal));
+        style.over = new TextureRegionDrawable(new TextureRegion(pauseTextureHover));
+
+        ImageButton pauseButton = new ImageButton(style);
 
         pauseButton.addListener(new ClickListener() {
             @Override
@@ -60,16 +73,13 @@ public class GameScreen implements Screen {
         });
 
         Table table = new Table();
-        table.top().right(); // Positionne la table en haut à droite
-        table.setFillParent(true); // La table remplit tout l'écran
-        table.add(pauseButton).padTop(50).padRight(50); // Ajout du bouton avec un peu de marge
+        table.top().right();
+        table.setFillParent(true);
+        table.add(pauseButton).padTop(35).padRight(35);
 
-        // Mise en place de l'inputProcessor
         Gdx.input.setInputProcessor(stage);
         stage.addActor(table);
-
-        table.setDebug(true); // Active le mode debug pour la table
-
+        //table.setDebug(true);
     }
 
     public void setPaused(boolean isPaused) {
