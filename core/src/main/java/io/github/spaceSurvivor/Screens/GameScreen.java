@@ -60,9 +60,16 @@ public class GameScreen implements Screen {
         });
 
         Table table = new Table();
-        table.setFillParent(true);
-        table.add(pauseButton).top().right();
+        table.top().right(); // Positionne la table en haut à droite
+        table.setFillParent(true); // La table remplit tout l'écran
+        table.add(pauseButton).padTop(50).padRight(50); // Ajout du bouton avec un peu de marge
+
+        // Mise en place de l'inputProcessor
+        Gdx.input.setInputProcessor(stage);
         stage.addActor(table);
+
+        table.setDebug(true); // Active le mode debug pour la table
+
     }
 
     public void setPaused(boolean isPaused) {

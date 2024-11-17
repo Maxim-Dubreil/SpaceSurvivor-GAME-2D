@@ -108,11 +108,11 @@ public class MainMenuScreen implements Screen {
         Table table = new Table();
         table.setFillParent(true);
 
-        table.add(playButton).fillX().uniformX().pad(15).minHeight(50);
-        table.row().pad(5, 0, 10, 0);
-        table.add(optionsButton).fillX().uniformX().pad(15).minHeight(50);
+        table.add(playButton).fillX().uniformX().pad(20).minHeight(50);
+        table.row().pad(15, 0, 10, 0);
+        table.add(optionsButton).fillX().uniformX().pad(20).minHeight(50);
         table.row();
-        table.add(quitButton).fillX().uniformX().pad(15).minHeight(50);
+        table.add(quitButton).fillX().uniformX().pad(20).minHeight(50);
 
         stage.addActor(table);
         Gdx.input.setInputProcessor(stage);
