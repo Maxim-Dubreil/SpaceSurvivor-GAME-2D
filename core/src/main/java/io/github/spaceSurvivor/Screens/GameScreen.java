@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameScreen implements Screen {
-    private final Main game; // Correction : ajout de Main ici
+    private final Main game;
     private final SpriteBatch batch;
     private final Player player;
     private final Map map;
@@ -49,26 +49,24 @@ public class GameScreen implements Screen {
         this.batch = batch;
         this.collisionManager = new CollisionManager();
         this.player = new Player();
+        spawnMonstersInArc(20, 20, 500, 500, 680, 0, 180);
+
         this.map = new Map("Map/SpaceSurvivorMapTemple.tmx");
         this.map.initCamera();
         this.stage = new Stage();
         this.skin = new Skin(Gdx.files.internal("uiskin.json"));
 
         ImageButtonStyle style = new ImageButtonStyle();
-
         Texture pauseTextureNormal = new Texture(Gdx.files.internal("ui/pauseButton.png"));
-        Texture pauseTextureHover = new Texture(Gdx.files.internal("ui/pauseButtonHover.png"));
-
+        Texture pauseTextureDown = new Texture(Gdx.files.internal("ui/pauseButtonDown.png"));
         style.up = new TextureRegionDrawable(new TextureRegion(pauseTextureNormal));
-        style.over = new TextureRegionDrawable(new TextureRegion(pauseTextureHover));
+        style.down = new TextureRegionDrawable(new TextureRegion(pauseTextureDown));
 
         ImageButton pauseButton = new ImageButton(style);
-
         pauseButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                setPaused(true);
-                game.setScreen(new PauseScreen(game, GameScreen.this));
+                pause();
             }
         });
 
@@ -86,14 +84,13 @@ public class GameScreen implements Screen {
         this.isPaused = isPaused;
     }
 
-    public boolean isPaused() {
-        return isPaused;
-    }
-
     @Override
     public void render(float delta) {
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
-
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            pause();
+            return;
+        }
         if (isPaused) {
             stage.act(delta);
             stage.draw();
@@ -149,7 +146,26 @@ public class GameScreen implements Screen {
     @Override
     public void pause() {
         setPaused(true);
-        game.setScreen(new PauseScreen(game, GameScreen.this));
+        Gdx.input.setInputProcessor(null);
+        game.setScreen(new PauseScreen(game, this));
+    }
+
+    public void spawnMonstersInArc(int numTrouilles, int numXelas, float centerX, float centerY, float radius,
+                                   float startAngle, float endAngle) {
+        float angleStepTrouille = (endAngle - startAngle) / (numTrouilles - 1); // Angle entre chaque Trouille
+        float angleStepXela = (endAngle - startAngle) / (numXelas - 1); // Angle entre chaque Xela
+        for (int i = 0; i < numTrouilles; i++) {
+            float angle = startAngle + i * angleStepTrouille;
+            float posX = centerX + (float) Math.cos(Math.toRadians(angle)) * radius;
+            float posY = centerY + (float) Math.sin(Math.toRadians(angle)) * radius;
+            trouilles.add(new Trouille(posX, posY));
+        }
+        for (int i = 0; i < numXelas; i++) {
+            float angle = startAngle + i * angleStepXela;
+            float posX = centerX + (float) Math.cos(Math.toRadians(angle)) * radius;
+            float posY = centerY + (float) Math.sin(Math.toRadians(angle)) * radius;
+            xelas.add(new Xela(posX, posY));
+        }
     }
 
     @Override
@@ -178,6 +194,8 @@ public class GameScreen implements Screen {
         Entity.entities.clear();
         stage.dispose();
         skin.dispose();
+        batch.dispose();
+        map.dispose();
     }
 }
 
