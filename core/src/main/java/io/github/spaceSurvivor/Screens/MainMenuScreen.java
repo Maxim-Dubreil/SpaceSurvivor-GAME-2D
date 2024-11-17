@@ -7,7 +7,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -32,36 +35,62 @@ public class MainMenuScreen implements Screen {
         this.game = game;
         stage = new Stage(new ScreenViewport());
         backgroundTexture = new Texture("background.png");
-
-        // Initialisation BitmapFont et SpriteBatch
         font = new BitmapFont();
         batch = new SpriteBatch();
 
-        //Style des boutons
-        BitmapFont newFont = new BitmapFont(Gdx.files.internal("fonts/MyFont.fnt"));
+        TextButton.TextButtonStyle playButtonStyle = new TextButton.TextButtonStyle();
+        playButtonStyle.font = new BitmapFont(Gdx.files.internal("fonts/MyFont.fnt"));
 
-        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-        textButtonStyle.font = newFont;
+        TextButton.TextButtonStyle optionsButtonStyle = new TextButton.TextButtonStyle();
+        optionsButtonStyle.font = new BitmapFont(Gdx.files.internal("fonts/MyFont.fnt"));
 
-        textButtonStyle.up = new TextureRegionDrawable(new TextureRegion(new Texture("ui/Transparent.png")));
-        textButtonStyle.down = textButtonStyle.up;
-        textButtonStyle.over = textButtonStyle.up;
+        TextButton.TextButtonStyle quitButtonStyle = new TextButton.TextButtonStyle();
+        quitButtonStyle.font = new BitmapFont(Gdx.files.internal("fonts/MyFont.fnt"));
 
-        textButtonStyle.fontColor = Color.WHITE;
-        textButtonStyle.downFontColor = Color.GRAY;
-        textButtonStyle.overFontColor = Color.RED;
+        playButtonStyle.up = new TextureRegionDrawable(new TextureRegion(new Texture("ui/Transparent.png")));
+        playButtonStyle.down = playButtonStyle.up;
+        playButtonStyle.over = playButtonStyle.up;
 
-        // Initialisation des boutons
-        TextButton playButton = new TextButton("Play", textButtonStyle);
-        TextButton optionsButton = new TextButton("Options", textButtonStyle);
-        TextButton quitButton = new TextButton("Quit", textButtonStyle);
+        optionsButtonStyle.up = new TextureRegionDrawable(new TextureRegion(new Texture("ui/Transparent.png")));
+        optionsButtonStyle.down = optionsButtonStyle.up;
+        optionsButtonStyle.over = optionsButtonStyle.up;
 
-        // Actions des boutons
+        quitButtonStyle.up = new TextureRegionDrawable(new TextureRegion(new Texture("ui/Transparent.png")));
+        quitButtonStyle.down = quitButtonStyle.up;
+        quitButtonStyle.over = quitButtonStyle.up;
+
+        playButtonStyle.fontColor = Color.WHITE;
+        playButtonStyle.downFontColor = Color.GRAY;
+        playButtonStyle.overFontColor = Color.RED;
+
+        optionsButtonStyle.fontColor = Color.WHITE;
+        optionsButtonStyle.downFontColor = Color.GRAY;
+        optionsButtonStyle.overFontColor = Color.RED;
+
+        quitButtonStyle.fontColor = Color.WHITE;
+        quitButtonStyle.downFontColor = Color.GRAY;
+        quitButtonStyle.overFontColor = Color.RED;
+
+        TextButton playButton = new TextButton("Play", playButtonStyle);
+        TextButton optionsButton = new TextButton("Options", optionsButtonStyle);
+        TextButton quitButton = new TextButton("Quit", quitButtonStyle);
+
+        addHoverEffect(playButton);
+        addHoverEffect(optionsButton);
+        addHoverEffect(quitButton);
+
         playButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("MainMenuScreen", "Play button clicked, starting game...");
-                game.startGame(); // Lance le jeu
+                game.startGame();
+            }
+        });
+
+        optionsButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.log("MainMenuScreen", "Options button clicked, opening options menu...");
             }
         });
 
@@ -75,14 +104,35 @@ public class MainMenuScreen implements Screen {
         Table table = new Table();
         table.setFillParent(true);
 
-        table.add(playButton).fillX().uniformX().pad(20).minHeight(100).minWidth(300);
-        table.row().pad(10, 0, 10, 0);
-        table.add(optionsButton).fillX().uniformX().pad(20).minHeight(100).minWidth(300);
+        table.add(playButton).fillX().uniformX().pad(15).minHeight(50);
+        table.row().pad(5, 0, 10, 0);
+        table.add(optionsButton).fillX().uniformX().pad(15).minHeight(50);
         table.row();
-        table.add(quitButton).fillX().uniformX().pad(20).minHeight(100).minWidth(300);
+        table.add(quitButton).fillX().uniformX().pad(15).minHeight(50);
 
         stage.addActor(table);
         Gdx.input.setInputProcessor(stage);
+
+        table.debugAll();
+
+    }
+
+    private void addHoverEffect(final TextButton button) {
+        button.addListener(new InputListener() {
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                // Agrandir la police au survol
+                button.getLabel().getStyle().font.getData().setScale(1.2f);
+                button.getLabel().invalidateHierarchy();
+            }
+
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                // Réinitialiser la taille de la police
+                button.getLabel().getStyle().font.getData().setScale(1.0f);
+                button.getLabel().invalidateHierarchy();
+            }
+        });
     }
 
     @Override
@@ -94,7 +144,6 @@ public class MainMenuScreen implements Screen {
     @Override
     public void render(float delta) {
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
-
 
         batch.begin();
         batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
