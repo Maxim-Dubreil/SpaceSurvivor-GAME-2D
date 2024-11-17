@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import io.github.spaceSurvivor.Main;
@@ -69,12 +70,14 @@ public class PauseScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        Gdx.app.log("PauseScreen", "Affichage de l'écran Pause");
         stage.act(delta);
         stage.draw();
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             gameScreen.setPaused(false);
             game.setScreen(gameScreen);
+
         }
     }
 
