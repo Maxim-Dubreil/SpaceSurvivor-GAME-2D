@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameScreen implements Screen {
-    private final Main game; // Correction : ajout de Main ici
+    private final Main game;
     private final SpriteBatch batch;
     private final Player player;
     private final Map map;
@@ -57,15 +57,12 @@ public class GameScreen implements Screen {
         this.skin = new Skin(Gdx.files.internal("uiskin.json"));
 
         ImageButtonStyle style = new ImageButtonStyle();
-
         Texture pauseTextureNormal = new Texture(Gdx.files.internal("ui/pauseButton.png"));
         Texture pauseTextureDown = new Texture(Gdx.files.internal("ui/pauseButtonDown.png"));
-
         style.up = new TextureRegionDrawable(new TextureRegion(pauseTextureNormal));
         style.down = new TextureRegionDrawable(new TextureRegion(pauseTextureDown));
 
         ImageButton pauseButton = new ImageButton(style);
-
         pauseButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -197,8 +194,8 @@ public class GameScreen implements Screen {
         Entity.entities.clear();
         stage.dispose();
         skin.dispose();
-        batch.dispose(); // Dispose of batch
-        map.dispose(); // Dispose of map
+        batch.dispose();
+        map.dispose();
     }
 }
 
