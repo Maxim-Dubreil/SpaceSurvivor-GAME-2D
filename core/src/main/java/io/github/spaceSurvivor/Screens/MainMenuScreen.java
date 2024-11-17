@@ -35,7 +35,7 @@ public class MainMenuScreen implements Screen {
         this.game = game;
         stage = new Stage(new ScreenViewport());
         backgroundTexture = new Texture("background.png");
-        font = new BitmapFont();
+        font = new BitmapFont(Gdx.files.internal("fonts/MyFont.fnt"));
         batch = new SpriteBatch();
 
         TextButton.TextButtonStyle playButtonStyle = new TextButton.TextButtonStyle();
@@ -59,17 +59,21 @@ public class MainMenuScreen implements Screen {
         quitButtonStyle.down = quitButtonStyle.up;
         quitButtonStyle.over = quitButtonStyle.up;
 
+        Color hoverColor = new Color(82/255f, 113/255f, 255/255f, 1);
+        Color clickedColor = new Color(122/255f, 151/255f, 255/255f, 1);
+
+
         playButtonStyle.fontColor = Color.WHITE;
-        playButtonStyle.downFontColor = Color.GRAY;
-        playButtonStyle.overFontColor = Color.RED;
+        playButtonStyle.downFontColor = clickedColor;
+        playButtonStyle.overFontColor = hoverColor;
 
         optionsButtonStyle.fontColor = Color.WHITE;
-        optionsButtonStyle.downFontColor = Color.GRAY;
-        optionsButtonStyle.overFontColor = Color.RED;
+        optionsButtonStyle.downFontColor = clickedColor;
+        optionsButtonStyle.overFontColor = hoverColor;
 
         quitButtonStyle.fontColor = Color.WHITE;
-        quitButtonStyle.downFontColor = Color.GRAY;
-        quitButtonStyle.overFontColor = Color.RED;
+        quitButtonStyle.downFontColor = clickedColor;
+        quitButtonStyle.overFontColor = hoverColor;
 
         TextButton playButton = new TextButton("Play", playButtonStyle);
         TextButton optionsButton = new TextButton("Options", optionsButtonStyle);
@@ -113,7 +117,6 @@ public class MainMenuScreen implements Screen {
         stage.addActor(table);
         Gdx.input.setInputProcessor(stage);
 
-        table.debugAll();
 
     }
 
@@ -121,14 +124,12 @@ public class MainMenuScreen implements Screen {
         button.addListener(new InputListener() {
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                // Agrandir la police au survol
                 button.getLabel().getStyle().font.getData().setScale(1.2f);
                 button.getLabel().invalidateHierarchy();
             }
 
             @Override
             public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-                // Réinitialiser la taille de la police
                 button.getLabel().getStyle().font.getData().setScale(1.0f);
                 button.getLabel().invalidateHierarchy();
             }
@@ -151,12 +152,6 @@ public class MainMenuScreen implements Screen {
 
         stage.act(delta);
         stage.draw();
-
-        batch.begin();
-        font.getData().setScale(3f);
-        font.draw(batch, "Space Survivor", Gdx.graphics.getWidth() / 2 - 150, Gdx.graphics.getHeight() - 50);
-        batch.end();
-
     }
 
     @Override
