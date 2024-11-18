@@ -21,7 +21,5 @@ public class Pewpew extends Weapon {
 
     }
 
-    public void stopShooting() {
-        Timer.instance().clear();
-    }
+
 }
