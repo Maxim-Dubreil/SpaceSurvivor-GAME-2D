@@ -55,24 +55,35 @@ public class CollisionManager {
 
     public boolean handleEntityMapCollision(Movable entity, Map map){
 
-        TiledMapTileLayer temple = (TiledMapTileLayer) map.getMap().getLayers().get("Temple");
+        TiledMapTileLayer lab = (TiledMapTileLayer) map.getMap().getLayers().get("Lab");
+        TiledMapTileLayer rocks = (TiledMapTileLayer) map.getMap().getLayers().get("Rocks");
+        TiledMapTileLayer borders = (TiledMapTileLayer) map.getMap().getLayers().get("Borders");
         float x = entity.getPosX();
         float y = entity.getPosY();
 
         int tileX = (int) x;
         int tileY = (int) y;
 
-        TiledMapTileLayer.Cell cell = temple.getCell(tileX, tileY);
-        if (cell != null){
-            int tileId = cell.getTile().getId();
-            if(tileId != 0){
-                return true;
-            }
+        TiledMapTileLayer.Cell labCell = lab.getCell(tileX, tileY);
+        TiledMapTileLayer.Cell rocksCell = rocks.getCell(tileX, tileY);
+        TiledMapTileLayer.Cell bordersCell = borders.getCell(tileX, tileY);
+
+
+
+        if (labCell != null && labCell.getTile() != null && labCell.getTile().getId() != 0) {
+            return true;
+        }
+        if (rocksCell != null && rocksCell.getTile() != null && rocksCell.getTile().getId() != 0) {
+            return true;
+        }
+        if (bordersCell != null && bordersCell.getTile() != null && bordersCell.getTile().getId() != 0) {
+            return true;
         }
 
 
 
         return false;
+
 
     }
 

@@ -11,8 +11,8 @@ public class Map {
     private OrthographicCamera camera;
 
     private static final int TILE_SIZE = 32;
-    private static final int MAP_WIDTH = 100;
-    private static final int MAP_HEIGHT = 100;
+    private static final int MAP_WIDTH = 60;
+    private static final int MAP_HEIGHT = 60;
 
     private static final float UNIT_SCALE = 1f / TILE_SIZE;
 
