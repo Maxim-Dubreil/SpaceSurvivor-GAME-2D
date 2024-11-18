@@ -51,7 +51,7 @@ public class GameScreen implements Screen {
         this.player = new Player();
         spawnMonstersInArc(20, 20, 500, 500, 680, 0, 180);
 
-        this.map = new Map("Map/SpaceSurvivorMapTemple.tmx");
+        this.map = new Map("Map/SpaceSurvivorNewMap.tmx");
         this.map.initCamera();
         this.stage = new Stage();
         this.skin = new Skin(Gdx.files.internal("uiskin.json"));

@@ -20,7 +20,7 @@ public class Player extends Movable {
     private float hp = 100;
 
     public Player() {
-        super(new Texture("Player/player1.png"), 100, 100, 50, 50, 150);
+        super(new Texture("Player/player1.png"), 600, 600, 50, 50, 150);
         Player.weapons.add(new Pewpew(this));
     }
 
