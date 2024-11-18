@@ -8,8 +8,6 @@ import io.github.spaceSurvivor.monsters.Monster;
 import io.github.spaceSurvivor.projectiles.Projectile;
 import io.github.spaceSurvivor.Map;
 
-import java.util.List;
-
 public class CollisionManager {
 
     public CollisionManager() {
@@ -53,7 +51,7 @@ public class CollisionManager {
         System.out.println("Projectile a touché le Monster!");
     }
 
-    public boolean handleEntityMapCollision(Movable entity, Map map){
+    public boolean handleEntityMapCollision(Movable entity, Map map) {
 
         TiledMapTileLayer lab = (TiledMapTileLayer) map.getMap().getLayers().get("Lab");
         TiledMapTileLayer rocks = (TiledMapTileLayer) map.getMap().getLayers().get("Rocks");
@@ -68,8 +66,6 @@ public class CollisionManager {
         TiledMapTileLayer.Cell rocksCell = rocks.getCell(tileX, tileY);
         TiledMapTileLayer.Cell bordersCell = borders.getCell(tileX, tileY);
 
-
-
         if (labCell != null && labCell.getTile() != null && labCell.getTile().getId() != 0) {
             return true;
         }
@@ -80,13 +76,9 @@ public class CollisionManager {
             return true;
         }
 
-
-
         return false;
 
-
     }
-
 
     public void handleCollision(Entity entityA, Entity entityB) {
         if ((entityA instanceof Player && entityB instanceof Monster) ||

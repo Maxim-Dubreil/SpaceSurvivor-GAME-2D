@@ -1,7 +1,6 @@
 package io.github.spaceSurvivor.Screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -9,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -78,7 +76,7 @@ public class GameScreen implements Screen {
 
         Gdx.input.setInputProcessor(stage);
         stage.addActor(table);
-        //table.setDebug(true);
+        // table.setDebug(true);
     }
 
     public void setPaused(boolean isPaused) {
@@ -110,12 +108,19 @@ public class GameScreen implements Screen {
 
         batch.setProjectionMatrix(map.getCamera().combined);
         batch.begin();
-        for (Entity entity : Entity.entities) {
-            entity.renderEntity(batch);
+        for (Entity entity : entitiesCopy) {
+            if (entity instanceof Player) {
+                Player player = (Player) entity;
+                batch.draw(player.getCurrentFrame(), player.getPosX(), player.getPosY(), player.getSizeX(),
+                        player.getSizeY());
+            } else {
+                entity.renderEntity(batch);
+            }
         }
         batch.end();
 
         checkAllCollisions();
+
         stage.act(delta);
         stage.draw();
     }
@@ -150,7 +155,7 @@ public class GameScreen implements Screen {
     }
 
     public void spawnMonstersInArc(int numTrouilles, int numXelas, float centerX, float centerY, float radius,
-                                   float startAngle, float endAngle) {
+            float startAngle, float endAngle) {
         float angleStepTrouille = (endAngle - startAngle) / (numTrouilles - 1); // Angle entre chaque Trouille
         float angleStepXela = (endAngle - startAngle) / (numXelas - 1); // Angle entre chaque Xela
         for (int i = 0; i < numTrouilles; i++) {
@@ -178,7 +183,8 @@ public class GameScreen implements Screen {
     }
 
     @Override
-    public void resume() {}
+    public void resume() {
+    }
 
     @Override
     public void hide() {
@@ -211,4 +217,3 @@ public class GameScreen implements Screen {
         System.out.println(Weapon.weapons.size());
     }
 }
-

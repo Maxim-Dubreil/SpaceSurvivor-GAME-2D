@@ -1,7 +1,5 @@
 package io.github.spaceSurvivor.weapons;
 
-import com.badlogic.gdx.utils.Timer;
-
 import io.github.spaceSurvivor.Player;
 import io.github.spaceSurvivor.projectiles.PewpewProjectile;
 
@@ -20,6 +18,5 @@ public class Pewpew extends Weapon {
                 player.getDirection(), this);
 
     }
-
 
 }

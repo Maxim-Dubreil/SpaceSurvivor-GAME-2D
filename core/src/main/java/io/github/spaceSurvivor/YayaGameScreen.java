@@ -13,7 +13,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-public class GameScreen implements Screen {
+public class YayaGameScreen implements Screen {
 
     private final SpriteBatch batch;
     private Player player;
@@ -22,7 +22,7 @@ public class GameScreen implements Screen {
     private List<Trouille> trouilles = new ArrayList<>();
     private List<Xela> xelas = new ArrayList<>();
 
-    public GameScreen(SpriteBatch batch) {
+    public YayaGameScreen(SpriteBatch batch) {
         this.batch = batch;
         collisionManager = new CollisionManager();
         player = new Player();
@@ -76,7 +76,6 @@ public class GameScreen implements Screen {
         }
 
         batch.setProjectionMatrix(map.getCamera().combined);
-
         batch.begin();
         for (Entity entity : Entity.entities) {
             if (entity instanceof Player) {

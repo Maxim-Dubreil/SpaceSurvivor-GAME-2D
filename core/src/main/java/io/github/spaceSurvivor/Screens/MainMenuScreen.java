@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -59,9 +58,8 @@ public class MainMenuScreen implements Screen {
         quitButtonStyle.down = quitButtonStyle.up;
         quitButtonStyle.over = quitButtonStyle.up;
 
-        Color hoverColor = new Color(82/255f, 113/255f, 255/255f, 1);
-        Color clickedColor = new Color(122/255f, 151/255f, 255/255f, 1);
-
+        Color hoverColor = new Color(82 / 255f, 113 / 255f, 255 / 255f, 1);
+        Color clickedColor = new Color(122 / 255f, 151 / 255f, 255 / 255f, 1);
 
         playButtonStyle.fontColor = Color.WHITE;
         playButtonStyle.downFontColor = clickedColor;
@@ -116,7 +114,6 @@ public class MainMenuScreen implements Screen {
 
         stage.addActor(table);
         Gdx.input.setInputProcessor(stage);
-
 
     }
 

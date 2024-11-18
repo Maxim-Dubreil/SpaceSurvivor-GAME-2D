@@ -29,7 +29,7 @@ public class Player extends Movable {
     private float stateTime = 0f;
 
     public Player() {
-        super(new Texture("Player/SpaceMarineSprites.png"), 200, 200, 85, 85, 150);
+        super(new Texture("Player/SpaceMarineSprites.png"), 600, 600, 85, 85, 150);
         loadAnimations(new Texture("Player/SpaceMarineSprites.png"));
         Player.weapons.add(new Pewpew(this));
     }

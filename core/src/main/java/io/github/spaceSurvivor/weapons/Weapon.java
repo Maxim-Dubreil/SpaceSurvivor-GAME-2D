@@ -16,7 +16,7 @@ public abstract class Weapon {
     private int range;
     private boolean isPhantom;
     private float rate;
-    private boolean isShooting;
+    // private boolean isShooting;
 
     public static List<Weapon> weapons = new ArrayList<Weapon>();
 
@@ -52,6 +52,7 @@ public abstract class Weapon {
     public void destroy() {
         this.destroy();
     }
+
     public void stopShooting() {
         Timer.instance().clear();
     }
