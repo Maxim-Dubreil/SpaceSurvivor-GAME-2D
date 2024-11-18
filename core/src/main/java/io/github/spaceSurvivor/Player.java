@@ -5,12 +5,14 @@ import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 
+import io.github.spaceSurvivor.weapons.AutoNoob;
 import io.github.spaceSurvivor.weapons.Pewpew;
 import io.github.spaceSurvivor.weapons.Weapon;
 import io.github.spaceSurvivor.managers.CollisionManager;
@@ -28,10 +30,11 @@ public class Player extends Movable {
     private TextureRegion currentFrame;
     private float stateTime = 0f;
 
-    public Player() {
+    public Player(OrthographicCamera camera) {
         super(new Texture("Player/SpaceMarineSprites.png"), 600, 600, 85, 85, 150);
         loadAnimations(new Texture("Player/SpaceMarineSprites.png"));
-        Player.weapons.add(new Pewpew(this));
+        Player.weapons.add(new Pewpew(this, camera));
+        Player.weapons.add(new AutoNoob(this));
     }
 
     private void loadAnimations(Texture spriteSheet) {
@@ -68,19 +71,19 @@ public class Player extends Movable {
         float deltaX = 0;
         float deltaY = 0;
 
-        if (Gdx.input.isKeyPressed(Keys.LEFT)) {
+        if (Gdx.input.isKeyPressed(Keys.A)) {
             deltaX -= this.getSpeed() * deltaTime;
             moved = true;
         }
-        if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
+        if (Gdx.input.isKeyPressed(Keys.D)) {
             deltaX += this.getSpeed() * deltaTime;
             moved = true;
         }
-        if (Gdx.input.isKeyPressed(Keys.UP)) {
+        if (Gdx.input.isKeyPressed(Keys.W)) {
             deltaY += this.getSpeed() * deltaTime;
             moved = true;
         }
-        if (Gdx.input.isKeyPressed(Keys.DOWN)) {
+        if (Gdx.input.isKeyPressed(Keys.S)) {
             deltaY -= this.getSpeed() * deltaTime;
             moved = true;
         }

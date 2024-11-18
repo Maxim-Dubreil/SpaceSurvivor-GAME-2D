@@ -1,22 +1,22 @@
+// Pewpew.java
+
 package io.github.spaceSurvivor.weapons;
 
 import io.github.spaceSurvivor.Player;
 import io.github.spaceSurvivor.projectiles.PewpewProjectile;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 
 public class Pewpew extends Weapon {
-    private Player player;
 
-    public Pewpew(Player player) {
+    private OrthographicCamera camera;
+
+    public Pewpew(Player player, OrthographicCamera camera) {
         super(player, 80, 80, false, 0.5f);
-        this.player = player;
-
+        this.camera = camera;
     }
 
     @Override
     public void shotProjectile(Player player) {
-        PewpewProjectile projectile = new PewpewProjectile((player.getPosX() + 1.6f), (player.getPosY() + 1f),
-                player.getDirection(), this);
-
+        new PewpewProjectile((player.getPosX() + 1.6f), (player.getPosY() + 1f), this, this.camera);
     }
-
 }

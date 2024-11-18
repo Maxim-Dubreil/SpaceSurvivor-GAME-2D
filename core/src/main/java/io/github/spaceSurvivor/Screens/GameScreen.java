@@ -47,13 +47,13 @@ public class GameScreen implements Screen {
         this.game = game;
         this.batch = batch;
         this.collisionManager = new CollisionManager();
-        this.player = new Player();
         spawnMonstersInArc(20, 20, 500, 500, 680, 0, 180);
 
         this.map = new Map("Map/SpaceSurvivorNewMap.tmx");
         this.map.initCamera();
         this.stage = new Stage();
         this.skin = new Skin(Gdx.files.internal("uiskin.json"));
+        this.player = new Player(this.map.getCamera());
 
         ImageButtonStyle style = new ImageButtonStyle();
         Texture pauseTextureNormal = new Texture(Gdx.files.internal("ui/pauseButton.png"));

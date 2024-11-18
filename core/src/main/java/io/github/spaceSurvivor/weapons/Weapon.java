@@ -16,7 +16,6 @@ public abstract class Weapon {
     private int range;
     private boolean isPhantom;
     private float rate;
-    // private boolean isShooting;
 
     public static List<Weapon> weapons = new ArrayList<Weapon>();
 
