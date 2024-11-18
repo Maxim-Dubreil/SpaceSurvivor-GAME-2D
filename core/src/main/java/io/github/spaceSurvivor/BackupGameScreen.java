@@ -13,7 +13,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-public class YayaGameScreen implements Screen {
+public class BackupGameScreen implements Screen {
 
     private final SpriteBatch batch;
     private Player player;
@@ -22,7 +22,7 @@ public class YayaGameScreen implements Screen {
     private List<Trouille> trouilles = new ArrayList<>();
     private List<Xela> xelas = new ArrayList<>();
 
-    public YayaGameScreen(SpriteBatch batch) {
+    public BackupGameScreen(SpriteBatch batch) {
         this.batch = batch;
         collisionManager = new CollisionManager();
         player = new Player();
