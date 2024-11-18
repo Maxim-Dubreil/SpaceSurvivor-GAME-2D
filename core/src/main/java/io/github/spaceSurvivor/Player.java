@@ -7,6 +7,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
 
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Array;
+
 import io.github.spaceSurvivor.weapons.Pewpew;
 import io.github.spaceSurvivor.weapons.Weapon;
 import io.github.spaceSurvivor.managers.CollisionManager;
@@ -19,9 +23,38 @@ public class Player extends Movable {
     private float lastDirectionY = 1;
     private float hp = 100;
 
+    private Animation<TextureRegion> walkRightAnimation;
+    private Animation<TextureRegion> walkLeftAnimation;
+    private TextureRegion currentFrame;
+    private float stateTime = 0f;
+
     public Player() {
-        super(new Texture("Player/player1.png"), 100, 100, 50, 50, 150);
+        super(new Texture("Player/SpaceMarineSprites.png"), 200, 200, 85, 85, 150);
+        loadAnimations(new Texture("Player/SpaceMarineSprites.png"));
         Player.weapons.add(new Pewpew(this));
+    }
+
+    private void loadAnimations(Texture spriteSheet) {
+        int frameWidth = 128;
+        int frameHeight = 128;
+
+        TextureRegion[][] frames = TextureRegion.split(spriteSheet, frameWidth, frameHeight);
+
+        Array<TextureRegion> walkRightFrames = new Array<>();
+        Array<TextureRegion> walkLeftFrames = new Array<>();
+
+        for (int i = 0; i < 4; i++) {
+            walkRightFrames.add(frames[1][i]);
+        }
+
+        for (int i = 0; i < 4; i++) {
+            walkLeftFrames.add(frames[3][i]);
+        }
+
+        walkRightAnimation = new Animation<>(0.1f, walkRightFrames);
+        walkLeftAnimation = new Animation<>(0.1f, walkLeftFrames);
+
+        currentFrame = walkRightAnimation.getKeyFrame(0);
     }
 
     public void move(CollisionManager collisionManager, Map map) {
@@ -30,56 +63,72 @@ public class Player extends Movable {
         float oldX = this.getPosX();
         float oldY = this.getPosY();
 
+        stateTime += deltaTime;
+
+        float deltaX = 0;
+        float deltaY = 0;
+
         if (Gdx.input.isKeyPressed(Keys.LEFT)) {
-            this.setPosX(this.getPosX() - this.getSpeed() * deltaTime);
-            lastDirectionX = -1;
-            lastDirectionY = 0;
+            deltaX -= this.getSpeed() * deltaTime;
             moved = true;
         }
         if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
-            this.setPosX(this.getPosX() + this.getSpeed() * deltaTime);
-            lastDirectionX = 1;
-            lastDirectionY = 0;
+            deltaX += this.getSpeed() * deltaTime;
             moved = true;
         }
         if (Gdx.input.isKeyPressed(Keys.UP)) {
-            this.setPosY(this.getPosY() + this.getSpeed() * deltaTime);
-            lastDirectionX = 0;
-            lastDirectionY = 1;
+            deltaY += this.getSpeed() * deltaTime;
             moved = true;
         }
         if (Gdx.input.isKeyPressed(Keys.DOWN)) {
-            this.setPosY(this.getPosY() - this.getSpeed() * deltaTime);
-            lastDirectionX = 0;
-            lastDirectionY = -1;
+            deltaY -= this.getSpeed() * deltaTime;
             moved = true;
+        }
+
+        if (moved) {
+            this.setPosX(this.getPosX() + deltaX);
+            this.setPosY(this.getPosY() + deltaY);
+
+            float length = (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+            if (length != 0) {
+                lastDirectionX = deltaX / length;
+                lastDirectionY = deltaY / length;
+            }
+
+            if (deltaX < 0) {
+                currentFrame = walkLeftAnimation.getKeyFrame(stateTime, true);
+            } else if (deltaX > 0) {
+                currentFrame = walkRightAnimation.getKeyFrame(stateTime, true);
+            } else {
+                if (lastDirectionX < 0) {
+                    currentFrame = walkLeftAnimation.getKeyFrame(stateTime, true);
+                } else {
+                    currentFrame = walkRightAnimation.getKeyFrame(stateTime, true);
+                }
+            }
+        } else {
+            stateTime = 0;
+            if (lastDirectionX < 0) {
+                currentFrame = walkLeftAnimation.getKeyFrame(0);
+            } else {
+                currentFrame = walkRightAnimation.getKeyFrame(0);
+            }
         }
 
         if (moved) {
             if (collisionManager.handleEntityMapCollision(this, map)) {
                 this.setPosX(oldX);
                 this.setPosY(oldY);
-            }else {
-                float length = (float) Math.sqrt(lastDirectionX * lastDirectionX + lastDirectionY * lastDirectionY);
-                if (length != 0) {
-                    lastDirectionX /= length;
-                    lastDirectionY /= length;
             }
-
-            }
-        }
-    }
-
-    public void isDead() {
-        if (this.hp <= 0) {
-            entities.remove(this);
-            this.dispose();
-            this.isDead = true;
         }
     }
 
     public float[] getDirection() {
         return new float[] { lastDirectionX, lastDirectionY };
+    }
+
+    public TextureRegion getCurrentFrame() {
+        return currentFrame;
     }
 
     public void takeDamage(float damage) {
@@ -93,5 +142,13 @@ public class Player extends Movable {
 
     public float getHp() {
         return this.hp;
+    }
+
+    public void isDead() {
+        if (this.hp <= 0) {
+            entities.remove(this);
+            this.dispose();
+            this.isDead = true;
+        }
     }
 }

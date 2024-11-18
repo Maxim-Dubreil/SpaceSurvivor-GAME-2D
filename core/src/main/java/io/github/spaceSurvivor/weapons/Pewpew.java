@@ -16,8 +16,9 @@ public class Pewpew extends Weapon {
 
     @Override
     public void shotProjectile(Player player) {
-        PewpewProjectile projectile = new PewpewProjectile(player.getPosX(), player.getPosY(),
+        PewpewProjectile projectile = new PewpewProjectile((player.getPosX() + 1.6f), (player.getPosY() + 1f),
                 player.getDirection(), this);
+
     }
 
     public void stopShooting() {

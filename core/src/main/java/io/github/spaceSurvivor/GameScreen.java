@@ -64,11 +64,11 @@ public class GameScreen implements Screen {
         map.render();
         map.UpdateCamera(player.getPosX(), player.getPosY());
 
-        player.move(collisionManager,map);
+        player.move(collisionManager, map);
 
         for (Entity entity : entitiesCopy) {
             if (entity instanceof Monster) {
-                ((Monster) entity).move(player,collisionManager,map);
+                ((Monster) entity).move(player, collisionManager, map);
             }
             if (entity instanceof Projectile) {
                 ((Projectile) entity).move(collisionManager, map);
@@ -79,7 +79,13 @@ public class GameScreen implements Screen {
 
         batch.begin();
         for (Entity entity : Entity.entities) {
-            entity.renderEntity(batch);
+            if (entity instanceof Player) {
+                Player player = (Player) entity;
+                batch.draw(player.getCurrentFrame(), player.getPosX(), player.getPosY(), player.getSizeX(),
+                        player.getSizeY());
+            } else {
+                entity.renderEntity(batch);
+            }
         }
         batch.end();
 
