@@ -43,6 +43,7 @@ public abstract class Entity {
 
     public void dispose() {
         this.texture.dispose();
+        entities.remove(this);
     }
 
     // ====================== SETTERS ======================
