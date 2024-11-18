@@ -25,8 +25,9 @@ public abstract class Projectile extends Movable {
         this.directionX = direction[0];
         this.directionY = direction[1];
         this.weapon = weapon;
+        System.out.println("Entities == " + Entity.entities);
     }
-
+    //vérifier les projectiles réduire le nombre
     public void move(CollisionManager collisionManager, Map map) {
         float deltaTime = Gdx.graphics.getDeltaTime();
         this.setPosX(this.getPosX() + this.directionX * this.getSpeed() * deltaTime);

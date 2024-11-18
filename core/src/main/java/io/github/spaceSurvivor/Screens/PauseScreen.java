@@ -118,11 +118,10 @@ public class PauseScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.app.log("PauseScreen", "Affichage de l'écran Pause");
         stage.act(delta);
         stage.draw();
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) && game.getScreen() == this) {
             resume();
         }
     }
@@ -137,11 +136,15 @@ public class PauseScreen implements Screen {
 
     @Override
     public void resume() {
-        gameScreen.setPaused(false);
-        game.setScreen(gameScreen);
+        if (game.getScreen() != gameScreen) {
+            gameScreen.setPaused(false);
+            game.setScreen(gameScreen);
+        }
     }
 
     public void returnToMainMenu() {
+        gameScreen.resetGame();
+
         gameScreen.setPaused(false);
         game.MainMenuScreen();
     }

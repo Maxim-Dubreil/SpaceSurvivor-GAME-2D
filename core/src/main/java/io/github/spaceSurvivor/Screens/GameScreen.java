@@ -25,6 +25,7 @@ import io.github.spaceSurvivor.monsters.Trouille;
 import io.github.spaceSurvivor.monsters.Xela;
 import io.github.spaceSurvivor.projectiles.Projectile;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
+import io.github.spaceSurvivor.weapons.Weapon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,10 +88,6 @@ public class GameScreen implements Screen {
     @Override
     public void render(float delta) {
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            pause();
-            return;
-        }
         if (isPaused) {
             stage.act(delta);
             stage.draw();
@@ -145,9 +142,11 @@ public class GameScreen implements Screen {
 
     @Override
     public void pause() {
-        setPaused(true);
-        Gdx.input.setInputProcessor(null);
-        game.setScreen(new PauseScreen(game, this));
+        if (!isPaused) {
+            setPaused(true);
+            Gdx.input.setInputProcessor(null);
+            game.setScreen(new PauseScreen(game, this));
+        }
     }
 
     public void spawnMonstersInArc(int numTrouilles, int numXelas, float centerX, float centerY, float radius,
@@ -196,6 +195,20 @@ public class GameScreen implements Screen {
         skin.dispose();
         batch.dispose();
         map.dispose();
+    }
+
+    public void resetGame() {
+        System.out.println(Entity.entities.size());
+        // Réinitialiser les autres entités
+        for (Entity entity : Entity.entities) {
+            entity.dispose();
+        }
+        for (Weapon weapon : Weapon.weapons) {
+            weapon.stopShooting();
+        }
+        Entity.entities.clear();
+        System.out.println(Entity.entities.size());
+        System.out.println(Weapon.weapons.size());
     }
 }
 

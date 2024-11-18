@@ -20,7 +20,5 @@ public class Pewpew extends Weapon {
                 player.getDirection(), this);
     }
 
-    public void stopShooting() {
-        Timer.instance().clear();
-    }
+
 }

@@ -7,18 +7,25 @@ import com.badlogic.gdx.utils.Timer.Task;
 
 import io.github.spaceSurvivor.Player;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class Weapon {
 
     private int damages;
     private int range;
     private boolean isPhantom;
     private float rate;
+    private boolean isShooting;
+
+    public static List<Weapon> weapons = new ArrayList<Weapon>();
 
     public Weapon(Player player, int damages, int range, boolean isPhantom, float rate) {
         this.damages = damages;
         this.range = range;
         this.isPhantom = isPhantom;
         this.rate = rate;
+        weapons.add(this);
         startShooting(player);
     }
 
@@ -41,6 +48,13 @@ public abstract class Weapon {
     }
 
     public abstract void shotProjectile(Player player);
+
+    public void destroy() {
+        this.destroy();
+    }
+    public void stopShooting() {
+        Timer.instance().clear();
+    }
 
     public void startShooting(Player player) {
         Timer.schedule(new Task() {

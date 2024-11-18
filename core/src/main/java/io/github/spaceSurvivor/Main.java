@@ -14,16 +14,9 @@ public class Main extends Game {
         this.setScreen(new MainMenuScreen(this));
     }
 
-
     public void startGame() {
-        resetGame();
-
         GameScreen gameScreen = new GameScreen(this, batch);
         this.setScreen(gameScreen);
-    }
-
-    private void resetGame() {
-        Entity.entities.clear();// Vider toutes les entités existantes
     }
 
     @Override
