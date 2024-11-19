@@ -5,15 +5,13 @@ import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 
-import io.github.spaceSurvivor.weapons.AutoNoob;
-import io.github.spaceSurvivor.weapons.Pewpew;
+import io.github.spaceSurvivor.weapons.StoneThrown;
 import io.github.spaceSurvivor.weapons.Weapon;
 import io.github.spaceSurvivor.managers.CollisionManager;
 
@@ -24,17 +22,20 @@ public class Player extends Movable {
     private float lastDirectionX = 0;
     private float lastDirectionY = 1;
     private float hp = 100;
+    public static float posX = 600 * Map.getUnitScale();
+    public static float posY = 600 * Map.getUnitScale();
 
     private Animation<TextureRegion> walkRightAnimation;
     private Animation<TextureRegion> walkLeftAnimation;
     private TextureRegion currentFrame;
     private float stateTime = 0f;
 
-    public Player(OrthographicCamera camera) {
-        super(new Texture("Player/SpaceMarineSprites.png"), 600, 600, 85, 85, 150);
+    public Player() {
+        super(new Texture("Player/SpaceMarineSprites.png"), posX, posY, 85, 85, 150);
         loadAnimations(new Texture("Player/SpaceMarineSprites.png"));
-        Player.weapons.add(new Pewpew(this, camera));
-        Player.weapons.add(new AutoNoob(this));
+        // Player.weapons.add(new Pewpew(this));
+        // Player.weapons.add(new AutoNoob(this));
+        Player.weapons.add(new StoneThrown(this));
     }
 
     private void loadAnimations(Texture spriteSheet) {
@@ -153,5 +154,23 @@ public class Player extends Movable {
             this.dispose();
             this.isDead = true;
         }
+    }
+
+    public void setPosX(float posX) {
+        Player.posX = posX;
+    }
+
+    public void setPosY(float posY) {
+        Player.posY = posY;
+    }
+
+    // ====================== GETTERS ======================
+
+    public float getPosX() {
+        return Player.posX;
+    }
+
+    public float getPosY() {
+        return Player.posY;
     }
 }

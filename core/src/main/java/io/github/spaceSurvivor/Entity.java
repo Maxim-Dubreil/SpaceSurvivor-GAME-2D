@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
+import io.github.spaceSurvivor.monsters.Monster;
+
 public abstract class Entity {
 
     public static List<Entity> entities = new ArrayList<>();
@@ -44,6 +46,10 @@ public abstract class Entity {
     public void dispose() {
         this.texture.dispose();
         entities.remove(this);
+    }
+
+    public boolean isEnemy() {
+        return this instanceof Monster;
     }
 
     // ====================== SETTERS ======================

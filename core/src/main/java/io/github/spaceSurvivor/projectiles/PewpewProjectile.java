@@ -13,8 +13,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 
 public class PewpewProjectile extends Projectile {
 
-    private OrthographicCamera camera;
-
     public PewpewProjectile(float posX, float posY, Weapon weapon, OrthographicCamera camera) {
         super(new Texture("Projectile/pewpewbullet.png"), posX * Map.getTileSize(), posY * Map.getTileSize(), 30, 30,
                 500, weapon, new float[] { 0, 0 });

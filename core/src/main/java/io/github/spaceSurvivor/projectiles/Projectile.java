@@ -23,7 +23,6 @@ public abstract class Projectile extends Movable {
         this.directionX = direction[0];
         this.directionY = direction[1];
         this.weapon = weapon;
-        System.out.println("Entities == " + Entity.entities);
     }
 
     public void move(CollisionManager collisionManager, Map map) {

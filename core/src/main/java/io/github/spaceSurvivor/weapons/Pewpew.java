@@ -2,6 +2,7 @@
 
 package io.github.spaceSurvivor.weapons;
 
+import io.github.spaceSurvivor.Map;
 import io.github.spaceSurvivor.Player;
 import io.github.spaceSurvivor.projectiles.PewpewProjectile;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -10,9 +11,9 @@ public class Pewpew extends Weapon {
 
     private OrthographicCamera camera;
 
-    public Pewpew(Player player, OrthographicCamera camera) {
+    public Pewpew(Player player) {
         super(player, 80, 80, false, 0.5f);
-        this.camera = camera;
+        this.camera = Map.camera;
     }
 
     @Override

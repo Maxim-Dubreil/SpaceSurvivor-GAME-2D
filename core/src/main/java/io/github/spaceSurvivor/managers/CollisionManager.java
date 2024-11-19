@@ -36,7 +36,6 @@ public class CollisionManager {
 
     private void handlePlayerMonsterCollision(Player player, Monster monster) {
         player.takeDamage(monster.getDamages());
-        System.out.println("Player collided with a Monster!");
 
     }
 
@@ -48,7 +47,6 @@ public class CollisionManager {
         monster.takeDamage(projectile.getDamage());
         Entity.entities.remove(projectile);
         projectile.dispose();
-        System.out.println("Projectile a touché le Monster!");
     }
 
     public boolean handleEntityMapCollision(Movable entity, Map map) {
