@@ -8,7 +8,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 public class Map {
     private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
-    private OrthographicCamera camera;
+    public static OrthographicCamera camera;
 
     private static final int TILE_SIZE = 32;
     private static final int MAP_WIDTH = 60;
@@ -78,7 +78,7 @@ public class Map {
     }
 
     public void setCamera(OrthographicCamera camera) {
-        this.camera = camera;
+        Map.camera = camera;
     }
 
     public TiledMap getMap() {

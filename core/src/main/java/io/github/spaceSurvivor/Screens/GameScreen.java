@@ -53,7 +53,7 @@ public class GameScreen implements Screen {
         this.map.initCamera();
         this.stage = new Stage();
         this.skin = new Skin(Gdx.files.internal("uiskin.json"));
-        this.player = new Player(this.map.getCamera());
+        this.player = new Player();
 
         ImageButtonStyle style = new ImageButtonStyle();
         Texture pauseTextureNormal = new Texture(Gdx.files.internal("ui/pauseButton.png"));
