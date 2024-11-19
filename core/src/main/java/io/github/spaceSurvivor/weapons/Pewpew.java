@@ -2,6 +2,7 @@
 
 package io.github.spaceSurvivor.weapons;
 
+import io.github.spaceSurvivor.Entity;
 import io.github.spaceSurvivor.Map;
 import io.github.spaceSurvivor.Player;
 import io.github.spaceSurvivor.projectiles.PewpewProjectile;
@@ -19,5 +20,6 @@ public class Pewpew extends Weapon {
     @Override
     public void shotProjectile(Player player) {
         new PewpewProjectile((player.getPosX() + 1.6f), (player.getPosY() + 1f), this, this.camera);
+
     }
 }

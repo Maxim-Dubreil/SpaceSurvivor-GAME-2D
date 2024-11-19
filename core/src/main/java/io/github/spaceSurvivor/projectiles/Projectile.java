@@ -36,6 +36,8 @@ public abstract class Projectile extends Movable {
         } else if (collisionManager.handleEntityMapCollision(this, map)) {
             Entity.entities.remove(this);
             this.dispose();
+            System.out.println(Entity.entities);
+
         }
     }
 

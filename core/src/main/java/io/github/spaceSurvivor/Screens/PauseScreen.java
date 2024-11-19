@@ -13,6 +13,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import io.github.spaceSurvivor.Main;
 import com.badlogic.gdx.graphics.Texture;
+import io.github.spaceSurvivor.Player;
+import io.github.spaceSurvivor.weapons.Weapon;
 
 
 public class PauseScreen implements Screen {
@@ -21,6 +23,7 @@ public class PauseScreen implements Screen {
     private final GameScreen gameScreen;
     private final Skin skin;
     private final BitmapFont font;
+    private final Player player;
 
     public PauseScreen(Main game, GameScreen gameScreen) {
         this.game = game;
@@ -28,7 +31,7 @@ public class PauseScreen implements Screen {
         this.stage = new Stage(new ScreenViewport());
         this.skin = new Skin(Gdx.files.internal("uiskin.json"));
         font = new BitmapFont(Gdx.files.internal("fonts/MyFont.fnt"));
-
+        player = gameScreen.getPlayer();
 
         Texture resumeTexture = new Texture(Gdx.files.internal("buttons/resume_up.png"));
         Texture resumeOverTexture = new Texture(Gdx.files.internal("buttons/resume_over.png"));
@@ -168,15 +171,18 @@ public class PauseScreen implements Screen {
     @Override
     public void resume() {
         if (game.getScreen() != gameScreen) {
+
             gameScreen.setPaused(false);
+            for (Weapon weapon : Weapon.weapons) {
+                weapon.startShooting(player);
+            }
             game.setScreen(gameScreen);
         }
     }
 
     public void returnToMainMenu() {
-        gameScreen.resetGame();
-
         gameScreen.setPaused(false);
+        gameScreen.resetGame();
         game.MainMenuScreen();
     }
 

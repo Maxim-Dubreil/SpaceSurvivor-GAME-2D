@@ -150,6 +150,9 @@ public class GameScreen implements Screen {
         if (!isPaused) {
             setPaused(true);
             Gdx.input.setInputProcessor(null);
+            for (Weapon weapon : Weapon.weapons) {
+                weapon.stopShooting();
+            }
             game.setScreen(new PauseScreen(game, this));
         }
     }
@@ -204,16 +207,14 @@ public class GameScreen implements Screen {
     }
 
     public void resetGame() {
-        System.out.println(Entity.entities.size());
         // Réinitialiser les autres entités
-        for (Entity entity : Entity.entities) {
-            entity.dispose();
-        }
         for (Weapon weapon : Weapon.weapons) {
             weapon.stopShooting();
         }
         Entity.entities.clear();
-        System.out.println(Entity.entities.size());
-        System.out.println(Weapon.weapons.size());
+    }
+
+    public Player getPlayer() {
+        return player;
     }
 }
