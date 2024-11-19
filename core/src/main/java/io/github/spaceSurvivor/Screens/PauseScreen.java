@@ -3,20 +3,16 @@ package io.github.spaceSurvivor.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import io.github.spaceSurvivor.Main;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.utils.Align;
 
 
 public class PauseScreen implements Screen {
@@ -24,28 +20,53 @@ public class PauseScreen implements Screen {
     private final Stage stage;
     private final GameScreen gameScreen;
     private final Skin skin;
+    private final BitmapFont font;
 
     public PauseScreen(Main game, GameScreen gameScreen) {
         this.game = game;
         this.gameScreen = gameScreen;
         this.stage = new Stage(new ScreenViewport());
         this.skin = new Skin(Gdx.files.internal("uiskin.json"));
+        font = new BitmapFont(Gdx.files.internal("fonts/MyFont.fnt"));
 
-        TextButton optionsButton = new TextButton("Settings", skin);
-        TextButton resumeButton = new TextButton("Resume", skin);
-        TextButton returnMenuButton = new TextButton("Return to menu", skin);
+
+        Texture resumeTexture = new Texture(Gdx.files.internal("buttons/resume_up.png"));
+        Texture resumeOverTexture = new Texture(Gdx.files.internal("buttons/resume_over.png"));
+        Texture resumePressedTexture = new Texture(Gdx.files.internal("buttons/resume_down.png"));
+
+        Texture menuTexture = new Texture(Gdx.files.internal("buttons/menu_up.png"));
+        Texture menuOverTexture = new Texture(Gdx.files.internal("buttons/menu_over.png"));
+        Texture menuPressedTexture = new Texture(Gdx.files.internal("buttons/menu_down.png"));
+
+        Texture quitTexture = new Texture(Gdx.files.internal("buttons/quit_up.png"));
+        Texture quitOverTexture = new Texture(Gdx.files.internal("buttons/quit_over.png"));
+        Texture quitPressedTexture = new Texture(Gdx.files.internal("buttons/quit_down.png"));
+
+        // Création des styles pour les ImageButton
+        ImageButton.ImageButtonStyle resumeButtonStyle = new ImageButton.ImageButtonStyle();
+        resumeButtonStyle.up = new TextureRegionDrawable(new TextureRegion(resumeTexture));
+        resumeButtonStyle.over = new TextureRegionDrawable(new TextureRegion(resumeOverTexture));
+        resumeButtonStyle.down = new TextureRegionDrawable(new TextureRegion(resumePressedTexture));
+
+        ImageButton.ImageButtonStyle menuButtonStyle = new ImageButton.ImageButtonStyle();
+        menuButtonStyle.up = new TextureRegionDrawable(new TextureRegion(menuTexture));
+        menuButtonStyle.over = new TextureRegionDrawable(new TextureRegion(menuOverTexture));
+        menuButtonStyle.down = new TextureRegionDrawable(new TextureRegion(menuPressedTexture));
+
+        ImageButton.ImageButtonStyle quitButtonStyle = new ImageButton.ImageButtonStyle();
+        quitButtonStyle.up = new TextureRegionDrawable(new TextureRegion(quitTexture));
+        quitButtonStyle.over = new TextureRegionDrawable(new TextureRegion(quitOverTexture));
+        quitButtonStyle.down = new TextureRegionDrawable(new TextureRegion(quitPressedTexture));
+
+        // Création des boutons
+        ImageButton resumeButton = new ImageButton(resumeButtonStyle);
+        ImageButton returnMenuButton = new ImageButton(menuButtonStyle);
+        ImageButton quitButton = new ImageButton(quitButtonStyle);
 
         resumeButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 resume();
-            }
-        });
-
-        optionsButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.log("PauseScreen", "Options button clicked, opening options");
             }
         });
 
@@ -57,21 +78,31 @@ public class PauseScreen implements Screen {
             }
         });
 
-        Table table = new Table();
-        table.center(); // Centre le tableau
+        quitButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.log("PauseScreen", "quit button clicked, quit the game");
+                Gdx.app.exit();
+            }
+        });
 
-        //TITRE
-        Label titleLabel = new Label("Game Pause", skin);
-        titleLabel.setAlignment(Align.center);
-        table.add(titleLabel).expandX().fillX().padBottom(20);
-        table.row();
+        Table table = new Table();
+        table.center();
 
         //AJOUT BOUTON DANS TABLE
-        table.add(resumeButton).fillX().uniformX().height(60).pad(10);
+        table.add(resumeButton).padTop(100);
+        table.row().pad(10);
+        table.add(returnMenuButton);
         table.row();
-        table.add(optionsButton).fillX().uniformX().height(60).pad(10);
-        table.row();
-        table.add(returnMenuButton).fillX().uniformX().height(60).pad(10);
+        table.add(quitButton);
+
+        /* Bouoton note :
+        Meme largeur
+        Meme hauteur
+        Changer return to menu par menu
+         */
+
+
 
         //WINDOW
         Window pauseWindow = new Window("", skin);
@@ -79,15 +110,15 @@ public class PauseScreen implements Screen {
         pauseWindow.center();
 
         //TAILLE WINDOW
-        pauseWindow.setSize(500, 400);
+        pauseWindow.setSize(stage.getViewport().getWorldWidth(), stage.getViewport().getWorldHeight());
 
         //BACKGROUND WINDOW
-        Texture transparentTexture = new Texture(Gdx.files.internal("ui/backgroundPauseScreen.png"));
+        Texture transparentTexture = new Texture(Gdx.files.internal("ui/backgroundPauseScreenv3.png"));
         TextureRegionDrawable transparentDrawable = new TextureRegionDrawable(new TextureRegion(transparentTexture));
         pauseWindow.setBackground(transparentDrawable);
 
         //AJOUT TABLE DANS WINDOW
-        pauseWindow.add(table).pad(20).fill();
+        pauseWindow.add(table).pad(0).fill();
 
         //AJOUT WINDOW DANS STAGE
         stage.addActor(pauseWindow);
