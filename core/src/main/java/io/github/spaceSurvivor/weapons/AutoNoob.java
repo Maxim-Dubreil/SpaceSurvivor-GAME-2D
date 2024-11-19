@@ -14,7 +14,6 @@ public class AutoNoob extends Weapon {
     public void shotProjectile(Player player) {
         new AutoNoobProjectile((player.getPosX() + 1.2f), (player.getPosY() + 1f),
                 player.getDirection(), this);
-
     }
 
 }

@@ -123,6 +123,7 @@ public class GameScreen implements Screen {
 
         stage.act(delta);
         stage.draw();
+
     }
 
     private void checkAllCollisions() {
