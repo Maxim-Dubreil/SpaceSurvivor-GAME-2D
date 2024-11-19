@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 
 import io.github.spaceSurvivor.Movable;
 import io.github.spaceSurvivor.Player;
+import io.github.spaceSurvivor.dropable.Xp;
 
 public abstract class Monster extends Movable {
 
@@ -22,6 +23,7 @@ public abstract class Monster extends Movable {
         if (this.hp <= 0) {
             entities.remove(this);
             this.dispose();
+            dropXp();
         }
     }
 
@@ -41,5 +43,9 @@ public abstract class Monster extends Movable {
     public void takeDamage(float damage) {
         this.hp -= damage;
         isDead();
+    }
+
+    public void dropXp() {
+        new Xp(this.getPosX(), this.getPosY());
     }
 }
