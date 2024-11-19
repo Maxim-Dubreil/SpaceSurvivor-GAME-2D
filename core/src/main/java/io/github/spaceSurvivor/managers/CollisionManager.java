@@ -21,6 +21,7 @@ public class CollisionManager {
 
                 if (this.isColliding(entityA, entityB)) {
                     this.handleCollision(entityA, entityB);
+                    System.out.println(entityA + " collided with " + entityB);
                 }
             }
         }
@@ -28,6 +29,7 @@ public class CollisionManager {
 
     public boolean isColliding(Entity entityA, Entity entityB) {
         if (entityA.getHitBox().overlaps(entityB.getHitBox())) {
+            System.out.println("Collision");
             return true;
         } else {
             return false;
@@ -36,7 +38,7 @@ public class CollisionManager {
 
     private void handlePlayerMonsterCollision(Player player, Monster monster) {
         player.takeDamage(monster.getDamages());
-
+        System.out.println("Player hit monster!");
     }
 
     private void handleMonsterMonsterCollision(Monster monsterA, Monster monsterB) {
