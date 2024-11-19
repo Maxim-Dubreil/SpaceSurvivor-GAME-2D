@@ -46,8 +46,6 @@ public abstract class Monster extends Movable {
     }
 
     public void dropXp() {
-        System.out.println("DROP XP");
-        System.out.println("XP Position: (" + this.getPosX() + ", " + this.getPosY() + ")");
         new Xp(this.getPosX(), this.getPosY());
     }
 }

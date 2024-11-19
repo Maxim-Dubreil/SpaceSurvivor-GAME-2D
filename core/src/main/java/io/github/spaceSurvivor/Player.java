@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Texture;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 
 import io.github.spaceSurvivor.weapons.StoneThrown;
@@ -172,5 +173,9 @@ public class Player extends Movable {
 
     public float getPosY() {
         return Player.posY;
+    }
+
+    public Rectangle getHitBox() {
+        return new Rectangle(Player.posX, Player.posY, sizeX, sizeY);
     }
 }
