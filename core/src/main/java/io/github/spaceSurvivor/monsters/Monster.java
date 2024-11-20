@@ -11,12 +11,14 @@ public abstract class Monster extends Movable {
     protected Player target;
     protected float hp;
     protected float damages;
+    private int xpValue;
 
     public Monster(Texture texture, float posX, float posY, float sizeX, float sizeY, float speed, float hp,
-            float damages) {
+            float damages, int xpValue) {
         super(texture, posX, posY, sizeX, sizeY, speed);
         this.hp = hp;
         this.damages = damages;
+        this.xpValue = xpValue;
     }
 
     public void isDead() {
@@ -46,6 +48,6 @@ public abstract class Monster extends Movable {
     }
 
     public void dropXp() {
-        new Xp(this.getPosX(), this.getPosY());
+        new Xp(this.getPosX(), this.getPosY(), this.xpValue);
     }
 }
