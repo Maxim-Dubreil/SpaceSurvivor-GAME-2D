@@ -63,9 +63,17 @@ public class CollisionManager {
         int tileX = (int) x;
         int tileY = (int) y;
 
+        if (entity instanceof Player){
+            System.out.println("Player pos :" + entity.getPosX() + "," + entity.getPosY());
+            System.out.println("Player pos :" + x + "," + y);
+            System.out.println("Tile X : " + tileX + ", Y: " + tileY);
+        }
+
         TiledMapTileLayer.Cell labCell = lab.getCell(tileX, tileY);
         TiledMapTileLayer.Cell rocksCell = rocks.getCell(tileX, tileY);
         TiledMapTileLayer.Cell bordersCell = borders.getCell(tileX, tileY);
+
+
 
         if (labCell != null && labCell.getTile() != null && labCell.getTile().getId() != 0) {
             return true;

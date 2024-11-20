@@ -127,6 +127,7 @@ public class Player extends Movable {
             if (collisionManager.handleEntityMapCollision(this, map)) {
                 this.setPosX(oldX);
                 this.setPosY(oldY);
+                System.out.println("Player collided with the map");
             }
         }
     }
