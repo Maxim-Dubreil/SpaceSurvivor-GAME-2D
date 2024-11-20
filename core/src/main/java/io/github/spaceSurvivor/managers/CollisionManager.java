@@ -57,17 +57,11 @@ public class CollisionManager {
         TiledMapTileLayer lab = (TiledMapTileLayer) map.getMap().getLayers().get("Lab");
         TiledMapTileLayer rocks = (TiledMapTileLayer) map.getMap().getLayers().get("Rocks");
         TiledMapTileLayer borders = (TiledMapTileLayer) map.getMap().getLayers().get("Borders");
-        float x = entity.getPosX() / Map.getTileSize();
-        float y = entity.getPosY() / Map.getTileSize();
+        float x = entity.getPosX();
+        float y = entity.getPosY();
 
         int tileX = (int) x;
         int tileY = (int) y;
-
-        if (entity instanceof Player){
-            System.out.println("Player pos :" + entity.getPosX() + "," + entity.getPosY());
-            System.out.println("Player pos :" + x + "," + y);
-            System.out.println("Tile X : " + tileX + ", Y: " + tileY);
-        }
 
         TiledMapTileLayer.Cell labCell = lab.getCell(tileX, tileY);
         TiledMapTileLayer.Cell rocksCell = rocks.getCell(tileX, tileY);
