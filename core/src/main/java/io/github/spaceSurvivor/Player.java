@@ -24,6 +24,8 @@ public class Player extends Movable {
     private float lastDirectionX = 0;
     private float lastDirectionY = 1;
     private float hp = 100;
+    private int xp = 0;
+    private int level = 0;
     public static float posX = 600 * Map.getUnitScale();
     public static float posY = 600 * Map.getUnitScale();
 
@@ -146,8 +148,22 @@ public class Player extends Movable {
         this.hp = newHp;
     }
 
-    public float getHp() {
-        return this.hp;
+    public void isLevelGained() {
+        int xpRequired = 100;
+        if (this.xp >= xpRequired) {
+            this.xp = 0;
+            this.level += 1;
+            this.hp = 100 + (this.level * 25);
+            xpRequired = 100 * (this.level + 1);
+            System.out.println("Level up! You are now level " + this.level);
+            System.out.println("HP: " + this.hp);
+            System.out.println("XP: " + this.xp);
+            System.out.println("==================================");
+        }
+    }
+
+    public String getLevelText() {
+        return "Level: " + this.level;
     }
 
     public void isDead() {
@@ -166,7 +182,19 @@ public class Player extends Movable {
         Player.posY = posY;
     }
 
+    public void setXp(int newXp) {
+        this.xp += newXp;
+    }
+
+    public void setLevel(int newLevel) {
+        this.hp = newLevel;
+    }
+
     // ====================== GETTERS ======================
+
+    public float getLevel() {
+        return this.level;
+    }
 
     public float getPosX() {
         return Player.posX;
@@ -176,7 +204,15 @@ public class Player extends Movable {
         return Player.posY;
     }
 
+    public float getHp() {
+        return this.hp;
+    }
+
     public Rectangle getHitBox() {
         return new Rectangle(Player.posX, Player.posY, sizeX, sizeY);
+    }
+
+    public int getXp() {
+        return this.xp;
     }
 }

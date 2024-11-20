@@ -3,6 +3,7 @@ package io.github.spaceSurvivor.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -40,6 +41,7 @@ public class GameScreen implements Screen {
     private boolean isPaused = false;
     private final Stage stage;
     private final Skin skin;
+    private BitmapFont font; // j'ai test un truc
 
     public GameScreen(Main game, SpriteBatch batch) {
         Gdx.app.log("GameScreen", "Nouvelle instance de GameScreen créée !");
@@ -48,7 +50,8 @@ public class GameScreen implements Screen {
         this.batch = batch;
         this.collisionManager = new CollisionManager();
         spawnMonstersInArc(20, 20, 500, 500, 680, 0, 180);
-
+        font = new BitmapFont(); // j'ai test un truc
+        font.getData().setScale(0.15f); // j'ai test un truc
         this.map = new Map("Map/SpaceSurvivorNewMap.tmx");
         this.map.initCamera();
         this.stage = new Stage();
@@ -108,6 +111,9 @@ public class GameScreen implements Screen {
 
         batch.setProjectionMatrix(map.getCamera().combined);
         batch.begin();
+        float x = Map.camera.position.x - Map.camera.viewportWidth / 2 + 10; // j'ai test un truc
+        float y = Map.camera.position.y + Map.camera.viewportHeight / 2 - 5; // j'ai test un truc
+        font.draw(batch, player.getLevelText(), x, y); // j'ai test un truc
         for (Entity entity : entitiesCopy) {
             if (entity instanceof Player) {
                 Player player = (Player) entity;
@@ -205,6 +211,7 @@ public class GameScreen implements Screen {
         skin.dispose();
         batch.dispose();
         map.dispose();
+        font.dispose();
     }
 
     public void resetGame() {
