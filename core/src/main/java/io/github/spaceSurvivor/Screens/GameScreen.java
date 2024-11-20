@@ -31,8 +31,8 @@ import java.util.List;
 public class GameScreen implements Screen {
     private final Main game;
     private final SpriteBatch batch;
-    private final Player player;
-    private final Map map;
+    private Player player;
+    private Map map;
     private final CollisionManager collisionManager;
     private final List<Trouille> trouilles = new ArrayList<>();
     private final List<Xela> xelas = new ArrayList<>();
@@ -42,7 +42,7 @@ public class GameScreen implements Screen {
     private final Skin skin;
 
     public GameScreen(Main game, SpriteBatch batch) {
-        Gdx.app.log("GameScreen", "Nouvelle instance de GameScreen créée !");
+        Gdx.app.log("GameScreen", "New instance of GameScreen created !");
 
         this.game = game;
         this.batch = batch;
@@ -56,8 +56,8 @@ public class GameScreen implements Screen {
         this.player = new Player();
 
         ImageButtonStyle style = new ImageButtonStyle();
-        Texture pauseTextureNormal = new Texture(Gdx.files.internal("ui/pauseButton.png"));
-        Texture pauseTextureDown = new Texture(Gdx.files.internal("ui/pauseButtonDown.png"));
+        Texture pauseTextureNormal = new Texture(Gdx.files.internal("buttons/pauseButton.png"));
+        Texture pauseTextureDown = new Texture(Gdx.files.internal("buttons/pauseButtonDown.png"));
         style.up = new TextureRegionDrawable(new TextureRegion(pauseTextureNormal));
         style.down = new TextureRegionDrawable(new TextureRegion(pauseTextureDown));
 
@@ -76,7 +76,7 @@ public class GameScreen implements Screen {
 
         Gdx.input.setInputProcessor(stage);
         stage.addActor(table);
-        // table.setDebug(true);
+        table.setDebug(true);
     }
 
     public void setPaused(boolean isPaused) {
@@ -90,6 +90,10 @@ public class GameScreen implements Screen {
             stage.act(delta);
             stage.draw();
             return;
+        }
+
+        if (player.getIsDead()) {
+            game.setScreen(new GameOverScreen(game, this));
         }
 
         List<Entity> entitiesCopy = new ArrayList<>(Entity.entities);
@@ -186,9 +190,6 @@ public class GameScreen implements Screen {
         stage.getViewport().update(width, height, true);
     }
 
-    @Override
-    public void resume() {
-    }
 
     @Override
     public void hide() {
@@ -212,10 +213,28 @@ public class GameScreen implements Screen {
         for (Weapon weapon : Weapon.weapons) {
             weapon.stopShooting();
         }
-        Entity.entities.clear();
     }
+
+    /*public void resetGame() {
+        // Réinitialiser les autres entités
+        for (Weapon weapon : Weapon.weapons) {
+            weapon.stopShooting();
+        }
+        this.player = new Player();
+        //player.setPosX(player.getInitialX());
+        //player.setPosY(player.getInitialY());
+        //player.resetStats();
+        Entity.entities.clear();
+    }*/
+
 
     public Player getPlayer() {
         return player;
     }
+
+    @Override
+    public void resume() {
+    }
+
+
 }

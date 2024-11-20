@@ -29,11 +29,11 @@ public class MainMenuScreen implements Screen {
     private final SpriteBatch batch;
 
     public MainMenuScreen(Main game) {
-        Gdx.app.log("MainMenuScreen", "Nouvelle instance de MainMenuScreen créée !");
+        Gdx.app.log("MainMenuScreen", "New instance of MainMenuScreen created !");
 
         this.game = game;
         stage = new Stage(new ScreenViewport());
-        backgroundTexture = new Texture("background.png");
+        backgroundTexture = new Texture("Background/Menu.png");
         font = new BitmapFont(Gdx.files.internal("fonts/MyFont.fnt"));
         batch = new SpriteBatch();
 

@@ -14,6 +14,11 @@ public class Main extends Game {
         this.setScreen(new MainMenuScreen(this));
     }
 
+    /*public void resetGame() {
+        GameScreen gameScreen = new GameScreen(this, batch);
+        this.setScreen(gameScreen);
+    }**/
+
     public void startGame() {
         GameScreen gameScreen = new GameScreen(this, batch);
         this.setScreen(gameScreen);

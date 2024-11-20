@@ -3,8 +3,8 @@ package io.github.spaceSurvivor.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -16,59 +16,34 @@ import com.badlogic.gdx.graphics.Texture;
 import io.github.spaceSurvivor.Player;
 import io.github.spaceSurvivor.weapons.Weapon;
 
-
 public class PauseScreen implements Screen {
     private final Main game;
     private final Stage stage;
     private final GameScreen gameScreen;
     private final Skin skin;
-    private final BitmapFont font;
     private final Player player;
+    private Window pauseWindow;
 
     public PauseScreen(Main game, GameScreen gameScreen) {
         this.game = game;
         this.gameScreen = gameScreen;
         this.stage = new Stage(new ScreenViewport());
         this.skin = new Skin(Gdx.files.internal("uiskin.json"));
-        font = new BitmapFont(Gdx.files.internal("fonts/MyFont.fnt"));
-        player = gameScreen.getPlayer();
+        this.player = gameScreen.getPlayer();
 
-        Texture resumeTexture = new Texture(Gdx.files.internal("buttons/resume_up.png"));
-        Texture resumeOverTexture = new Texture(Gdx.files.internal("buttons/resume_over.png"));
-        Texture resumePressedTexture = new Texture(Gdx.files.internal("buttons/resume_down.png"));
+        initializeUI();
+        stage.setDebugAll(true);
+    }
 
-        Texture menuTexture = new Texture(Gdx.files.internal("buttons/menu_up.png"));
-        Texture menuOverTexture = new Texture(Gdx.files.internal("buttons/menu_over.png"));
-        Texture menuPressedTexture = new Texture(Gdx.files.internal("buttons/menu_down.png"));
-
-        Texture quitTexture = new Texture(Gdx.files.internal("buttons/quit_up.png"));
-        Texture quitOverTexture = new Texture(Gdx.files.internal("buttons/quit_over.png"));
-        Texture quitPressedTexture = new Texture(Gdx.files.internal("buttons/quit_down.png"));
-
-        // Création des styles pour les ImageButton
-        ImageButton.ImageButtonStyle resumeButtonStyle = new ImageButton.ImageButtonStyle();
-        resumeButtonStyle.up = new TextureRegionDrawable(new TextureRegion(resumeTexture));
-        resumeButtonStyle.over = new TextureRegionDrawable(new TextureRegion(resumeOverTexture));
-        resumeButtonStyle.down = new TextureRegionDrawable(new TextureRegion(resumePressedTexture));
-
-        ImageButton.ImageButtonStyle menuButtonStyle = new ImageButton.ImageButtonStyle();
-        menuButtonStyle.up = new TextureRegionDrawable(new TextureRegion(menuTexture));
-        menuButtonStyle.over = new TextureRegionDrawable(new TextureRegion(menuOverTexture));
-        menuButtonStyle.down = new TextureRegionDrawable(new TextureRegion(menuPressedTexture));
-
-        ImageButton.ImageButtonStyle quitButtonStyle = new ImageButton.ImageButtonStyle();
-        quitButtonStyle.up = new TextureRegionDrawable(new TextureRegion(quitTexture));
-        quitButtonStyle.over = new TextureRegionDrawable(new TextureRegion(quitOverTexture));
-        quitButtonStyle.down = new TextureRegionDrawable(new TextureRegion(quitPressedTexture));
-
-        // Création des boutons
-        ImageButton resumeButton = new ImageButton(resumeButtonStyle);
-        ImageButton returnMenuButton = new ImageButton(menuButtonStyle);
-        ImageButton quitButton = new ImageButton(quitButtonStyle);
+    private void initializeUI() {
+        ImageButton resumeButton = createButton("buttons/resume");
+        ImageButton returnMenuButton = createButton("buttons/menu");
+        ImageButton quitButton = createButton("buttons/quit");
 
         resumeButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.log("PauseScreen", "Resume button clicked, resuming the game...");
                 resume();
             }
         });
@@ -91,59 +66,55 @@ public class PauseScreen implements Screen {
 
         Table table = new Table();
         table.center();
-
-        //AJOUT BOUTON DANS TABLE
-        table.add(resumeButton).padTop(100);
+        table.add(resumeButton);
         table.row().pad(10);
         table.add(returnMenuButton);
         table.row();
         table.add(quitButton);
 
-        /* Bouoton note :
-        Meme largeur
-        Meme hauteur
-        Changer return to menu par menu
-         */
 
-
-
-        //WINDOW
-        Window pauseWindow = new Window("", skin);
+        pauseWindow = new Window("", skin);
         pauseWindow.setModal(true);
-        pauseWindow.center();
+        pauseWindow.setMovable(false);
+        pauseWindow.setBackground(createBackgroundDrawable("Background/Pause.png"));
+        pauseWindow.add(table).expand().fill();
 
-        //TAILLE WINDOW
         pauseWindow.setSize(stage.getViewport().getWorldWidth(), stage.getViewport().getWorldHeight());
+        pauseWindow.setSize(800, 600);  // Taille de la fenêtre (ajuste selon tes besoins)
 
-        //BACKGROUND WINDOW
-        Texture transparentTexture = new Texture(Gdx.files.internal("ui/backgroundPauseScreenv3.png"));
-        TextureRegionDrawable transparentDrawable = new TextureRegionDrawable(new TextureRegion(transparentTexture));
-        pauseWindow.setBackground(transparentDrawable);
-
-        //AJOUT TABLE DANS WINDOW
-        pauseWindow.add(table).pad(0).fill();
-
-        //AJOUT WINDOW DANS STAGE
+        centerActor(pauseWindow);
         stage.addActor(pauseWindow);
-
-        //CENTRANGE WINDOW
-        centerWindow(pauseWindow);
     }
 
-    private void centerWindow(Window pauseWindow) {
-        // Récupérez la largeur et la hauteur du stage (écran)
+    private ImageButton createButton(String basePath) {
+        Texture upTexture = new Texture(Gdx.files.internal(basePath + "_up.png"));
+        Texture overTexture = new Texture(Gdx.files.internal(basePath + "_over.png"));
+        Texture downTexture = new Texture(Gdx.files.internal(basePath + "_down.png"));
+
+        ImageButton.ImageButtonStyle buttonStyle = new ImageButton.ImageButtonStyle();
+        buttonStyle.up = new TextureRegionDrawable(new TextureRegion(upTexture));
+        buttonStyle.over = new TextureRegionDrawable(new TextureRegion(overTexture));
+        buttonStyle.down = new TextureRegionDrawable(new TextureRegion(downTexture));
+
+        return new ImageButton(buttonStyle);
+    }
+
+
+    private TextureRegionDrawable createBackgroundDrawable(String path) {
+        Texture texture = new Texture(Gdx.files.internal(path));
+        return new TextureRegionDrawable(new TextureRegion(texture));
+    }
+
+    private void centerActor(Actor actor) {
         float stageWidth = stage.getViewport().getWorldWidth();
         float stageHeight = stage.getViewport().getWorldHeight();
+        float actorWidth = actor.getWidth();
+        float actorHeight = actor.getHeight();
 
-        // Récupérez la largeur et la hauteur de la fenêtre
-        float windowWidth = pauseWindow.getWidth();
-        float windowHeight = pauseWindow.getHeight();
-
-        // Calculer la position pour centrer la fenêtre
-        float x = (stageWidth - windowWidth) / 2;
-        float y = (stageHeight - windowHeight) / 2;
-        pauseWindow.setPosition(x, y);
+        Gdx.app.log("PauseScreen", "Stage size: " + stageWidth + "x" + stageHeight);
+        Gdx.app.log("PauseScreen", "Actor size: " + actorWidth + "x" + actorHeight);
     }
+
 
     @Override
     public void show() {
@@ -163,7 +134,12 @@ public class PauseScreen implements Screen {
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
+        pauseWindow.setSize(stage.getViewport().getWorldWidth(), stage.getViewport().getWorldHeight());
+
+        centerActor(pauseWindow);
+
     }
+
 
     @Override
     public void pause() {}
