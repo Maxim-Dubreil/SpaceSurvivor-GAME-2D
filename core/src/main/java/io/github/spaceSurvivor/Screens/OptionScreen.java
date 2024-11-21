@@ -2,19 +2,19 @@ package io.github.spaceSurvivor.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
-
-
 
 import com.badlogic.gdx.Screen;
 import io.github.spaceSurvivor.Main;
 
 public class OptionScreen implements Screen {
     private final Stage stage;
-    private Main game;
+    public Main game;
     private Texture backgroundOption;
     private final SpriteBatch batch;
 
@@ -23,6 +23,39 @@ public class OptionScreen implements Screen {
         this.stage = new Stage();
         this.batch = new SpriteBatch();
         backgroundOption = new Texture("Background/Option.png");
+
+        //BUTTON
+        Texture backTexture = new Texture(Gdx.files.internal("buttons/back_up.png"));
+        //Texture backOverTexture = new Texture(Gdx.files.internal("buttons/back_over.png"));
+        //Texture backPressedTexture = new Texture(Gdx.files.internal("buttons/back_down.png"));
+
+        ImageButton.ImageButtonStyle backButtonStyle = new ImageButton.ImageButtonStyle();
+        backButtonStyle.up = new TextureRegionDrawable(backTexture);
+        //backButtonStyle.over = new TextureRegionDrawable(backOverTexture);
+        //backButtonStyle.down = new TextureRegionDrawable(backPressedTexture);
+
+        ImageButton backButton = new ImageButton(backButtonStyle);
+
+        backButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                backTo();
+            }
+        });
+
+        Table table = new Table();
+        table.setFillParent(true);
+        table.center();
+
+        table.add(backButton).padTop(20);
+
+        stage.addActor(table);
+        Gdx.input.setInputProcessor(stage);
+
+    }
+
+    public void backTo(){
+
     }
 
     @Override
@@ -36,6 +69,10 @@ public class OptionScreen implements Screen {
         batch.begin();
         batch.draw(backgroundOption, 0, 0);
         batch.end();
+
+        stage.act(delta);
+        stage.draw();
+
     }
 
     @Override
@@ -45,21 +82,19 @@ public class OptionScreen implements Screen {
 
     @Override
     public void pause() {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public void resume() {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public void hide() {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public void dispose() {
+        stage.dispose();
         backgroundOption.dispose();
-    }
+        batch.dispose();    }
 }

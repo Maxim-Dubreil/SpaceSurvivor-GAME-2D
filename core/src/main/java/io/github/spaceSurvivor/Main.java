@@ -25,11 +25,6 @@ public class Main extends Game {
         this.setScreen(gameScreen);
     }
 
-    public void optionScreen() {
-        OptionScreen optionScreen = new OptionScreen(this);
-        this.setScreen(optionScreen);
-
-    }
     @Override
     public void dispose() {
         batch.dispose();

@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import io.github.spaceSurvivor.Main;
 import com.badlogic.gdx.graphics.Texture;
 import io.github.spaceSurvivor.Player;
+import io.github.spaceSurvivor.Screens.backOptions.OptionScreenPause;
 import io.github.spaceSurvivor.weapons.Weapon;
 
 public class PauseScreen implements Screen {
@@ -60,6 +61,8 @@ public class PauseScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("PauseScreen", "Option button clicked, returning to main menu...");
+                game.setScreen(new OptionScreenPause(game));
+
             }
         });
 
