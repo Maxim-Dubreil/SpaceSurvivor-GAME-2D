@@ -157,7 +157,7 @@ public class GameScreen implements Screen {
             for (Weapon weapon : Weapon.weapons) {
                 weapon.stopShooting();
             }
-            game.setScreen(new PauseScreen(game, this));
+            game.setScreen(new PauseScreen(game));
         }
     }
 
