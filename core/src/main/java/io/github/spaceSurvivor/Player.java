@@ -3,6 +3,7 @@ package io.github.spaceSurvivor;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
@@ -33,6 +34,7 @@ public class Player extends Movable {
     private Animation<TextureRegion> walkLeftAnimation;
     private TextureRegion currentFrame;
     private float stateTime = 0f;
+    private Game game;
 
     public Player() {
         super(new Texture("Player/SpaceMarineSprites.png"), posX, posY, 85, 85, 150);
@@ -40,6 +42,7 @@ public class Player extends Movable {
         Player.weapons.add(new Pewpew(this));
         // Player.weapons.add(new AutoNoob(this));
         Player.weapons.add(new StoneThrown(this));
+        this.game = game;
     }
 
     private void loadAnimations(Texture spriteSheet) {
@@ -171,7 +174,12 @@ public class Player extends Movable {
             entities.remove(this);
             this.dispose();
             this.isDead = true;
+
+
         }
+    }
+    public boolean getIsDead() {
+        return this.isDead;
     }
 
     public void setPosX(float posX) {
@@ -211,6 +219,14 @@ public class Player extends Movable {
     public Rectangle getHitBox() {
         return new Rectangle(Player.posX, Player.posY, sizeX, sizeY);
     }
+
+    public float getInitialX() {
+        return this.initialX;
+    }
+
+    public float getInitialY() {
+        return this.initialY;
+    }}
 
     public int getXp() {
         return this.xp;
