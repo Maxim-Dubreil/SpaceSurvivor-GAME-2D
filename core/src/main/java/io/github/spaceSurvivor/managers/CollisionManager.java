@@ -6,6 +6,7 @@ import io.github.spaceSurvivor.Movable;
 import io.github.spaceSurvivor.Player;
 import io.github.spaceSurvivor.monsters.Monster;
 import io.github.spaceSurvivor.projectiles.Projectile;
+import io.github.spaceSurvivor.dropable.Xp;
 import io.github.spaceSurvivor.Map;
 
 public class CollisionManager {
@@ -21,24 +22,17 @@ public class CollisionManager {
 
                 if (this.isColliding(entityA, entityB)) {
                     this.handleCollision(entityA, entityB);
-                    System.out.println(entityA + " collided with " + entityB);
                 }
             }
         }
     }
 
     public boolean isColliding(Entity entityA, Entity entityB) {
-        if (entityA.getHitBox().overlaps(entityB.getHitBox())) {
-            System.out.println("Collision");
-            return true;
-        } else {
-            return false;
-        }
+        return entityA.getHitBox().overlaps(entityB.getHitBox());
     }
 
     private void handlePlayerMonsterCollision(Player player, Monster monster) {
         player.takeDamage(monster.getDamages());
-        System.out.println("Player hit monster!");
     }
 
     private void handleMonsterMonsterCollision(Monster monsterA, Monster monsterB) {
@@ -51,13 +45,20 @@ public class CollisionManager {
         projectile.dispose();
     }
 
-    public boolean handleEntityMapCollision(Movable entity, Map map) {
+    private void handlePlayerXpCollision(Player player, Xp xp) {
+        xp.getAttracted(player);
+        player.setXp(xp.getXpValue());
+        System.out.println("Player getXp: " + xp.getXpValue());
+        System.out.println("Xp total: " + player.getXp());
+        player.isLevelGained();
+    }
 
+    public boolean handleEntityMapCollision(Movable entity, Map map) {
         TiledMapTileLayer lab = (TiledMapTileLayer) map.getMap().getLayers().get("Lab");
         TiledMapTileLayer rocks = (TiledMapTileLayer) map.getMap().getLayers().get("Rocks");
         TiledMapTileLayer borders = (TiledMapTileLayer) map.getMap().getLayers().get("Borders");
-        float x = entity.getPosX();
-        float y = entity.getPosY();
+        float x = entity.getPosX() / Map.getTileSize();
+        float y = entity.getPosY() / Map.getTileSize();
 
         int tileX = (int) x;
         int tileY = (int) y;
@@ -77,7 +78,6 @@ public class CollisionManager {
         }
 
         return false;
-
     }
 
     public void handleCollision(Entity entityA, Entity entityB) {
@@ -95,8 +95,11 @@ public class CollisionManager {
             Monster monster1 = (Monster) entityA;
             Monster monster2 = (Monster) entityB;
             handleMonsterMonsterCollision(monster1, monster2);
+        } else if ((entityA instanceof Player && entityB instanceof Xp) ||
+                (entityA instanceof Xp && entityB instanceof Player)) {
+            Player player = (entityA instanceof Player) ? (Player) entityA : (Player) entityB;
+            Xp xp = (entityA instanceof Xp) ? (Xp) entityA : (Xp) entityB;
+            handlePlayerXpCollision(player, xp);
         }
-
     }
-
 }

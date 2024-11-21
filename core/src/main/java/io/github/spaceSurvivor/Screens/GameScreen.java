@@ -48,7 +48,6 @@ public class GameScreen implements Screen {
         this.batch = batch;
         this.collisionManager = new CollisionManager();
         spawnMonstersInArc(20, 20, 500, 500, 680, 0, 180);
-
         this.map = new Map("Map/SpaceSurvivorNewMap.tmx");
         this.map.initCamera();
         this.stage = new Stage();
