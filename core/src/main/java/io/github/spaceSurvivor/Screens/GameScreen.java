@@ -17,6 +17,9 @@ import io.github.spaceSurvivor.Entity;
 import io.github.spaceSurvivor.Main;
 import io.github.spaceSurvivor.Map;
 import io.github.spaceSurvivor.Player;
+import io.github.spaceSurvivor.dropable.FireSpeedBuff;
+import io.github.spaceSurvivor.dropable.HealBuff;
+import io.github.spaceSurvivor.dropable.MoveSpeedBuff;
 import io.github.spaceSurvivor.managers.CollisionManager;
 import io.github.spaceSurvivor.monsters.Monster;
 import io.github.spaceSurvivor.monsters.Trouille;
@@ -36,6 +39,9 @@ public class GameScreen implements Screen {
     private final CollisionManager collisionManager;
     private final List<Trouille> trouilles = new ArrayList<>();
     private final List<Xela> xelas = new ArrayList<>();
+    private final HealBuff healBuff1;
+    private final FireSpeedBuff fireSpeedBuff1;
+    private final MoveSpeedBuff moveSpeedBuff1;
 
     private boolean isPaused = false;
     private final Stage stage;
@@ -53,6 +59,9 @@ public class GameScreen implements Screen {
         this.stage = new Stage();
         this.skin = new Skin(Gdx.files.internal("uiskin.json"));
         this.player = new Player();
+        this.healBuff1 = new HealBuff(0.25f, 700, 750);
+        this.fireSpeedBuff1 = new FireSpeedBuff(5, 800, 750);
+        this.moveSpeedBuff1 = new MoveSpeedBuff(150, 900, 750);
 
         ImageButtonStyle style = new ImageButtonStyle();
         Texture pauseTextureNormal = new Texture(Gdx.files.internal("ui/pauseButton.png"));

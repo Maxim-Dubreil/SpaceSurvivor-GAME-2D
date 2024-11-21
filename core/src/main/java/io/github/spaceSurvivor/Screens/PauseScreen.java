@@ -16,7 +16,6 @@ import com.badlogic.gdx.graphics.Texture;
 import io.github.spaceSurvivor.Player;
 import io.github.spaceSurvivor.weapons.Weapon;
 
-
 public class PauseScreen implements Screen {
     private final Main game;
     private final Stage stage;
@@ -92,41 +91,40 @@ public class PauseScreen implements Screen {
         Table table = new Table();
         table.center();
 
-        //AJOUT BOUTON DANS TABLE
+        // AJOUT BOUTON DANS TABLE
         table.add(resumeButton).padTop(100);
         table.row().pad(10);
         table.add(returnMenuButton);
         table.row();
         table.add(quitButton);
 
-        /* Bouoton note :
-        Meme largeur
-        Meme hauteur
-        Changer return to menu par menu
+        /*
+         * Bouoton note :
+         * Meme largeur
+         * Meme hauteur
+         * Changer return to menu par menu
          */
 
-
-
-        //WINDOW
+        // WINDOW
         Window pauseWindow = new Window("", skin);
         pauseWindow.setModal(true);
         pauseWindow.center();
 
-        //TAILLE WINDOW
+        // TAILLE WINDOW
         pauseWindow.setSize(stage.getViewport().getWorldWidth(), stage.getViewport().getWorldHeight());
 
-        //BACKGROUND WINDOW
+        // BACKGROUND WINDOW
         Texture transparentTexture = new Texture(Gdx.files.internal("ui/backgroundPauseScreenv3.png"));
         TextureRegionDrawable transparentDrawable = new TextureRegionDrawable(new TextureRegion(transparentTexture));
         pauseWindow.setBackground(transparentDrawable);
 
-        //AJOUT TABLE DANS WINDOW
+        // AJOUT TABLE DANS WINDOW
         pauseWindow.add(table).pad(0).fill();
 
-        //AJOUT WINDOW DANS STAGE
+        // AJOUT WINDOW DANS STAGE
         stage.addActor(pauseWindow);
 
-        //CENTRANGE WINDOW
+        // CENTRANGE WINDOW
         centerWindow(pauseWindow);
     }
 
@@ -166,7 +164,8 @@ public class PauseScreen implements Screen {
     }
 
     @Override
-    public void pause() {}
+    public void pause() {
+    }
 
     @Override
     public void resume() {
