@@ -78,8 +78,6 @@ public class GameOverScreen implements Screen {
 
         yesButton.setDebug(true);
         noButton.setDebug(true);
-        stage.setDebugAll(true);
-
     }
 
     @Override

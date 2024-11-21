@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import io.github.spaceSurvivor.Screens.GameScreen;
 import io.github.spaceSurvivor.Screens.MainMenuScreen;
+import io.github.spaceSurvivor.Screens.OptionScreen;
 
 public class Main extends Game {
     private SpriteBatch batch;
@@ -24,6 +25,11 @@ public class Main extends Game {
         this.setScreen(gameScreen);
     }
 
+    public void optionScreen() {
+        OptionScreen optionScreen = new OptionScreen(this);
+        this.setScreen(optionScreen);
+
+    }
     @Override
     public void dispose() {
         batch.dispose();

@@ -93,6 +93,7 @@ public class MainMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("MainMenuScreen", "Options button clicked, opening options menu...");
+                game.optionScreen();
             }
         });
 
