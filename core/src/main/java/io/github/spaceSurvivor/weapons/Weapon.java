@@ -16,6 +16,8 @@ public abstract class Weapon {
     private int range;
     private boolean isPhantom;
     private float rate;
+    private Task shootingTask;
+    protected Player player;
 
     public static List<Weapon> weapons = new ArrayList<Weapon>();
 
@@ -26,6 +28,10 @@ public abstract class Weapon {
         this.rate = rate;
         weapons.add(this);
         startShooting(player);
+    }
+
+    public void setRate(float newRate) {
+        this.rate = newRate;
     }
 
     // ====================== GETTERS ======================
@@ -52,16 +58,20 @@ public abstract class Weapon {
         this.destroy();
     }
 
-    public void stopShooting() {
-        Timer.instance().clear();
-    }
-
     public void startShooting(Player player) {
-        Timer.schedule(new Task() {
+        shootingTask = new Task() {
             @Override
             public void run() {
                 shotProjectile(player);
             }
-        }, 0, this.rate);
+        };
+        Timer.schedule(shootingTask, 0, this.rate);
+    }
+
+    public void stopShooting() {
+        if (shootingTask != null) {
+            shootingTask.cancel();
+            shootingTask = null;
+        }
     }
 }

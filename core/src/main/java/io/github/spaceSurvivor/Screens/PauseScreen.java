@@ -81,12 +81,12 @@ public class PauseScreen implements Screen {
         table.row();
         table.add(quitButton);
 
-
         pauseWindow = new Window("", skin);
         pauseWindow.setModal(true);
         pauseWindow.setMovable(false);
         pauseWindow.setBackground(createBackgroundDrawable("Background/Pause.png"));
         pauseWindow.add(table).expand().fill();
+
 
         pauseWindow.setSize(stage.getViewport().getWorldWidth(), stage.getViewport().getWorldHeight());
         pauseWindow.setSize(800, 600);  // Taille de la fenêtre (ajuste selon tes besoins)
@@ -151,7 +151,8 @@ public class PauseScreen implements Screen {
 
 
     @Override
-    public void pause() {}
+    public void pause() {
+    }
 
     @Override
     public void resume() {

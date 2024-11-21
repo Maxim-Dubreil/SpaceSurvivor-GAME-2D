@@ -17,6 +17,8 @@ import io.github.spaceSurvivor.weapons.Pewpew;
 import io.github.spaceSurvivor.weapons.StoneThrown;
 import io.github.spaceSurvivor.weapons.Weapon;
 import io.github.spaceSurvivor.managers.CollisionManager;
+import com.badlogic.gdx.utils.Timer;
+import com.badlogic.gdx.utils.Timer.Task;
 
 public class Player extends Movable {
 
@@ -24,11 +26,13 @@ public class Player extends Movable {
     protected boolean isDead = false;
     private float lastDirectionX = 0;
     private float lastDirectionY = 1;
-    private float hp = 100;
+    private float hp = 200;
+    private float maxHp = 200;
     private int xp = 0;
     private int level = 0;
     public static float posX = 600 * Map.getUnitScale();
     public static float posY = 600 * Map.getUnitScale();
+    private boolean canTakeDamage = true;
     private int initialX;
     private int initialY;
 
@@ -147,12 +151,29 @@ public class Player extends Movable {
     }
 
     public void takeDamage(float damage) {
-        this.hp -= damage;
-        isDead();
+        if (canTakeDamage) {
+            this.hp -= damage;
+            isDead();
+            canTakeDamage = false;
+            Timer.schedule(new Task() {
+                @Override
+                public void run() {
+                    canTakeDamage = true;
+                }
+            }, 0.25f);
+        }
     }
 
-    public void setHp(int newHp) {
-        this.hp = newHp;
+    public void setHp(float newHp) {
+        if (newHp > this.maxHp) {
+            this.hp = this.maxHp;
+        } else {
+            this.hp = newHp;
+        }
+    }
+
+    public void setMaxHp(float newMaxHp) {
+        this.maxHp = newMaxHp;
     }
 
     public void isLevelGained() {
@@ -218,6 +239,10 @@ public class Player extends Movable {
 
     public float getHp() {
         return this.hp;
+    }
+
+    public float getMaxHp() {
+        return this.maxHp;
     }
 
     public Rectangle getHitBox() {

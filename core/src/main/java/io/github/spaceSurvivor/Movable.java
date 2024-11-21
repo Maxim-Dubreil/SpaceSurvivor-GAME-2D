@@ -31,13 +31,13 @@ public abstract class Movable extends Entity {
         // Essayez d'abord de bouger en X
         this.setPosX(this.getPosX() + directionX * this.getSpeed() * deltaTime);
         if (collisionManager.handleEntityMapCollision(this, map)) {
-            this.setPosX(oldX);  // Revenir en arrière si collision en X
+            this.setPosX(oldX); // Revenir en arrière si collision en X
         }
 
         // Ensuite, essayez de bouger en Y
         this.setPosY(this.getPosY() + directionY * this.getSpeed() * deltaTime);
         if (collisionManager.handleEntityMapCollision(this, map)) {
-            this.setPosY(oldY);  // Revenir en arrière si collision en Y
+            this.setPosY(oldY); // Revenir en arrière si collision en Y
         }
 
         // Si aucun mouvement n'a été possible, essayez de vous déplacer diagonalement
@@ -58,4 +58,9 @@ public abstract class Movable extends Entity {
     public float getSpeed() {
         return this.speed;
     }
+
+    public void setSpeed(float newSpeed) {
+        this.speed = newSpeed * Map.getUnitScale();
+    }
+
 }
