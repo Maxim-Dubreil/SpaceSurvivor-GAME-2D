@@ -29,6 +29,8 @@ public class Player extends Movable {
     private int level = 0;
     public static float posX = 600 * Map.getUnitScale();
     public static float posY = 600 * Map.getUnitScale();
+    private int initialX;
+    private int initialY;
 
     private Animation<TextureRegion> walkRightAnimation;
     private Animation<TextureRegion> walkLeftAnimation;
@@ -43,6 +45,8 @@ public class Player extends Movable {
         // Player.weapons.add(new AutoNoob(this));
         Player.weapons.add(new StoneThrown(this));
         this.game = game;
+        this.initialX = (int) posX;
+        this.initialY = (int) posY;
     }
 
     private void loadAnimations(Texture spriteSheet) {
@@ -226,7 +230,7 @@ public class Player extends Movable {
 
     public float getInitialY() {
         return this.initialY;
-    }}
+    }
 
     public int getXp() {
         return this.xp;
