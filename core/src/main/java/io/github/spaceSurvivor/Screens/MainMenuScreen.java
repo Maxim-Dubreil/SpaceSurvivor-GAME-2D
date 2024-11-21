@@ -108,6 +108,8 @@ public class MainMenuScreen implements Screen {
 
         table.add(playButton).fillX().uniformX().pad(20).minHeight(50);
         table.row().pad(15, 0, 10, 0);
+        table.add(optionsButton).fillX().uniformX().pad(20).minHeight(50);
+        table.row().pad(15, 0, 10, 0);
         table.add(quitButton).fillX().uniformX().pad(20).minHeight(50);
 
         stage.addActor(table);
