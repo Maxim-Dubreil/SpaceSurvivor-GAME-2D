@@ -32,11 +32,11 @@ public class PauseScreen implements Screen {
         this.player = gameScreen.getPlayer();
 
         initializeUI();
-        stage.setDebugAll(true);
     }
 
     private void initializeUI() {
         ImageButton resumeButton = createButton("buttons/resume");
+        ImageButton optionButton = createButton("buttons/options");
         ImageButton returnMenuButton = createButton("buttons/menu");
         ImageButton quitButton = createButton("buttons/quit");
 
@@ -51,8 +51,15 @@ public class PauseScreen implements Screen {
         returnMenuButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.log("PauseScreen", "Quit button clicked, returning to main menu...");
+                Gdx.app.log("PauseScreen", "Quit button clicked, set option screen...");
                 returnToMainMenu();
+            }
+        });
+
+        optionButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.log("PauseScreen", "Option button clicked, returning to main menu...");
             }
         });
 
@@ -67,6 +74,8 @@ public class PauseScreen implements Screen {
         Table table = new Table();
         table.center();
         table.add(resumeButton);
+        table.row().pad(10);
+        table.add(optionButton);
         table.row().pad(10);
         table.add(returnMenuButton);
         table.row();
