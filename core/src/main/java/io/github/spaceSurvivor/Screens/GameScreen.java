@@ -75,7 +75,6 @@ public class GameScreen implements Screen {
 
         Gdx.input.setInputProcessor(stage);
         stage.addActor(table);
-        table.setDebug(true);
     }
 
     public void setPaused(boolean isPaused) {

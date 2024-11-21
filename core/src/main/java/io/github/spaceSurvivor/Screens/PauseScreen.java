@@ -3,6 +3,8 @@ package io.github.spaceSurvivor.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -22,11 +24,15 @@ public class PauseScreen implements Screen {
     private final Stage stage;
     private final Skin skin;
     private Window pauseWindow;
+    private Texture backgroundPause;
+    private final SpriteBatch batch;
 
     public PauseScreen(Main game) {
         this.game = game;
+        this.batch = new SpriteBatch();
         this.stage = new Stage(new ScreenViewport());
         this.skin = new Skin(Gdx.files.internal("uiskin.json"));
+        backgroundPause = new Texture(Gdx.files.internal("Background/PauseBgv2.png"));
 
         initializeUI();
     }
@@ -130,6 +136,10 @@ public class PauseScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        batch.begin();
+        batch.draw(backgroundPause, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        batch.end();
+
         stage.act(delta);
         stage.draw();
 
