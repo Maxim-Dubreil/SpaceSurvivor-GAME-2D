@@ -3,6 +3,7 @@ package io.github.spaceSurvivor;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
@@ -32,11 +33,14 @@ public class Player extends Movable {
     public static float posX = 600 * Map.getUnitScale();
     public static float posY = 600 * Map.getUnitScale();
     private boolean canTakeDamage = true;
+    private int initialX;
+    private int initialY;
 
     private Animation<TextureRegion> walkRightAnimation;
     private Animation<TextureRegion> walkLeftAnimation;
     private TextureRegion currentFrame;
     private float stateTime = 0f;
+    private Game game;
 
     public Player() {
         super(new Texture("Player/SpaceMarineSprites.png"), posX, posY, 85, 85, 150);
@@ -44,6 +48,9 @@ public class Player extends Movable {
         Player.weapons.add(new Pewpew(this));
         // Player.weapons.add(new AutoNoob(this));
         Player.weapons.add(new StoneThrown(this));
+        this.game = game;
+        this.initialX = (int) posX;
+        this.initialY = (int) posY;
     }
 
     private void loadAnimations(Texture spriteSheet) {
@@ -192,7 +199,12 @@ public class Player extends Movable {
             entities.remove(this);
             this.dispose();
             this.isDead = true;
+
+
         }
+    }
+    public boolean getIsDead() {
+        return this.isDead;
     }
 
     public void setPosX(float posX) {
@@ -235,6 +247,14 @@ public class Player extends Movable {
 
     public Rectangle getHitBox() {
         return new Rectangle(Player.posX, Player.posY, sizeX, sizeY);
+    }
+
+    public float getInitialX() {
+        return this.initialX;
+    }
+
+    public float getInitialY() {
+        return this.initialY;
     }
 
     public int getXp() {
