@@ -3,11 +3,15 @@ package io.github.spaceSurvivor.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -32,6 +36,8 @@ import io.github.spaceSurvivor.managers.CollisionManager;
 import io.github.spaceSurvivor.monsters.Boss;
 
 import io.github.spaceSurvivor.monsters.Monster;
+import io.github.spaceSurvivor.monsters.Trouille;
+import io.github.spaceSurvivor.monsters.Xela;
 import io.github.spaceSurvivor.projectiles.Projectile;
 import io.github.spaceSurvivor.weapons.Weapon;
 
@@ -53,22 +59,15 @@ public class GameScreen implements Screen {
     private ShapeRenderer shapeRenderer;
     private boolean showHitboxes = false;
 
-    private final HealBuff healBuff1;
-    private final FireSpeedBuff fireSpeedBuff1;
-    private final MoveSpeedBuff moveSpeedBuff1;
-
-
     private boolean isPaused = false;
     private final Stage stage;
     private final Skin skin;
-
 
     private Label waveMessageLabel;
     private Label hpLabel;
     private Label scoreLabel;
 
     private AudioManager audioManager;
-
 
     public GameScreen(Main game, SpriteBatch batch) {
         Gdx.app.log("GameScreen", "New instance of GameScreen created !");
@@ -87,13 +86,11 @@ public class GameScreen implements Screen {
 
         this.progressionManager = new ProgressionManager(player, this);
 
-
-        ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
+        // ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
 
         audioManager = game.getAudioManager();
         audioManager.playGameMusic();
         Gdx.app.log("AudioManager", "AudioManager initialized and game music should play.");
-
 
         ImageButtonStyle style = new ImageButtonStyle();
 
@@ -184,17 +181,18 @@ public class GameScreen implements Screen {
             if (entity instanceof Player) {
                 Player player = (Player) entity;
                 ((Player) entity).render(batch);
-                //batch.draw(player.getCurrentFrame(), player.getPosX(), player.getPosY(), player.getSizeX(),
-                       // player.getSizeY());
-            } if(entity instanceof Boss) {
-                batch.draw(boss.getCurrentFrame(), boss.getPosX(), boss.getPosY(), boss.getSizeX(),boss.getSizeY());
+                // batch.draw(player.getCurrentFrame(), player.getPosX(), player.getPosY(),
+                // player.getSizeX(),
+                // player.getSizeY());
+            }
+            if (entity instanceof Boss) {
+                batch.draw(boss.getCurrentFrame(), boss.getPosX(), boss.getPosY(), boss.getSizeX(), boss.getSizeY());
 
             } else {
                 entity.renderEntity(batch);
             }
         }
         batch.end();
-
 
         if (showHitboxes) {
             shapeRenderer.setProjectionMatrix(map.getCamera().combined);
@@ -206,9 +204,6 @@ public class GameScreen implements Screen {
             }
             shapeRenderer.end();
         }
-
-
-
 
         checkAllCollisions();
 
@@ -240,7 +235,6 @@ public class GameScreen implements Screen {
             if (entity instanceof Movable && entity != player) {
                 collisionManager.handleEntityMapCollision((Movable) entity, map);
             }
-        
 
         }
 
