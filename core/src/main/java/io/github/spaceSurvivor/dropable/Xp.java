@@ -12,7 +12,6 @@ import io.github.spaceSurvivor.Player;
 public class Xp extends Movable {
 
     private static final float ATTRACT_DISTANCE = 100f;
-    private Player player;
     private int xpValue;
 
     public Xp(float posX, float posY, int xpValue) {
@@ -22,7 +21,6 @@ public class Xp extends Movable {
     }
 
     public void getAttracted(Player player) {
-        this.player = player;
 
         float distance = Vector2.dst(this.getPosX(), this.getPosY(), player.getPosX(), player.getPosY());
 

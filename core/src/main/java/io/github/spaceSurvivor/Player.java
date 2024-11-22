@@ -17,6 +17,9 @@ import io.github.spaceSurvivor.weapons.Pewpew;
 import io.github.spaceSurvivor.weapons.StoneThrown;
 import io.github.spaceSurvivor.weapons.Weapon;
 import io.github.spaceSurvivor.managers.CollisionManager;
+import com.badlogic.gdx.utils.Timer;
+import com.badlogic.gdx.utils.Timer.Task;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Player extends Movable {
 
@@ -24,11 +27,13 @@ public class Player extends Movable {
     protected boolean isDead = false;
     private float lastDirectionX = 0;
     private float lastDirectionY = 1;
-    private float hp = 100;
+    private float hp = 200;
+    private float maxHp = 200;
     private int xp = 0;
     private int level = 0;
     public static float posX = 600 * Map.getUnitScale();
     public static float posY = 600 * Map.getUnitScale();
+    private boolean canTakeDamage = true;
     private int initialX;
     private int initialY;
 
@@ -36,7 +41,8 @@ public class Player extends Movable {
     private Animation<TextureRegion> walkLeftAnimation;
     private TextureRegion currentFrame;
     private float stateTime = 0f;
-    private Game game;
+
+    private float damageTimer = 0f;
 
     public Player() {
         super(new Texture("Player/SpaceMarineSprites.png"), posX, posY, 85, 85, 150);
@@ -44,7 +50,6 @@ public class Player extends Movable {
         Player.weapons.add(new Pewpew(this));
         // Player.weapons.add(new AutoNoob(this));
         Player.weapons.add(new StoneThrown(this));
-        this.game = game;
         this.initialX = (int) posX;
         this.initialY = (int) posY;
     }
@@ -134,8 +139,30 @@ public class Player extends Movable {
             if (collisionManager.handleEntityMapCollision(this, map)) {
                 this.setPosX(oldX);
                 this.setPosY(oldY);
+                System.out.println("Player collided with the map");
             }
         }
+    }
+
+    public void update(float deltaTime) {
+        if (damageTimer > 0f) {
+            damageTimer -= deltaTime;
+            if (damageTimer < 0f) {
+                damageTimer = 0f;
+            }
+        }
+    }
+
+    public void render(SpriteBatch batch) {
+        if (damageTimer > 0f) {
+            batch.setColor(1f, 0f, 0f, 1f);
+        } else {
+            batch.setColor(1f, 1f, 1f, 1f);
+        }
+
+        batch.draw(getCurrentFrame(), getPosX(), getPosY(), sizeX, sizeY);
+
+        batch.setColor(1f, 1f, 1f, 1f);
     }
 
     public float[] getDirection() {
@@ -147,12 +174,31 @@ public class Player extends Movable {
     }
 
     public void takeDamage(float damage) {
-        this.hp -= damage;
-        isDead();
+        if (canTakeDamage) {
+            this.hp -= damage;
+            isDead();
+            canTakeDamage = false;
+            damageTimer = 0.25f;
+
+            Timer.schedule(new Task() {
+                @Override
+                public void run() {
+                    canTakeDamage = true;
+                }
+            }, 0.25f);
+        }
     }
 
-    public void setHp(int newHp) {
-        this.hp = newHp;
+    public void setHp(float newHp) {
+        if (newHp > this.maxHp) {
+            this.hp = this.maxHp;
+        } else {
+            this.hp = newHp;
+        }
+    }
+
+    public void setMaxHp(float newMaxHp) {
+        this.maxHp = newMaxHp;
     }
 
     public void isLevelGained() {
@@ -178,10 +224,9 @@ public class Player extends Movable {
             entities.remove(this);
             this.dispose();
             this.isDead = true;
-
-
         }
     }
+
     public boolean getIsDead() {
         return this.isDead;
     }
@@ -220,8 +265,16 @@ public class Player extends Movable {
         return this.hp;
     }
 
+    public float getMaxHp() {
+        return this.maxHp;
+    }
+
     public Rectangle getHitBox() {
-        return new Rectangle(Player.posX, Player.posY, sizeX, sizeY);
+        float hitboxWidth = sizeX / 2;
+        float hitboxHeight = sizeY / 2;
+        float centerX = Player.posX + sizeX / 2;
+        float centerY = Player.posY + sizeY / 2;
+        return new Rectangle(centerX - hitboxWidth / 2, centerY - hitboxHeight / 2, hitboxWidth, hitboxHeight);
     }
 
     public float getInitialX() {

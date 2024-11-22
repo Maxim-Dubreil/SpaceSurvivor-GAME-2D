@@ -2,9 +2,12 @@ package io.github.spaceSurvivor.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -13,10 +16,16 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
+import io.github.spaceSurvivor.*;
+
 import io.github.spaceSurvivor.Entity;
 import io.github.spaceSurvivor.Main;
 import io.github.spaceSurvivor.Map;
 import io.github.spaceSurvivor.Player;
+import io.github.spaceSurvivor.dropable.FireSpeedBuff;
+import io.github.spaceSurvivor.dropable.HealBuff;
+import io.github.spaceSurvivor.dropable.MoveSpeedBuff;
+
 import io.github.spaceSurvivor.managers.CollisionManager;
 import io.github.spaceSurvivor.monsters.Monster;
 import io.github.spaceSurvivor.monsters.Trouille;
@@ -37,6 +46,10 @@ public class GameScreen implements Screen {
     private final List<Trouille> trouilles = new ArrayList<>();
     private final List<Xela> xelas = new ArrayList<>();
 
+    private final HealBuff healBuff1;
+    private final FireSpeedBuff fireSpeedBuff1;
+    private final MoveSpeedBuff moveSpeedBuff1;
+
     private boolean isPaused = false;
     private final Stage stage;
     private final Skin skin;
@@ -53,6 +66,11 @@ public class GameScreen implements Screen {
         this.stage = new Stage();
         this.skin = new Skin(Gdx.files.internal("uiskin.json"));
         this.player = new Player();
+
+        this.healBuff1 = new HealBuff(0.25f, 700, 750);
+        this.fireSpeedBuff1 = new FireSpeedBuff(5, 800, 750);
+        this.moveSpeedBuff1 = new MoveSpeedBuff(150, 900, 750);
+
 
         ImageButtonStyle style = new ImageButtonStyle();
         Texture pauseTextureNormal = new Texture(Gdx.files.internal("buttons/pauseButton.png"));
@@ -98,6 +116,7 @@ public class GameScreen implements Screen {
         map.render();
         map.UpdateCamera(player.getPosX(), player.getPosY());
         player.move(collisionManager, map);
+        player.update(delta);
 
         for (Entity entity : entitiesCopy) {
             if (entity instanceof Monster) {
@@ -112,14 +131,13 @@ public class GameScreen implements Screen {
         batch.begin();
         for (Entity entity : entitiesCopy) {
             if (entity instanceof Player) {
-                Player player = (Player) entity;
-                batch.draw(player.getCurrentFrame(), player.getPosX(), player.getPosY(), player.getSizeX(),
-                        player.getSizeY());
+                ((Player) entity).render(batch);
             } else {
                 entity.renderEntity(batch);
             }
         }
         batch.end();
+
 
         checkAllCollisions();
 
@@ -188,7 +206,6 @@ public class GameScreen implements Screen {
         stage.getViewport().update(width, height, true);
     }
 
-
     @Override
     public void hide() {
         Gdx.input.setInputProcessor(null);
@@ -207,24 +224,10 @@ public class GameScreen implements Screen {
     }
 
     public void resetGame() {
-        // Réinitialiser les autres entités
         for (Weapon weapon : Weapon.weapons) {
             weapon.stopShooting();
         }
     }
-
-    /*public void resetGame() {
-        // Réinitialiser les autres entités
-        for (Weapon weapon : Weapon.weapons) {
-            weapon.stopShooting();
-        }
-        this.player = new Player();
-        //player.setPosX(player.getInitialX());
-        //player.setPosY(player.getInitialY());
-        //player.resetStats();
-        Entity.entities.clear();
-    }*/
-
 
     public Player getPlayer() {
         return player;
@@ -233,6 +236,4 @@ public class GameScreen implements Screen {
     @Override
     public void resume() {
     }
-
-
 }
