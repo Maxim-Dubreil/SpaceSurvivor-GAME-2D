@@ -3,7 +3,6 @@ package io.github.spaceSurvivor;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
@@ -15,6 +14,7 @@ import com.badlogic.gdx.utils.Array;
 
 import io.github.spaceSurvivor.weapons.Pewpew;
 import io.github.spaceSurvivor.weapons.StoneThrown;
+import io.github.spaceSurvivor.weapons.AutoNoob;
 import io.github.spaceSurvivor.weapons.Weapon;
 import io.github.spaceSurvivor.managers.CollisionManager;
 import com.badlogic.gdx.utils.Timer;
@@ -30,9 +30,10 @@ public class Player extends Movable {
     private float hp = 200;
     private float maxHp = 200;
     private int xp = 0;
-    private int level = 0;
-    public static float posX = 600 * Map.getUnitScale();
-    public static float posY = 600 * Map.getUnitScale();
+    private int level = 1;
+    private static int score = 0;
+    public static float posX = 950 * Map.getUnitScale();
+    public static float posY = 800 * Map.getUnitScale();
     private boolean canTakeDamage = true;
     private int initialX;
     private int initialY;
@@ -48,8 +49,6 @@ public class Player extends Movable {
         super(new Texture("Player/SpaceMarineSprites.png"), posX, posY, 85, 85, 150);
         loadAnimations(new Texture("Player/SpaceMarineSprites.png"));
         Player.weapons.add(new Pewpew(this));
-        // Player.weapons.add(new AutoNoob(this));
-        Player.weapons.add(new StoneThrown(this));
         this.initialX = (int) posX;
         this.initialY = (int) posY;
     }
@@ -151,6 +150,27 @@ public class Player extends Movable {
                 damageTimer = 0f;
             }
         }
+        checkWeaponUnlocks();
+    }
+
+    private void checkWeaponUnlocks() {
+        if (level >= 2 && !hasWeapon(StoneThrown.class)) {
+            Player.weapons.add(new StoneThrown(this));
+            System.out.println("Nouvelle arme débloquée : StoneThrown !");
+        }
+        if (level >= 3 && !hasWeapon(AutoNoob.class)) {
+            Player.weapons.add(new AutoNoob(this));
+            System.out.println("Nouvelle arme débloquée : AutoNoob !");
+        }
+    }
+
+    private boolean hasWeapon(Class<? extends Weapon> weaponClass) {
+        for (Weapon weapon : Player.weapons) {
+            if (weaponClass.isInstance(weapon)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void render(SpriteBatch batch) {
@@ -202,21 +222,17 @@ public class Player extends Movable {
     }
 
     public void isLevelGained() {
-        int xpRequired = 100;
+        int xpRequired = 100 * level;
         if (this.xp >= xpRequired) {
-            this.xp = 0;
+            this.xp -= xpRequired;
             this.level += 1;
-            this.hp = 100 + (this.level * 25);
-            xpRequired = 100 * (this.level + 1);
-            System.out.println("Level up! You are now level " + this.level);
+            this.maxHp += 25;
+            this.hp = this.maxHp;
+            System.out.println("Niveau supérieur ! Vous êtes maintenant niveau " + this.level);
             System.out.println("HP: " + this.hp);
             System.out.println("XP: " + this.xp);
             System.out.println("==================================");
         }
-    }
-
-    public String getLevelText() {
-        return "Level: " + this.level;
     }
 
     public void isDead() {
@@ -239,17 +255,26 @@ public class Player extends Movable {
         Player.posY = posY;
     }
 
-    public void setXp(int newXp) {
-        this.xp += newXp;
+    public void setXp(int xpToAdd) {
+        this.xp += xpToAdd;
+        isLevelGained();
     }
 
     public void setLevel(int newLevel) {
-        this.hp = newLevel;
+        this.level = newLevel;
+    }
+
+    public static void addScore(int points) {
+        Player.score += points;
     }
 
     // ====================== GETTERS ======================
 
-    public float getLevel() {
+    public int getScore() {
+        return this.score;
+    }
+
+    public int getLevel() {
         return this.level;
     }
 

@@ -48,6 +48,7 @@ public class CollisionManager {
 
     private void handleProjectileMonsterCollision(Projectile projectile, Monster monster) {
         monster.takeDamage(projectile.getDamage());
+        Player.addScore(28);
         Entity.entities.remove(projectile);
         projectile.dispose();
     }
@@ -93,19 +94,19 @@ public class CollisionManager {
         // Calculer le point de vérification en fonction de la direction
         float checkX, checkY;
 
-        if (direction[0] > 0) {  // Mouvement vers la droite
+        if (direction[0] > 0) { // Mouvement vers la droite
             checkX = hitbox.x + hitbox.width;
             checkY = hitbox.y + hitbox.height / 2;
-        } else if (direction[0] < 0) {  // Mouvement vers la gauche
+        } else if (direction[0] < 0) { // Mouvement vers la gauche
             checkX = hitbox.x;
             checkY = hitbox.y + hitbox.height / 2;
-        } else if (direction[1] > 0) {  // Mouvement vers le haut
+        } else if (direction[1] > 0) { // Mouvement vers le haut
             checkX = hitbox.x + hitbox.width / 2;
             checkY = hitbox.y + hitbox.height;
-        } else if (direction[1] < 0) {  // Mouvement vers le bas
+        } else if (direction[1] < 0) { // Mouvement vers le bas
             checkX = hitbox.x + hitbox.width / 2;
             checkY = hitbox.y;
-        } else {  // Aucun mouvement
+        } else {
             checkX = hitbox.x + hitbox.width / 2;
             checkY = hitbox.y + hitbox.height / 2;
         }
@@ -116,7 +117,6 @@ public class CollisionManager {
         TiledMapTileLayer.Cell labCell = lab.getCell(tileX, tileY);
         TiledMapTileLayer.Cell rocksCell = rocks.getCell(tileX, tileY);
         TiledMapTileLayer.Cell bordersCell = borders.getCell(tileX, tileY);
-
 
         if (labCell != null && labCell.getTile() != null && labCell.getTile().getId() != 0) {
             return true;
@@ -134,42 +134,35 @@ public class CollisionManager {
     public void handleCollision(Entity entityA, Entity entityB) {
         if ((entityA instanceof Player && entityB instanceof Monster) ||
                 (entityA instanceof Monster && entityB instanceof Player)) {
-            // Collision entre le joueur et un monstre
             Player player = (entityA instanceof Player) ? (Player) entityA : (Player) entityB;
             Monster monster = (entityA instanceof Monster) ? (Monster) entityA : (Monster) entityB;
             handlePlayerMonsterCollision(player, monster);
         } else if ((entityA instanceof Projectile && entityB instanceof Monster) ||
                 (entityA instanceof Monster && entityB instanceof Projectile)) {
-            // Collision entre un projectile et un monstre
             Projectile projectile = (entityA instanceof Projectile) ? (Projectile) entityA : (Projectile) entityB;
             Monster monster = (entityA instanceof Monster) ? (Monster) entityA : (Monster) entityB;
             handleProjectileMonsterCollision(projectile, monster);
         } else if (entityA instanceof Monster && entityB instanceof Monster) {
-            // Collision entre deux monstres
             Monster monster1 = (Monster) entityA;
             Monster monster2 = (Monster) entityB;
             handleMonsterMonsterCollision(monster1, monster2);
         } else if ((entityA instanceof Player && entityB instanceof Xp) ||
                 (entityA instanceof Xp && entityB instanceof Player)) {
-            // Collision entre le joueur et l'XP
             Player player = (entityA instanceof Player) ? (Player) entityA : (Player) entityB;
             Xp xp = (entityA instanceof Xp) ? (Xp) entityA : (Xp) entityB;
             handlePlayerXpCollision(player, xp);
         } else if ((entityA instanceof Player && entityB instanceof MoveSpeedBuff) ||
                 (entityA instanceof MoveSpeedBuff && entityB instanceof Player)) {
-            // Collision entre le joueur et un buff de vitesse de déplacement
             Player player = (entityA instanceof Player) ? (Player) entityA : (Player) entityB;
             MoveSpeedBuff buff = (entityA instanceof MoveSpeedBuff) ? (MoveSpeedBuff) entityA : (MoveSpeedBuff) entityB;
             handlePlayerMoveSpeedBuffCollision(player, buff);
         } else if ((entityA instanceof Player && entityB instanceof FireSpeedBuff) ||
                 (entityA instanceof FireSpeedBuff && entityB instanceof Player)) {
-            // Collision entre le joueur et un buff de vitesse de tir
             Player player = (entityA instanceof Player) ? (Player) entityA : (Player) entityB;
             FireSpeedBuff buff = (entityA instanceof FireSpeedBuff) ? (FireSpeedBuff) entityA : (FireSpeedBuff) entityB;
             handlePlayerFireSpeedBuffCollision(player, buff);
         } else if ((entityA instanceof Player && entityB instanceof HealBuff) ||
                 (entityA instanceof HealBuff && entityB instanceof Player)) {
-            // Collision entre le joueur et un buff de soin
             Player player = (entityA instanceof Player) ? (Player) entityA : (Player) entityB;
             HealBuff buff = (entityA instanceof HealBuff) ? (HealBuff) entityA : (HealBuff) entityB;
             handlePlayerHealBuffCollision(player, buff);
