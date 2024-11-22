@@ -135,11 +135,12 @@ public class GameScreen implements Screen {
         for (Entity entity : entitiesCopy) {
             if (entity instanceof Player) {
                 Player player = (Player) entity;
+                ((Player) entity).render(batch);
                 //batch.draw(player.getCurrentFrame(), player.getPosX(), player.getPosY(), player.getSizeX(),
                        // player.getSizeY());
             } if(entity instanceof Boss) {
                 batch.draw(boss.getCurrentFrame(), boss.getPosX(), boss.getPosY(), boss.getSizeX(),boss.getSizeY());
-                ((Player) entity).render(batch);
+
             } else {
                 entity.renderEntity(batch);
             }
