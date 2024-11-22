@@ -3,22 +3,22 @@ package io.github.spaceSurvivor.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import io.github.spaceSurvivor.*;
 
+import io.github.spaceSurvivor.managers.CollisionManager;
+import io.github.spaceSurvivor.managers.ProgressionManager;
 import io.github.spaceSurvivor.Entity;
 import io.github.spaceSurvivor.Main;
 import io.github.spaceSurvivor.Map;
@@ -30,11 +30,9 @@ import io.github.spaceSurvivor.dropable.MoveSpeedBuff;
 import io.github.spaceSurvivor.managers.AudioManager;
 import io.github.spaceSurvivor.managers.CollisionManager;
 import io.github.spaceSurvivor.monsters.Boss;
+
 import io.github.spaceSurvivor.monsters.Monster;
-import io.github.spaceSurvivor.monsters.Trouille;
-import io.github.spaceSurvivor.monsters.Xela;
 import io.github.spaceSurvivor.projectiles.Projectile;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import io.github.spaceSurvivor.weapons.Weapon;
 
 import java.util.ArrayList;
@@ -46,6 +44,9 @@ public class GameScreen implements Screen {
     private Player player;
     private Map map;
     private final CollisionManager collisionManager;
+
+    private ProgressionManager progressionManager;
+
     private final List<Trouille> trouilles = new ArrayList<>();
     private final List<Xela> xelas = new ArrayList<>();
     private final Boss boss;
@@ -56,11 +57,18 @@ public class GameScreen implements Screen {
     private final FireSpeedBuff fireSpeedBuff1;
     private final MoveSpeedBuff moveSpeedBuff1;
 
+
     private boolean isPaused = false;
     private final Stage stage;
     private final Skin skin;
 
+
+    private Label waveMessageLabel;
+    private Label hpLabel;
+    private Label scoreLabel;
+
     private AudioManager audioManager;
+
 
     public GameScreen(Main game, SpriteBatch batch) {
         Gdx.app.log("GameScreen", "New instance of GameScreen created !");
@@ -68,7 +76,7 @@ public class GameScreen implements Screen {
         this.game = game;
         this.batch = batch;
         this.collisionManager = new CollisionManager();
-        spawnMonstersInArc(20, 20, 500, 500, 680, 0, 180);
+
         this.map = new Map("Map/SpaceSurvivorNewMap.tmx");
         this.map.initCamera();
         this.stage = new Stage();
@@ -77,9 +85,10 @@ public class GameScreen implements Screen {
         this.boss = new Boss(900, 900);
         shapeRenderer = new ShapeRenderer();
 
-        this.healBuff1 = new HealBuff(0.25f, 700, 750);
-        this.fireSpeedBuff1 = new FireSpeedBuff(5, 800, 750);
-        this.moveSpeedBuff1 = new MoveSpeedBuff(150, 900, 750);
+        this.progressionManager = new ProgressionManager(player, this);
+
+
+        ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
 
         audioManager = game.getAudioManager();
         audioManager.playGameMusic();
@@ -87,6 +96,7 @@ public class GameScreen implements Screen {
 
 
         ImageButtonStyle style = new ImageButtonStyle();
+
         Texture pauseTextureNormal = new Texture(Gdx.files.internal("buttons/pauseButton.png"));
         Texture pauseTextureDown = new Texture(Gdx.files.internal("buttons/pauseButtonDown.png"));
         style.up = new TextureRegionDrawable(new TextureRegion(pauseTextureNormal));
@@ -107,6 +117,30 @@ public class GameScreen implements Screen {
 
         Gdx.input.setInputProcessor(stage);
         stage.addActor(table);
+
+        table.setDebug(true);
+
+        waveMessageLabel = new Label("", skin);
+        waveMessageLabel.setFontScale(2f);
+        waveMessageLabel.setVisible(true);
+        stage.addActor(waveMessageLabel);
+
+        hpLabel = new Label("", skin);
+        hpLabel.setFontScale(2f);
+        stage.addActor(hpLabel);
+
+        scoreLabel = new Label("", skin);
+        scoreLabel.setFontScale(2f);
+        stage.addActor(scoreLabel);
+    }
+
+    public void displayWaveMessage(String message) {
+        waveMessageLabel.setText(message);
+        waveMessageLabel.pack();
+        float stageWidth = stage.getViewport().getWorldWidth();
+        float stageHeight = stage.getViewport().getWorldHeight();
+        waveMessageLabel.setPosition(stageWidth / 2f - waveMessageLabel.getWidth() / 2f, stageHeight - 50);
+
     }
 
     public void setPaused(boolean isPaused) {
@@ -126,6 +160,8 @@ public class GameScreen implements Screen {
         if (player.getIsDead()) {
             game.setScreen(new GameOverScreen(game, this));
         }
+
+        progressionManager.update(delta);
 
         List<Entity> entitiesCopy = new ArrayList<>(Entity.entities);
         map.render();
@@ -159,6 +195,7 @@ public class GameScreen implements Screen {
         }
         batch.end();
 
+
         if (showHitboxes) {
             shapeRenderer.setProjectionMatrix(map.getCamera().combined);
             shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
@@ -172,22 +209,41 @@ public class GameScreen implements Screen {
 
 
 
+
         checkAllCollisions();
+
+        updateLabels();
 
         stage.act(delta);
         stage.draw();
+    }
 
+    private void updateLabels() {
+        float stageWidth = stage.getViewport().getWorldWidth();
+        float stageHeight = stage.getViewport().getWorldHeight();
+
+        waveMessageLabel.setPosition(stageWidth / 2f - waveMessageLabel.getWidth() / 2f, stageHeight - 50);
+
+        hpLabel.setText("HP: " + (int) player.getHp());
+        hpLabel.pack();
+        hpLabel.setPosition(10, stageHeight - hpLabel.getHeight() - 10);
+
+        scoreLabel.setText("Score: " + player.getScore());
+        scoreLabel.pack();
+        scoreLabel.setPosition(stageWidth - scoreLabel.getWidth() - 10, stageHeight - scoreLabel.getHeight() - 10);
     }
 
     private void checkAllCollisions() {
         collisionManager.handleEntityMapCollision(player, map);
         collisionManager.handleEntityMapCollision(boss, map);
-        for (Trouille trouille : trouilles) {
-            collisionManager.handleEntityMapCollision(trouille, map);
+        for (Entity entity : Entity.entities) {
+            if (entity instanceof Movable && entity != player) {
+                collisionManager.handleEntityMapCollision((Movable) entity, map);
+            }
+        
+
         }
-        for (Xela xela : xelas) {
-            collisionManager.handleEntityMapCollision(xela, map);
-        }
+
         for (int i = 0; i < Entity.entities.size(); i++) {
             for (int j = i + 1; j < Entity.entities.size(); j++) {
                 Entity entityA = Entity.entities.get(i);
@@ -209,24 +265,6 @@ public class GameScreen implements Screen {
                 weapon.stopShooting();
             }
             game.setScreen(new PauseScreen(game));
-        }
-    }
-
-    public void spawnMonstersInArc(int numTrouilles, int numXelas, float centerX, float centerY, float radius,
-            float startAngle, float endAngle) {
-        float angleStepTrouille = (endAngle - startAngle) / (numTrouilles - 1); // Angle entre chaque Trouille
-        float angleStepXela = (endAngle - startAngle) / (numXelas - 1); // Angle entre chaque Xela
-        for (int i = 0; i < numTrouilles; i++) {
-            float angle = startAngle + i * angleStepTrouille;
-            float posX = centerX + (float) Math.cos(Math.toRadians(angle)) * radius;
-            float posY = centerY + (float) Math.sin(Math.toRadians(angle)) * radius;
-            trouilles.add(new Trouille(posX, posY));
-        }
-        for (int i = 0; i < numXelas; i++) {
-            float angle = startAngle + i * angleStepXela;
-            float posX = centerX + (float) Math.cos(Math.toRadians(angle)) * radius;
-            float posY = centerY + (float) Math.sin(Math.toRadians(angle)) * radius;
-            xelas.add(new Xela(posX, posY));
         }
     }
 
