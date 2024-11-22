@@ -1,6 +1,7 @@
 package io.github.spaceSurvivor.Screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -47,6 +48,8 @@ public class GameScreen implements Screen {
     private final List<Trouille> trouilles = new ArrayList<>();
     private final List<Xela> xelas = new ArrayList<>();
     private final Boss boss;
+    private ShapeRenderer shapeRenderer;
+    private boolean showHitboxes = false;
 
     private final HealBuff healBuff1;
     private final FireSpeedBuff fireSpeedBuff1;
@@ -69,6 +72,7 @@ public class GameScreen implements Screen {
         this.skin = new Skin(Gdx.files.internal("uiskin.json"));
         this.player = new Player();
         this.boss = new Boss(900, 900);
+        shapeRenderer = new ShapeRenderer();
 
         this.healBuff1 = new HealBuff(0.25f, 700, 750);
         this.fireSpeedBuff1 = new FireSpeedBuff(5, 800, 750);
@@ -104,6 +108,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        handleInput();
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
         if (isPaused) {
             stage.act(delta);
@@ -146,6 +151,18 @@ public class GameScreen implements Screen {
             }
         }
         batch.end();
+
+        if (showHitboxes) {
+            shapeRenderer.setProjectionMatrix(map.getCamera().combined);
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+            for (Entity entity : entitiesCopy) {
+                Rectangle hitbox = entity.getHitBox();
+                shapeRenderer.setColor(Color.RED);
+                shapeRenderer.rect(hitbox.x, hitbox.y, hitbox.width, hitbox.height);
+            }
+            shapeRenderer.end();
+        }
+
 
 
         checkAllCollisions();
@@ -231,6 +248,7 @@ public class GameScreen implements Screen {
         skin.dispose();
         batch.dispose();
         map.dispose();
+        shapeRenderer.dispose();
     }
 
     public void resetGame() {
@@ -245,5 +263,11 @@ public class GameScreen implements Screen {
 
     @Override
     public void resume() {
+    }
+
+    private void handleInput() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.H)) {
+            showHitboxes = !showHitboxes;
+        }
     }
 }

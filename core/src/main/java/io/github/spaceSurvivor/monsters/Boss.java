@@ -18,7 +18,7 @@ public class Boss extends Monster {
     private float stateTime = 0f;
 
     public Boss(float posX, float posY) {
-        super(new Texture("Monster/GolemSprite.png"), posX, posY, 220, 220, 100, 50000, 20, 100);
+        super(new Texture("Monster/GolemSprite.png"), posX, posY, 120, 120, 60, 10000, 20, 100);
         loadAnimations(new Texture("Monster/GolemSprite.png"));
     }
 
@@ -78,8 +78,10 @@ public class Boss extends Monster {
     public Rectangle getHitBox() {
         float hitboxWidth = sizeX / 2;
         float hitboxHeight = sizeY / 2;
-        float centerX = this.posX + sizeX / 2;
-        float centerY = this.posY + sizeY / 2;
-        return new Rectangle(centerX - hitboxWidth / 2, centerY - hitboxHeight / 2, hitboxWidth, hitboxHeight);
+        float centerX = this.posX + sizeX / 3;
+        float centerY = this.posY + sizeY / 3;
+        return new Rectangle(centerX - hitboxWidth / 3, centerY - hitboxHeight / 3, hitboxWidth, hitboxHeight);
     }
+
+
 }
