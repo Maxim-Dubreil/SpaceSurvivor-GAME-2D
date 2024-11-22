@@ -26,6 +26,7 @@ import io.github.spaceSurvivor.dropable.FireSpeedBuff;
 import io.github.spaceSurvivor.dropable.HealBuff;
 import io.github.spaceSurvivor.dropable.MoveSpeedBuff;
 
+import io.github.spaceSurvivor.managers.AudioManager;
 import io.github.spaceSurvivor.managers.CollisionManager;
 import io.github.spaceSurvivor.monsters.Monster;
 import io.github.spaceSurvivor.monsters.Trouille;
@@ -54,6 +55,8 @@ public class GameScreen implements Screen {
     private final Stage stage;
     private final Skin skin;
 
+    private AudioManager audioManager;
+
     public GameScreen(Main game, SpriteBatch batch) {
         Gdx.app.log("GameScreen", "New instance of GameScreen created !");
 
@@ -70,6 +73,10 @@ public class GameScreen implements Screen {
         this.healBuff1 = new HealBuff(0.25f, 700, 750);
         this.fireSpeedBuff1 = new FireSpeedBuff(5, 800, 750);
         this.moveSpeedBuff1 = new MoveSpeedBuff(150, 900, 750);
+
+        audioManager = game.getAudioManager();
+        audioManager.playGameMusic();
+        Gdx.app.log("AudioManager", "AudioManager initialized and game music should play.");
 
 
         ImageButtonStyle style = new ImageButtonStyle();
@@ -221,6 +228,8 @@ public class GameScreen implements Screen {
         skin.dispose();
         batch.dispose();
         map.dispose();
+        audioManager.dispose();
+
     }
 
     public void resetGame() {
