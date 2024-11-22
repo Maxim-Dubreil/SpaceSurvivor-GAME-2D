@@ -18,6 +18,8 @@ public class OptionScreen implements Screen {
     private Texture backgroundOption;
     private final SpriteBatch batch;
 
+
+
     public OptionScreen(Main game) {
         this.game = game;
         this.stage = new Stage();
