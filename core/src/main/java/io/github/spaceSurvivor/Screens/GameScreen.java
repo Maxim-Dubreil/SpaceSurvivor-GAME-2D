@@ -27,6 +27,7 @@ import io.github.spaceSurvivor.dropable.HealBuff;
 import io.github.spaceSurvivor.dropable.MoveSpeedBuff;
 
 import io.github.spaceSurvivor.managers.CollisionManager;
+import io.github.spaceSurvivor.monsters.Boss;
 import io.github.spaceSurvivor.monsters.Monster;
 import io.github.spaceSurvivor.monsters.Trouille;
 import io.github.spaceSurvivor.monsters.Xela;
@@ -45,6 +46,7 @@ public class GameScreen implements Screen {
     private final CollisionManager collisionManager;
     private final List<Trouille> trouilles = new ArrayList<>();
     private final List<Xela> xelas = new ArrayList<>();
+    private final Boss boss;
 
     private final HealBuff healBuff1;
     private final FireSpeedBuff fireSpeedBuff1;
@@ -66,6 +68,7 @@ public class GameScreen implements Screen {
         this.stage = new Stage();
         this.skin = new Skin(Gdx.files.internal("uiskin.json"));
         this.player = new Player();
+        this.boss = new Boss(900, 900);
 
         this.healBuff1 = new HealBuff(0.25f, 700, 750);
         this.fireSpeedBuff1 = new FireSpeedBuff(5, 800, 750);
@@ -131,6 +134,11 @@ public class GameScreen implements Screen {
         batch.begin();
         for (Entity entity : entitiesCopy) {
             if (entity instanceof Player) {
+                Player player = (Player) entity;
+                //batch.draw(player.getCurrentFrame(), player.getPosX(), player.getPosY(), player.getSizeX(),
+                       // player.getSizeY());
+            } if(entity instanceof Boss) {
+                batch.draw(boss.getCurrentFrame(), boss.getPosX(), boss.getPosY(), boss.getSizeX(),boss.getSizeY());
                 ((Player) entity).render(batch);
             } else {
                 entity.renderEntity(batch);
@@ -148,6 +156,7 @@ public class GameScreen implements Screen {
 
     private void checkAllCollisions() {
         collisionManager.handleEntityMapCollision(player, map);
+        collisionManager.handleEntityMapCollision(boss, map);
         for (Trouille trouille : trouilles) {
             collisionManager.handleEntityMapCollision(trouille, map);
         }
