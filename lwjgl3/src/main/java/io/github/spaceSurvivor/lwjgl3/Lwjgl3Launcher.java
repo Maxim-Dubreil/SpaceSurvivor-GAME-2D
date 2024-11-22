@@ -3,6 +3,7 @@ package io.github.spaceSurvivor.lwjgl3;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import io.github.spaceSurvivor.Main;
+import com.badlogic.gdx.Graphics;
 
 /** Launches the desktop (LWJGL3) application. */
 public class Lwjgl3Launcher {
@@ -23,27 +24,39 @@ public class Lwjgl3Launcher {
 
     private static Lwjgl3ApplicationConfiguration getDefaultConfiguration() {
         Lwjgl3ApplicationConfiguration configuration = new Lwjgl3ApplicationConfiguration();
-        configuration.setTitle("SpaceSurvivor");
-        //// Vsync limits the frames per second to what your hardware can display, and
-        //// helps eliminate
-        //// screen tearing. This setting doesn't always work on Linux, so the line
-        //// after is a safeguard.
+        configuration.setTitle("Space Survivor");
         configuration.useVsync(true);
-        //// Limits FPS to the refresh rate of the currently active monitor, plus 1 to
-        //// try to match fractional
-        //// refresh rates. The Vsync setting above should limit the actual FPS to match
-        //// the monitor.
-        configuration.setForegroundFPS(Lwjgl3ApplicationConfiguration.getDisplayMode().refreshRate + 1);
-        //// If you remove the above line and set Vsync to false, you can get unlimited
-        //// FPS, which can be
-        //// useful for testing performance, but can also be very stressful to some
-        //// hardware.
-        //// You may also need to configure GPU drivers to fully disable Vsync; this can
-        //// cause screen tearing.
-        configuration.setWindowedMode(1920, 1080);
-        //// You can change these files; they are in lwjgl3/src/main/resources/ .
-        configuration.setWindowIcon("libgdx128.png", "libgdx64.png", "libgdx32.png", "libgdx16.png");
 
+        //Taille par default
+        final int widthDefault = 1920;
+        final int heightDefault = 1080;
+        final float ratio = (float) widthDefault / heightDefault;
+
+        //récupère la taille de l'écran
+        Graphics.DisplayMode displayMod = Lwjgl3ApplicationConfiguration.getDisplayMode();
+        System.out.println("Display Mode: " + displayMod.width + "x" + displayMod.height + "x");
+        int screenWidth = displayMod.width;
+        int screenHeight = displayMod.height;
+        //Taille de la fenetre
+        int windowWidth = widthDefault;
+        int windowHeight = heightDefault;
+
+        //Condition pour le redimensionnement
+        if (screenWidth < windowWidth || screenHeight < windowHeight) {
+            if (screenWidth / (float) screenHeight > ratio) {
+                windowHeight = screenHeight;
+                windowWidth = (int) (windowHeight * ratio);
+            } else {
+                windowWidth = screenWidth;
+                windowHeight = (int) (windowWidth / ratio);
+            }
+        }
+
+        configuration.setWindowedMode(windowWidth, windowHeight);
+
+
+        configuration.setForegroundFPS(Lwjgl3ApplicationConfiguration.getDisplayMode().refreshRate + 1);
+        configuration.setWindowIcon("libgdx128.png", "libgdx64.png", "libgdx32.png", "libgdx16.png");
         return configuration;
     }
 }
