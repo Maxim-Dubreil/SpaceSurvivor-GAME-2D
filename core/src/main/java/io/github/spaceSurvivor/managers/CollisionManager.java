@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Rectangle;
 import io.github.spaceSurvivor.Entity;
 import io.github.spaceSurvivor.Movable;
 import io.github.spaceSurvivor.Player;
+import io.github.spaceSurvivor.monsters.Boss;
 import io.github.spaceSurvivor.monsters.Monster;
 import io.github.spaceSurvivor.projectiles.Projectile;
 import io.github.spaceSurvivor.dropable.Xp;

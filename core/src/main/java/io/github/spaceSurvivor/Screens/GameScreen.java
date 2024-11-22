@@ -1,6 +1,7 @@
 package io.github.spaceSurvivor.Screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -18,6 +19,18 @@ import io.github.spaceSurvivor.*;
 
 import io.github.spaceSurvivor.managers.CollisionManager;
 import io.github.spaceSurvivor.managers.ProgressionManager;
+import io.github.spaceSurvivor.Entity;
+import io.github.spaceSurvivor.Main;
+import io.github.spaceSurvivor.Map;
+import io.github.spaceSurvivor.Player;
+import io.github.spaceSurvivor.dropable.FireSpeedBuff;
+import io.github.spaceSurvivor.dropable.HealBuff;
+import io.github.spaceSurvivor.dropable.MoveSpeedBuff;
+
+import io.github.spaceSurvivor.managers.AudioManager;
+import io.github.spaceSurvivor.managers.CollisionManager;
+import io.github.spaceSurvivor.monsters.Boss;
+
 import io.github.spaceSurvivor.monsters.Monster;
 import io.github.spaceSurvivor.projectiles.Projectile;
 import io.github.spaceSurvivor.weapons.Weapon;
@@ -31,15 +44,31 @@ public class GameScreen implements Screen {
     private Player player;
     private Map map;
     private final CollisionManager collisionManager;
+
     private ProgressionManager progressionManager;
+
+    private final List<Trouille> trouilles = new ArrayList<>();
+    private final List<Xela> xelas = new ArrayList<>();
+    private final Boss boss;
+    private ShapeRenderer shapeRenderer;
+    private boolean showHitboxes = false;
+
+    private final HealBuff healBuff1;
+    private final FireSpeedBuff fireSpeedBuff1;
+    private final MoveSpeedBuff moveSpeedBuff1;
+
 
     private boolean isPaused = false;
     private final Stage stage;
     private final Skin skin;
 
+
     private Label waveMessageLabel;
     private Label hpLabel;
     private Label scoreLabel;
+
+    private AudioManager audioManager;
+
 
     public GameScreen(Main game, SpriteBatch batch) {
         Gdx.app.log("GameScreen", "New instance of GameScreen created !");
@@ -53,10 +82,21 @@ public class GameScreen implements Screen {
         this.stage = new Stage();
         this.skin = new Skin(Gdx.files.internal("uiskin.json"));
         this.player = new Player();
+        this.boss = new Boss(900, 900);
+        shapeRenderer = new ShapeRenderer();
 
         this.progressionManager = new ProgressionManager(player, this);
 
+
         ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
+
+        audioManager = game.getAudioManager();
+        audioManager.playGameMusic();
+        Gdx.app.log("AudioManager", "AudioManager initialized and game music should play.");
+
+
+        ImageButtonStyle style = new ImageButtonStyle();
+
         Texture pauseTextureNormal = new Texture(Gdx.files.internal("buttons/pauseButton.png"));
         Texture pauseTextureDown = new Texture(Gdx.files.internal("buttons/pauseButtonDown.png"));
         style.up = new TextureRegionDrawable(new TextureRegion(pauseTextureNormal));
@@ -77,6 +117,7 @@ public class GameScreen implements Screen {
 
         Gdx.input.setInputProcessor(stage);
         stage.addActor(table);
+
         table.setDebug(true);
 
         waveMessageLabel = new Label("", skin);
@@ -99,6 +140,7 @@ public class GameScreen implements Screen {
         float stageWidth = stage.getViewport().getWorldWidth();
         float stageHeight = stage.getViewport().getWorldHeight();
         waveMessageLabel.setPosition(stageWidth / 2f - waveMessageLabel.getWidth() / 2f, stageHeight - 50);
+
     }
 
     public void setPaused(boolean isPaused) {
@@ -107,6 +149,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        handleInput();
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
         if (isPaused) {
             stage.act(delta);
@@ -139,12 +182,33 @@ public class GameScreen implements Screen {
         batch.begin();
         for (Entity entity : entitiesCopy) {
             if (entity instanceof Player) {
+                Player player = (Player) entity;
                 ((Player) entity).render(batch);
+                //batch.draw(player.getCurrentFrame(), player.getPosX(), player.getPosY(), player.getSizeX(),
+                       // player.getSizeY());
+            } if(entity instanceof Boss) {
+                batch.draw(boss.getCurrentFrame(), boss.getPosX(), boss.getPosY(), boss.getSizeX(),boss.getSizeY());
+
             } else {
                 entity.renderEntity(batch);
             }
         }
         batch.end();
+
+
+        if (showHitboxes) {
+            shapeRenderer.setProjectionMatrix(map.getCamera().combined);
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+            for (Entity entity : entitiesCopy) {
+                Rectangle hitbox = entity.getHitBox();
+                shapeRenderer.setColor(Color.RED);
+                shapeRenderer.rect(hitbox.x, hitbox.y, hitbox.width, hitbox.height);
+            }
+            shapeRenderer.end();
+        }
+
+
+
 
         checkAllCollisions();
 
@@ -171,10 +235,13 @@ public class GameScreen implements Screen {
 
     private void checkAllCollisions() {
         collisionManager.handleEntityMapCollision(player, map);
+        collisionManager.handleEntityMapCollision(boss, map);
         for (Entity entity : Entity.entities) {
             if (entity instanceof Movable && entity != player) {
                 collisionManager.handleEntityMapCollision((Movable) entity, map);
             }
+        
+
         }
 
         for (int i = 0; i < Entity.entities.size(); i++) {
@@ -197,7 +264,7 @@ public class GameScreen implements Screen {
             for (Weapon weapon : Weapon.weapons) {
                 weapon.stopShooting();
             }
-            game.setScreen(new PauseScreen(game, this));
+            game.setScreen(new PauseScreen(game));
         }
     }
 
@@ -226,6 +293,9 @@ public class GameScreen implements Screen {
         skin.dispose();
         batch.dispose();
         map.dispose();
+        shapeRenderer.dispose();
+        audioManager.dispose();
+
     }
 
     public void resetGame() {
@@ -240,5 +310,11 @@ public class GameScreen implements Screen {
 
     @Override
     public void resume() {
+    }
+
+    private void handleInput() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.H)) {
+            showHitboxes = !showHitboxes;
+        }
     }
 }

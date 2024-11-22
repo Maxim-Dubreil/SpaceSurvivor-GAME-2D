@@ -18,15 +18,17 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import io.github.spaceSurvivor.Main;
+import io.github.spaceSurvivor.Screens.backOptions.OptionScreenMenu;
+import io.github.spaceSurvivor.managers.AudioManager;
 
 public class MainMenuScreen implements Screen {
 
     private final Main game;
     private final Stage stage;
     private final Texture backgroundTexture;
-
     private final BitmapFont font;
     private final SpriteBatch batch;
+    private AudioManager audioManager;
 
     public MainMenuScreen(Main game) {
         Gdx.app.log("MainMenuScreen", "New instance of MainMenuScreen created !");
@@ -36,6 +38,10 @@ public class MainMenuScreen implements Screen {
         backgroundTexture = new Texture("Background/Menu.png");
         font = new BitmapFont(Gdx.files.internal("fonts/MyFont.fnt"));
         batch = new SpriteBatch();
+        audioManager = game.getAudioManager();
+        audioManager.playMenuMusic();
+        Gdx.app.log("AudioManager", "AudioManager initialized and menu music should play.");
+
 
         TextButton.TextButtonStyle playButtonStyle = new TextButton.TextButtonStyle();
         playButtonStyle.font = new BitmapFont(Gdx.files.internal("fonts/MyFont.fnt"));
@@ -93,6 +99,7 @@ public class MainMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("MainMenuScreen", "Options button clicked, opening options menu...");
+                game.setScreen(new OptionScreenMenu(game));
             }
         });
 
@@ -167,6 +174,8 @@ public class MainMenuScreen implements Screen {
     @Override
     public void hide() {
         Gdx.input.setInputProcessor(null);
+        audioManager.stopAllMusic();
+
     }
 
     @Override
@@ -174,6 +183,9 @@ public class MainMenuScreen implements Screen {
         stage.dispose();
         backgroundTexture.dispose();
         font.dispose();
+        audioManager.dispose();
+
+
     }
 
     public Main getGame() {
