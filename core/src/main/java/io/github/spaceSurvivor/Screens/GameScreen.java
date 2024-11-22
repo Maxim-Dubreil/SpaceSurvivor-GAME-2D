@@ -93,7 +93,6 @@ public class GameScreen implements Screen {
 
         Gdx.input.setInputProcessor(stage);
         stage.addActor(table);
-        table.setDebug(true);
     }
 
     public void setPaused(boolean isPaused) {
@@ -175,7 +174,7 @@ public class GameScreen implements Screen {
             for (Weapon weapon : Weapon.weapons) {
                 weapon.stopShooting();
             }
-            game.setScreen(new PauseScreen(game, this));
+            game.setScreen(new PauseScreen(game));
         }
     }
 

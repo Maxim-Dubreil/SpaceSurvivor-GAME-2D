@@ -3,6 +3,8 @@ package io.github.spaceSurvivor.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -14,22 +16,23 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import io.github.spaceSurvivor.Main;
 import com.badlogic.gdx.graphics.Texture;
 import io.github.spaceSurvivor.Player;
+import io.github.spaceSurvivor.Screens.backOptions.OptionScreenPause;
 import io.github.spaceSurvivor.weapons.Weapon;
 
 public class PauseScreen implements Screen {
     private final Main game;
     private final Stage stage;
-    private final GameScreen gameScreen;
     private final Skin skin;
-    private final Player player;
     private Window pauseWindow;
+    private Texture backgroundPause;
+    private final SpriteBatch batch;
 
-    public PauseScreen(Main game, GameScreen gameScreen) {
+    public PauseScreen(Main game) {
         this.game = game;
-        this.gameScreen = gameScreen;
+        this.batch = new SpriteBatch();
         this.stage = new Stage(new ScreenViewport());
         this.skin = new Skin(Gdx.files.internal("uiskin.json"));
-        this.player = gameScreen.getPlayer();
+        backgroundPause = new Texture(Gdx.files.internal("Background/PauseBgv2.png"));
 
         initializeUI();
     }
@@ -44,7 +47,7 @@ public class PauseScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("PauseScreen", "Resume button clicked, resuming the game...");
-                resume();
+                resumeGame();
             }
         });
 
@@ -60,6 +63,8 @@ public class PauseScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("PauseScreen", "Option button clicked, returning to main menu...");
+                game.setScreen(new OptionScreenPause(game, PauseScreen.this));
+
             }
         });
 
@@ -108,7 +113,6 @@ public class PauseScreen implements Screen {
         return new ImageButton(buttonStyle);
     }
 
-
     private TextureRegionDrawable createBackgroundDrawable(String path) {
         Texture texture = new Texture(Gdx.files.internal(path));
         return new TextureRegionDrawable(new TextureRegion(texture));
@@ -132,6 +136,10 @@ public class PauseScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        batch.begin();
+        batch.draw(backgroundPause, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        batch.end();
+
         stage.act(delta);
         stage.draw();
 
@@ -152,24 +160,39 @@ public class PauseScreen implements Screen {
 
     @Override
     public void pause() {
+
     }
 
     @Override
     public void resume() {
-        if (game.getScreen() != gameScreen) {
 
+    }
+
+    public void resumeGame() {
+        GameScreen gameScreen = game.getGameScreen();
+        if (gameScreen != null) {
             gameScreen.setPaused(false);
+            Player player = gameScreen.getPlayer();
             for (Weapon weapon : Weapon.weapons) {
                 weapon.startShooting(player);
             }
             game.setScreen(gameScreen);
+        }else {
+            game.MainMenuScreen();
+            Gdx.app.log("PauseScreen", "GameScreen is null, cannot resume game.");
         }
     }
 
     public void returnToMainMenu() {
-        gameScreen.setPaused(false);
-        gameScreen.resetGame();
-        game.MainMenuScreen();
+        GameScreen gameScreen = game.getGameScreen();
+        if (gameScreen != null) {
+            gameScreen.setPaused(false);
+            gameScreen.resetGame();
+            game.MainMenuScreen();
+        } else {
+            game.MainMenuScreen();
+            Gdx.app.log("PauseScreen", "GameScreen is null, cannot return to main menu.");
+        }
     }
 
     @Override
