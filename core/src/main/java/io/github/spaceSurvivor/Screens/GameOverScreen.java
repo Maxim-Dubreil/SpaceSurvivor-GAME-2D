@@ -46,7 +46,7 @@ public class GameOverScreen implements Screen {
         ImageButton.ImageButtonStyle noButtonStyle = new ImageButton.ImageButtonStyle();
         noButtonStyle.up = new TextureRegionDrawable(new TextureRegion(noTexture));
         noButtonStyle.over = new TextureRegionDrawable(new TextureRegion(noOverTexture));
-            noButtonStyle.down = new TextureRegionDrawable(new TextureRegion(noPressedTexture));
+        noButtonStyle.down = new TextureRegionDrawable(new TextureRegion(noPressedTexture));
 
         ImageButton yesButton = new ImageButton(yesButtonStyle);
         ImageButton noButton = new ImageButton(noButtonStyle);
@@ -75,11 +75,6 @@ public class GameOverScreen implements Screen {
 
         stage.addActor(table);
         Gdx.input.setInputProcessor(stage);
-
-        yesButton.setDebug(true);
-        noButton.setDebug(true);
-        stage.setDebugAll(true);
-
     }
 
     @Override
