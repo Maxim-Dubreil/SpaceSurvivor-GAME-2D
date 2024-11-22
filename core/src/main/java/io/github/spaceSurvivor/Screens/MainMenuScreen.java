@@ -38,7 +38,7 @@ public class MainMenuScreen implements Screen {
         backgroundTexture = new Texture("Background/Menu.png");
         font = new BitmapFont(Gdx.files.internal("fonts/MyFont.fnt"));
         batch = new SpriteBatch();
-        audioManager = new AudioManager();
+        audioManager = game.getAudioManager();
         audioManager.playMenuMusic();
         Gdx.app.log("AudioManager", "AudioManager initialized and menu music should play.");
 

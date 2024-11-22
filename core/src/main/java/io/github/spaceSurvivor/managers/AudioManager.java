@@ -5,8 +5,8 @@ import com.badlogic.gdx.audio.Music;
 
 public class AudioManager   {
     //private Music gameMusic;
-    private Music menuMusic;
-    private float musicVolume = 1f;
+    private final Music menuMusic;
+    private float musicVolume = 0.5f;
 
     public AudioManager() {
 
@@ -19,6 +19,7 @@ public class AudioManager   {
     public void playMenuMusic() {
         stopAllMusic();
         menuMusic.play();
+        menuMusic.setVolume(musicVolume);
         Gdx.app.log("AudioManager", "Menu music started.");
 
     }
@@ -34,6 +35,8 @@ public class AudioManager   {
     public void setMusicVolume (float volume) {
         this.musicVolume = volume;
         menuMusic.setVolume(musicVolume);
+        Gdx.app.log("AudioManager", "Volume de la musique mis à jour à: " + musicVolume);  // Log pour vérifier
+
         //gameMusic.setVolume(musicVolume);
     }
 
