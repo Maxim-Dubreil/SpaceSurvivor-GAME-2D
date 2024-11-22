@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import io.github.spaceSurvivor.Player;
 import io.github.spaceSurvivor.managers.CollisionManager;
@@ -17,7 +18,7 @@ public class Boss extends Monster {
     private float stateTime = 0f;
 
     public Boss(float posX, float posY) {
-        super(new Texture("Monster/GolemSprite.png"), posX, posY, 220, 220, 20, 50000, 20, 100);
+        super(new Texture("Monster/GolemSprite.png"), posX, posY, 120, 120, 60, 10000, 20, 100);
         loadAnimations(new Texture("Monster/GolemSprite.png"));
     }
 
@@ -73,4 +74,14 @@ public class Boss extends Monster {
     public TextureRegion getCurrentFrame() {
         return currentFrame;
     }
+
+    public Rectangle getHitBox() {
+        float hitboxWidth = sizeX / 2;
+        float hitboxHeight = sizeY / 2;
+        float centerX = this.posX + sizeX / 3;
+        float centerY = this.posY + sizeY / 3;
+        return new Rectangle(centerX - hitboxWidth / 3, centerY - hitboxHeight / 3, hitboxWidth, hitboxHeight);
+    }
+
+
 }
