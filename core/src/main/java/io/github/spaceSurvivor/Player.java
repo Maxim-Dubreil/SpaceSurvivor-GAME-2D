@@ -19,6 +19,7 @@ import io.github.spaceSurvivor.weapons.Weapon;
 import io.github.spaceSurvivor.managers.CollisionManager;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Player extends Movable {
 
@@ -40,7 +41,8 @@ public class Player extends Movable {
     private Animation<TextureRegion> walkLeftAnimation;
     private TextureRegion currentFrame;
     private float stateTime = 0f;
-    private Game game;
+
+    private float damageTimer = 0f;
 
     public Player() {
         super(new Texture("Player/SpaceMarineSprites.png"), posX, posY, 85, 85, 150);
@@ -48,7 +50,6 @@ public class Player extends Movable {
         Player.weapons.add(new Pewpew(this));
         // Player.weapons.add(new AutoNoob(this));
         Player.weapons.add(new StoneThrown(this));
-        this.game = game;
         this.initialX = (int) posX;
         this.initialY = (int) posY;
     }
@@ -143,7 +144,27 @@ public class Player extends Movable {
         }
     }
 
-    @Override
+    public void update(float deltaTime) {
+        if (damageTimer > 0f) {
+            damageTimer -= deltaTime;
+            if (damageTimer < 0f) {
+                damageTimer = 0f;
+            }
+        }
+    }
+
+    public void render(SpriteBatch batch) {
+        if (damageTimer > 0f) {
+            batch.setColor(1f, 0f, 0f, 1f);
+        } else {
+            batch.setColor(1f, 1f, 1f, 1f);
+        }
+
+        batch.draw(getCurrentFrame(), getPosX(), getPosY(), sizeX, sizeY);
+
+        batch.setColor(1f, 1f, 1f, 1f);
+    }
+
     public float[] getDirection() {
         return new float[] { lastDirectionX, lastDirectionY };
     }
@@ -157,6 +178,8 @@ public class Player extends Movable {
             this.hp -= damage;
             isDead();
             canTakeDamage = false;
+            damageTimer = 0.25f;
+
             Timer.schedule(new Task() {
                 @Override
                 public void run() {
@@ -201,10 +224,9 @@ public class Player extends Movable {
             entities.remove(this);
             this.dispose();
             this.isDead = true;
-
-
         }
     }
+
     public boolean getIsDead() {
         return this.isDead;
     }

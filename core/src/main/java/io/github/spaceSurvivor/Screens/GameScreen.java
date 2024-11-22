@@ -117,6 +117,7 @@ public class GameScreen implements Screen {
         map.render();
         map.UpdateCamera(player.getPosX(), player.getPosY());
         player.move(collisionManager, map);
+        player.update(delta);
 
         for (Entity entity : entitiesCopy) {
             if (entity instanceof Monster) {
@@ -131,9 +132,7 @@ public class GameScreen implements Screen {
         batch.begin();
         for (Entity entity : entitiesCopy) {
             if (entity instanceof Player) {
-                Player player = (Player) entity;
-                batch.draw(player.getCurrentFrame(), player.getPosX(), player.getPosY(), player.getSizeX(),
-                        player.getSizeY());
+                ((Player) entity).render(batch);
             } else {
                 entity.renderEntity(batch);
             }
@@ -208,7 +207,6 @@ public class GameScreen implements Screen {
         stage.getViewport().update(width, height, true);
     }
 
-
     @Override
     public void hide() {
         Gdx.input.setInputProcessor(null);
@@ -227,24 +225,10 @@ public class GameScreen implements Screen {
     }
 
     public void resetGame() {
-        // Réinitialiser les autres entités
         for (Weapon weapon : Weapon.weapons) {
             weapon.stopShooting();
         }
     }
-
-    /*public void resetGame() {
-        // Réinitialiser les autres entités
-        for (Weapon weapon : Weapon.weapons) {
-            weapon.stopShooting();
-        }
-        this.player = new Player();
-        //player.setPosX(player.getInitialX());
-        //player.setPosY(player.getInitialY());
-        //player.resetStats();
-        Entity.entities.clear();
-    }*/
-
 
     public Player getPlayer() {
         return player;
@@ -253,6 +237,4 @@ public class GameScreen implements Screen {
     @Override
     public void resume() {
     }
-
-
 }
