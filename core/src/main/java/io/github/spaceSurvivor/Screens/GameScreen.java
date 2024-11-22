@@ -140,15 +140,6 @@ public class GameScreen implements Screen {
         }
         batch.end();
 
-        shapeRenderer.setProjectionMatrix(map.getCamera().combined);
-
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        for (Entity entity : entitiesCopy) {
-            Rectangle hitbox = entity.getHitBox();
-            shapeRenderer.setColor(Color.RED);
-            shapeRenderer.rect(hitbox.x, hitbox.y, hitbox.width, hitbox.height);
-        }
-        shapeRenderer.end();
 
         checkAllCollisions();
 
@@ -233,7 +224,6 @@ public class GameScreen implements Screen {
         skin.dispose();
         batch.dispose();
         map.dispose();
-        shapeRenderer.dispose();
     }
 
     public void resetGame() {

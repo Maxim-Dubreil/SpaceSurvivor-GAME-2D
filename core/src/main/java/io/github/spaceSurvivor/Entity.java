@@ -91,7 +91,7 @@ public abstract class Entity {
     }
 
     public void drawHitbox(ShapeRenderer shapeRenderer) {
-        shapeRenderer.setColor(Color.RED); // Vous pouvez changer la couleur si vous le souhaitez
+        shapeRenderer.setColor(Color.RED);
         shapeRenderer.rect(posX, posY, sizeX, sizeY);
     }
 
