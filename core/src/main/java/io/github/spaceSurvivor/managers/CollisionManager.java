@@ -1,6 +1,7 @@
 package io.github.spaceSurvivor.managers;
 
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.math.Rectangle;
 import io.github.spaceSurvivor.Entity;
 import io.github.spaceSurvivor.Movable;
 import io.github.spaceSurvivor.Player;
@@ -85,15 +86,37 @@ public class CollisionManager {
         TiledMapTileLayer lab = (TiledMapTileLayer) map.getMap().getLayers().get("Lab");
         TiledMapTileLayer rocks = (TiledMapTileLayer) map.getMap().getLayers().get("Rocks");
         TiledMapTileLayer borders = (TiledMapTileLayer) map.getMap().getLayers().get("Borders");
-        float x = entity.getPosX() / Map.getTileSize();
-        float y = entity.getPosY() / Map.getTileSize();
 
-        int tileX = (int) x;
-        int tileY = (int) y;
+        float[] direction = entity.getDirection();
+        Rectangle hitbox = entity.getHitBox();
+
+        // Calculer le point de vérification en fonction de la direction
+        float checkX, checkY;
+
+        if (direction[0] > 0) {  // Mouvement vers la droite
+            checkX = hitbox.x + hitbox.width;
+            checkY = hitbox.y + hitbox.height / 2;
+        } else if (direction[0] < 0) {  // Mouvement vers la gauche
+            checkX = hitbox.x;
+            checkY = hitbox.y + hitbox.height / 2;
+        } else if (direction[1] > 0) {  // Mouvement vers le haut
+            checkX = hitbox.x + hitbox.width / 2;
+            checkY = hitbox.y + hitbox.height;
+        } else if (direction[1] < 0) {  // Mouvement vers le bas
+            checkX = hitbox.x + hitbox.width / 2;
+            checkY = hitbox.y;
+        } else {  // Aucun mouvement
+            checkX = hitbox.x + hitbox.width / 2;
+            checkY = hitbox.y + hitbox.height / 2;
+        }
+
+        int tileX = (int) checkX;
+        int tileY = (int) checkY;
 
         TiledMapTileLayer.Cell labCell = lab.getCell(tileX, tileY);
         TiledMapTileLayer.Cell rocksCell = rocks.getCell(tileX, tileY);
         TiledMapTileLayer.Cell bordersCell = borders.getCell(tileX, tileY);
+
 
         if (labCell != null && labCell.getTile() != null && labCell.getTile().getId() != 0) {
             return true;

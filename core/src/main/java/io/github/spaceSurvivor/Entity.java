@@ -3,9 +3,11 @@ package io.github.spaceSurvivor;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 
 import io.github.spaceSurvivor.monsters.Monster;
@@ -86,6 +88,11 @@ public abstract class Entity {
 
     public Rectangle getHitBox() {
         return new Rectangle(posX, posY, sizeX, sizeY);
+    }
+
+    public void drawHitbox(ShapeRenderer shapeRenderer) {
+        shapeRenderer.setColor(Color.RED); // Vous pouvez changer la couleur si vous le souhaitez
+        shapeRenderer.rect(posX, posY, sizeX, sizeY);
     }
 
     // public int getHitbox() {

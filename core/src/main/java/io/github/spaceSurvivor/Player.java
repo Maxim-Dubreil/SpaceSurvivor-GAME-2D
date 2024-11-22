@@ -138,10 +138,12 @@ public class Player extends Movable {
             if (collisionManager.handleEntityMapCollision(this, map)) {
                 this.setPosX(oldX);
                 this.setPosY(oldY);
+                System.out.println("Player collided with the map");
             }
         }
     }
 
+    @Override
     public float[] getDirection() {
         return new float[] { lastDirectionX, lastDirectionY };
     }
@@ -246,7 +248,11 @@ public class Player extends Movable {
     }
 
     public Rectangle getHitBox() {
-        return new Rectangle(Player.posX, Player.posY, sizeX, sizeY);
+        float hitboxWidth = sizeX / 2;
+        float hitboxHeight = sizeY / 2;
+        float centerX = Player.posX + sizeX / 2;
+        float centerY = Player.posY + sizeY / 2;
+        return new Rectangle(centerX - hitboxWidth / 2, centerY - hitboxHeight / 2, hitboxWidth, hitboxHeight);
     }
 
     public float getInitialX() {

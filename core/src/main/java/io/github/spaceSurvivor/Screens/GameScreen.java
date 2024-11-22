@@ -2,9 +2,12 @@ package io.github.spaceSurvivor.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -13,6 +16,8 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
+import io.github.spaceSurvivor.*;
+
 import io.github.spaceSurvivor.Entity;
 import io.github.spaceSurvivor.Main;
 import io.github.spaceSurvivor.Map;
@@ -20,6 +25,7 @@ import io.github.spaceSurvivor.Player;
 import io.github.spaceSurvivor.dropable.FireSpeedBuff;
 import io.github.spaceSurvivor.dropable.HealBuff;
 import io.github.spaceSurvivor.dropable.MoveSpeedBuff;
+
 import io.github.spaceSurvivor.managers.CollisionManager;
 import io.github.spaceSurvivor.monsters.Monster;
 import io.github.spaceSurvivor.monsters.Trouille;
@@ -39,6 +45,7 @@ public class GameScreen implements Screen {
     private final CollisionManager collisionManager;
     private final List<Trouille> trouilles = new ArrayList<>();
     private final List<Xela> xelas = new ArrayList<>();
+
     private final HealBuff healBuff1;
     private final FireSpeedBuff fireSpeedBuff1;
     private final MoveSpeedBuff moveSpeedBuff1;
@@ -59,9 +66,11 @@ public class GameScreen implements Screen {
         this.stage = new Stage();
         this.skin = new Skin(Gdx.files.internal("uiskin.json"));
         this.player = new Player();
+
         this.healBuff1 = new HealBuff(0.25f, 700, 750);
         this.fireSpeedBuff1 = new FireSpeedBuff(5, 800, 750);
         this.moveSpeedBuff1 = new MoveSpeedBuff(150, 900, 750);
+
 
         ImageButtonStyle style = new ImageButtonStyle();
         Texture pauseTextureNormal = new Texture(Gdx.files.internal("buttons/pauseButton.png"));
@@ -130,6 +139,16 @@ public class GameScreen implements Screen {
             }
         }
         batch.end();
+
+        shapeRenderer.setProjectionMatrix(map.getCamera().combined);
+
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        for (Entity entity : entitiesCopy) {
+            Rectangle hitbox = entity.getHitBox();
+            shapeRenderer.setColor(Color.RED);
+            shapeRenderer.rect(hitbox.x, hitbox.y, hitbox.width, hitbox.height);
+        }
+        shapeRenderer.end();
 
         checkAllCollisions();
 
@@ -214,6 +233,7 @@ public class GameScreen implements Screen {
         skin.dispose();
         batch.dispose();
         map.dispose();
+        shapeRenderer.dispose();
     }
 
     public void resetGame() {
