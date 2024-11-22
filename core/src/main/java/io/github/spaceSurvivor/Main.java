@@ -1,6 +1,8 @@
 package io.github.spaceSurvivor;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import io.github.spaceSurvivor.Screens.GameScreen;
 import io.github.spaceSurvivor.Screens.MainMenuScreen;
@@ -17,6 +19,7 @@ public class Main extends Game {
 
     @Override
     public void create() {
+        setFullScreen();
         batch = new SpriteBatch();
         audioManager = new AudioManager();
         this.setScreen(new MainMenuScreen(this));
@@ -41,6 +44,15 @@ public class Main extends Game {
         for (Entity entity : Entity.entities) {
             entity.dispose();
         }
+    }
+
+    public void setFullScreen() {
+        Graphics.DisplayMode displayMode = Gdx.graphics.getDisplayMode();
+        Gdx.graphics.setFullscreenMode(displayMode);
+    }
+
+    public void setWindowedMode() {
+        Gdx.graphics.setWindowedMode(800, 600); // Taille de la fenêtre (par exemple 800x600)
     }
 
     public void MainMenuScreen() {

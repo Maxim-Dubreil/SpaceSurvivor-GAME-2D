@@ -76,7 +76,6 @@ public class GameScreen implements Screen {
 
         audioManager = game.getAudioManager();
         audioManager.playGameMusic();
-        Gdx.app.log("AudioManager", "AudioManager initialized and game music should play.");
 
 
         ImageButtonStyle style = new ImageButtonStyle();

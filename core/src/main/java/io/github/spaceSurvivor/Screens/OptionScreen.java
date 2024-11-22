@@ -1,5 +1,6 @@
 package io.github.spaceSurvivor.Screens;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -34,6 +35,8 @@ public class OptionScreen implements Screen {
         this.skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
         this.audioManager = game.getAudioManager();
         this.volumeSlider = new Slider(0f, 1f, 0.1f, false, skin);
+        volumeSlider.setSize(400, 50);
+
         volumeSlider.setValue(audioManager.getMusicVolume());
 
         volumeSlider.addListener(new ChangeListener() {
