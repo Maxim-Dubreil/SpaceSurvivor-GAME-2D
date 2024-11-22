@@ -7,6 +7,8 @@ import io.github.spaceSurvivor.managers.CollisionManager;
 public abstract class Movable extends Entity {
 
     protected float speed;
+    protected float directionX;
+    protected float directionY;
 
     public Movable(Texture texture, float posX, float posY, float sizeX, float sizeY, float speed) {
         super(texture, posX, posY, sizeX, sizeY);
@@ -18,8 +20,8 @@ public abstract class Movable extends Entity {
         float oldX = this.getPosX();
         float oldY = this.getPosY();
 
-        float directionX = target.getPosX() - this.getPosX();
-        float directionY = target.getPosY() - this.getPosY();
+        directionX = target.getPosX() - this.getPosX();
+        directionY = target.getPosY() - this.getPosY();
 
         float length = (float) Math.sqrt(directionX * directionX + directionY * directionY);
 
@@ -57,6 +59,11 @@ public abstract class Movable extends Entity {
 
     public float getSpeed() {
         return this.speed;
+    }
+
+
+    public float[] getDirection() {
+        return new float[] { directionX, directionY };
     }
 
     public void setSpeed(float newSpeed) {
