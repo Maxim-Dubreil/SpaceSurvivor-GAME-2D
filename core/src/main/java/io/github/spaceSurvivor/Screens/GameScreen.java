@@ -1,30 +1,38 @@
 package io.github.spaceSurvivor.Screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
+import io.github.spaceSurvivor.*;
+
 import io.github.spaceSurvivor.Entity;
 import io.github.spaceSurvivor.Main;
 import io.github.spaceSurvivor.Map;
 import io.github.spaceSurvivor.Player;
+import io.github.spaceSurvivor.dropable.FireSpeedBuff;
+import io.github.spaceSurvivor.dropable.HealBuff;
+import io.github.spaceSurvivor.dropable.MoveSpeedBuff;
+
 import io.github.spaceSurvivor.managers.CollisionManager;
 import io.github.spaceSurvivor.monsters.Monster;
 import io.github.spaceSurvivor.monsters.Trouille;
 import io.github.spaceSurvivor.monsters.Xela;
 import io.github.spaceSurvivor.projectiles.Projectile;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
+import io.github.spaceSurvivor.weapons.Weapon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,33 +40,41 @@ import java.util.List;
 public class GameScreen implements Screen {
     private final Main game;
     private final SpriteBatch batch;
-    private final Player player;
-    private final Map map;
+    private Player player;
+    private Map map;
     private final CollisionManager collisionManager;
     private final List<Trouille> trouilles = new ArrayList<>();
     private final List<Xela> xelas = new ArrayList<>();
+
+    private final HealBuff healBuff1;
+    private final FireSpeedBuff fireSpeedBuff1;
+    private final MoveSpeedBuff moveSpeedBuff1;
 
     private boolean isPaused = false;
     private final Stage stage;
     private final Skin skin;
 
     public GameScreen(Main game, SpriteBatch batch) {
-        Gdx.app.log("GameScreen", "Nouvelle instance de GameScreen créée !");
+        Gdx.app.log("GameScreen", "New instance of GameScreen created !");
 
         this.game = game;
         this.batch = batch;
         this.collisionManager = new CollisionManager();
-        this.player = new Player();
         spawnMonstersInArc(20, 20, 500, 500, 680, 0, 180);
-
         this.map = new Map("Map/SpaceSurvivorNewMap.tmx");
         this.map.initCamera();
         this.stage = new Stage();
         this.skin = new Skin(Gdx.files.internal("uiskin.json"));
+        this.player = new Player();
+
+        this.healBuff1 = new HealBuff(0.25f, 700, 750);
+        this.fireSpeedBuff1 = new FireSpeedBuff(5, 800, 750);
+        this.moveSpeedBuff1 = new MoveSpeedBuff(150, 900, 750);
+
 
         ImageButtonStyle style = new ImageButtonStyle();
-        Texture pauseTextureNormal = new Texture(Gdx.files.internal("ui/pauseButton.png"));
-        Texture pauseTextureDown = new Texture(Gdx.files.internal("ui/pauseButtonDown.png"));
+        Texture pauseTextureNormal = new Texture(Gdx.files.internal("buttons/pauseButton.png"));
+        Texture pauseTextureDown = new Texture(Gdx.files.internal("buttons/pauseButtonDown.png"));
         style.up = new TextureRegionDrawable(new TextureRegion(pauseTextureNormal));
         style.down = new TextureRegionDrawable(new TextureRegion(pauseTextureDown));
 
@@ -77,7 +93,6 @@ public class GameScreen implements Screen {
 
         Gdx.input.setInputProcessor(stage);
         stage.addActor(table);
-        //table.setDebug(true);
     }
 
     public void setPaused(boolean isPaused) {
@@ -87,20 +102,21 @@ public class GameScreen implements Screen {
     @Override
     public void render(float delta) {
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            pause();
-            return;
-        }
         if (isPaused) {
             stage.act(delta);
             stage.draw();
             return;
         }
 
+        if (player.getIsDead()) {
+            game.setScreen(new GameOverScreen(game, this));
+        }
+
         List<Entity> entitiesCopy = new ArrayList<>(Entity.entities);
         map.render();
         map.UpdateCamera(player.getPosX(), player.getPosY());
         player.move(collisionManager, map);
+        player.update(delta);
 
         for (Entity entity : entitiesCopy) {
             if (entity instanceof Monster) {
@@ -113,14 +129,21 @@ public class GameScreen implements Screen {
 
         batch.setProjectionMatrix(map.getCamera().combined);
         batch.begin();
-        for (Entity entity : Entity.entities) {
-            entity.renderEntity(batch);
+        for (Entity entity : entitiesCopy) {
+            if (entity instanceof Player) {
+                ((Player) entity).render(batch);
+            } else {
+                entity.renderEntity(batch);
+            }
         }
         batch.end();
 
+
         checkAllCollisions();
+
         stage.act(delta);
         stage.draw();
+
     }
 
     private void checkAllCollisions() {
@@ -145,13 +168,18 @@ public class GameScreen implements Screen {
 
     @Override
     public void pause() {
-        setPaused(true);
-        Gdx.input.setInputProcessor(null);
-        game.setScreen(new PauseScreen(game, this));
+        if (!isPaused) {
+            setPaused(true);
+            Gdx.input.setInputProcessor(null);
+            for (Weapon weapon : Weapon.weapons) {
+                weapon.stopShooting();
+            }
+            game.setScreen(new PauseScreen(game));
+        }
     }
 
     public void spawnMonstersInArc(int numTrouilles, int numXelas, float centerX, float centerY, float radius,
-                                   float startAngle, float endAngle) {
+            float startAngle, float endAngle) {
         float angleStepTrouille = (endAngle - startAngle) / (numTrouilles - 1); // Angle entre chaque Trouille
         float angleStepXela = (endAngle - startAngle) / (numXelas - 1); // Angle entre chaque Xela
         for (int i = 0; i < numTrouilles; i++) {
@@ -179,9 +207,6 @@ public class GameScreen implements Screen {
     }
 
     @Override
-    public void resume() {}
-
-    @Override
     public void hide() {
         Gdx.input.setInputProcessor(null);
     }
@@ -197,5 +222,18 @@ public class GameScreen implements Screen {
         batch.dispose();
         map.dispose();
     }
-}
 
+    public void resetGame() {
+        for (Weapon weapon : Weapon.weapons) {
+            weapon.stopShooting();
+        }
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    @Override
+    public void resume() {
+    }
+}

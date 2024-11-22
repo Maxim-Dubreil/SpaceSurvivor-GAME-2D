@@ -4,24 +4,28 @@ import com.badlogic.gdx.graphics.Texture;
 
 import io.github.spaceSurvivor.Movable;
 import io.github.spaceSurvivor.Player;
+import io.github.spaceSurvivor.dropable.Xp;
 
 public abstract class Monster extends Movable {
 
     protected Player target;
     protected float hp;
     protected float damages;
+    private int xpValue;
 
     public Monster(Texture texture, float posX, float posY, float sizeX, float sizeY, float speed, float hp,
-            float damages) {
+            float damages, int xpValue) {
         super(texture, posX, posY, sizeX, sizeY, speed);
         this.hp = hp;
         this.damages = damages;
+        this.xpValue = xpValue;
     }
 
     public void isDead() {
         if (this.hp <= 0) {
             entities.remove(this);
             this.dispose();
+            dropXp();
         }
     }
 
@@ -41,5 +45,9 @@ public abstract class Monster extends Movable {
     public void takeDamage(float damage) {
         this.hp -= damage;
         isDead();
+    }
+
+    public void dropXp() {
+        new Xp(this.getPosX(), this.getPosY(), this.xpValue);
     }
 }

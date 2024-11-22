@@ -3,113 +3,131 @@ package io.github.spaceSurvivor.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import io.github.spaceSurvivor.Main;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.utils.Align;
-
+import io.github.spaceSurvivor.Player;
+import io.github.spaceSurvivor.Screens.backOptions.OptionScreenPause;
+import io.github.spaceSurvivor.weapons.Weapon;
 
 public class PauseScreen implements Screen {
     private final Main game;
     private final Stage stage;
-    private final GameScreen gameScreen;
     private final Skin skin;
+    private Window pauseWindow;
+    private Texture backgroundPause;
+    private final SpriteBatch batch;
 
-    public PauseScreen(Main game, GameScreen gameScreen) {
+    public PauseScreen(Main game) {
         this.game = game;
-        this.gameScreen = gameScreen;
+        this.batch = new SpriteBatch();
         this.stage = new Stage(new ScreenViewport());
         this.skin = new Skin(Gdx.files.internal("uiskin.json"));
+        backgroundPause = new Texture(Gdx.files.internal("Background/PauseBgv2.png"));
 
-        TextButton optionsButton = new TextButton("Settings", skin);
-        TextButton resumeButton = new TextButton("Resume", skin);
-        TextButton returnMenuButton = new TextButton("Return to menu", skin);
+        initializeUI();
+    }
+
+    private void initializeUI() {
+        ImageButton resumeButton = createButton("buttons/resume");
+        ImageButton optionButton = createButton("buttons/options");
+        ImageButton returnMenuButton = createButton("buttons/menu");
+        ImageButton quitButton = createButton("buttons/quit");
 
         resumeButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                resume();
-            }
-        });
-
-        optionsButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.log("PauseScreen", "Options button clicked, opening options");
+                Gdx.app.log("PauseScreen", "Resume button clicked, resuming the game...");
+                resumeGame();
             }
         });
 
         returnMenuButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.log("PauseScreen", "Quit button clicked, returning to main menu...");
+                Gdx.app.log("PauseScreen", "Quit button clicked, set option screen...");
                 returnToMainMenu();
             }
         });
 
+        optionButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.log("PauseScreen", "Option button clicked, returning to main menu...");
+                game.setScreen(new OptionScreenPause(game, PauseScreen.this));
+
+            }
+        });
+
+        quitButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.log("PauseScreen", "quit button clicked, quit the game");
+                Gdx.app.exit();
+            }
+        });
+
         Table table = new Table();
-        table.center(); // Centre le tableau
-
-        //TITRE
-        Label titleLabel = new Label("Game Pause", skin);
-        titleLabel.setAlignment(Align.center);
-        table.add(titleLabel).expandX().fillX().padBottom(20);
+        table.center();
+        table.add(resumeButton);
+        table.row().pad(10);
+        table.add(optionButton);
+        table.row().pad(10);
+        table.add(returnMenuButton);
         table.row();
+        table.add(quitButton);
 
-        //AJOUT BOUTON DANS TABLE
-        table.add(resumeButton).fillX().uniformX().height(60).pad(10);
-        table.row();
-        table.add(optionsButton).fillX().uniformX().height(60).pad(10);
-        table.row();
-        table.add(returnMenuButton).fillX().uniformX().height(60).pad(10);
-
-        //WINDOW
-        Window pauseWindow = new Window("", skin);
+        pauseWindow = new Window("", skin);
         pauseWindow.setModal(true);
-        pauseWindow.center();
+        pauseWindow.setMovable(false);
+        pauseWindow.setBackground(createBackgroundDrawable("Background/Pause.png"));
+        pauseWindow.add(table).expand().fill();
 
-        //TAILLE WINDOW
-        pauseWindow.setSize(500, 400);
 
-        //BACKGROUND WINDOW
-        Texture transparentTexture = new Texture(Gdx.files.internal("ui/backgroundPauseScreen.png"));
-        TextureRegionDrawable transparentDrawable = new TextureRegionDrawable(new TextureRegion(transparentTexture));
-        pauseWindow.setBackground(transparentDrawable);
+        pauseWindow.setSize(stage.getViewport().getWorldWidth(), stage.getViewport().getWorldHeight());
+        pauseWindow.setSize(800, 600);  // Taille de la fenêtre (ajuste selon tes besoins)
 
-        //AJOUT TABLE DANS WINDOW
-        pauseWindow.add(table).pad(20).fill();
-
-        //AJOUT WINDOW DANS STAGE
+        centerActor(pauseWindow);
         stage.addActor(pauseWindow);
-
-        //CENTRANGE WINDOW
-        centerWindow(pauseWindow);
     }
 
-    private void centerWindow(Window pauseWindow) {
-        // Récupérez la largeur et la hauteur du stage (écran)
+    private ImageButton createButton(String basePath) {
+        Texture upTexture = new Texture(Gdx.files.internal(basePath + "_up.png"));
+        Texture overTexture = new Texture(Gdx.files.internal(basePath + "_over.png"));
+        Texture downTexture = new Texture(Gdx.files.internal(basePath + "_down.png"));
+
+        ImageButton.ImageButtonStyle buttonStyle = new ImageButton.ImageButtonStyle();
+        buttonStyle.up = new TextureRegionDrawable(new TextureRegion(upTexture));
+        buttonStyle.over = new TextureRegionDrawable(new TextureRegion(overTexture));
+        buttonStyle.down = new TextureRegionDrawable(new TextureRegion(downTexture));
+
+        return new ImageButton(buttonStyle);
+    }
+
+    private TextureRegionDrawable createBackgroundDrawable(String path) {
+        Texture texture = new Texture(Gdx.files.internal(path));
+        return new TextureRegionDrawable(new TextureRegion(texture));
+    }
+
+    private void centerActor(Actor actor) {
         float stageWidth = stage.getViewport().getWorldWidth();
         float stageHeight = stage.getViewport().getWorldHeight();
+        float actorWidth = actor.getWidth();
+        float actorHeight = actor.getHeight();
 
-        // Récupérez la largeur et la hauteur de la fenêtre
-        float windowWidth = pauseWindow.getWidth();
-        float windowHeight = pauseWindow.getHeight();
-
-        // Calculer la position pour centrer la fenêtre
-        float x = (stageWidth - windowWidth) / 2;
-        float y = (stageHeight - windowHeight) / 2;
-        pauseWindow.setPosition(x, y);
+        Gdx.app.log("PauseScreen", "Stage size: " + stageWidth + "x" + stageHeight);
+        Gdx.app.log("PauseScreen", "Actor size: " + actorWidth + "x" + actorHeight);
     }
+
 
     @Override
     public void show() {
@@ -118,11 +136,14 @@ public class PauseScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.app.log("PauseScreen", "Affichage de l'écran Pause");
+        batch.begin();
+        batch.draw(backgroundPause, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        batch.end();
+
         stage.act(delta);
         stage.draw();
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) && game.getScreen() == this) {
             resume();
         }
     }
@@ -130,20 +151,48 @@ public class PauseScreen implements Screen {
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
+        pauseWindow.setSize(stage.getViewport().getWorldWidth(), stage.getViewport().getWorldHeight());
+
+        centerActor(pauseWindow);
+
     }
 
+
     @Override
-    public void pause() {}
+    public void pause() {
+
+    }
 
     @Override
     public void resume() {
-        gameScreen.setPaused(false);
-        game.setScreen(gameScreen);
+
+    }
+
+    public void resumeGame() {
+        GameScreen gameScreen = game.getGameScreen();
+        if (gameScreen != null) {
+            gameScreen.setPaused(false);
+            Player player = gameScreen.getPlayer();
+            for (Weapon weapon : Weapon.weapons) {
+                weapon.startShooting(player);
+            }
+            game.setScreen(gameScreen);
+        }else {
+            game.MainMenuScreen();
+            Gdx.app.log("PauseScreen", "GameScreen is null, cannot resume game.");
+        }
     }
 
     public void returnToMainMenu() {
-        gameScreen.setPaused(false);
-        game.MainMenuScreen();
+        GameScreen gameScreen = game.getGameScreen();
+        if (gameScreen != null) {
+            gameScreen.setPaused(false);
+            gameScreen.resetGame();
+            game.MainMenuScreen();
+        } else {
+            game.MainMenuScreen();
+            Gdx.app.log("PauseScreen", "GameScreen is null, cannot return to main menu.");
+        }
     }
 
     @Override

@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -19,24 +18,30 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import io.github.spaceSurvivor.Main;
+import io.github.spaceSurvivor.Screens.backOptions.OptionScreenMenu;
+import io.github.spaceSurvivor.managers.AudioManager;
 
 public class MainMenuScreen implements Screen {
 
     private final Main game;
     private final Stage stage;
     private final Texture backgroundTexture;
-
     private final BitmapFont font;
     private final SpriteBatch batch;
+    private AudioManager audioManager;
 
     public MainMenuScreen(Main game) {
-        Gdx.app.log("MainMenuScreen", "Nouvelle instance de MainMenuScreen créée !");
+        Gdx.app.log("MainMenuScreen", "New instance of MainMenuScreen created !");
 
         this.game = game;
         stage = new Stage(new ScreenViewport());
-        backgroundTexture = new Texture("background.png");
+        backgroundTexture = new Texture("Background/Menu.png");
         font = new BitmapFont(Gdx.files.internal("fonts/MyFont.fnt"));
         batch = new SpriteBatch();
+        audioManager = game.getAudioManager();
+        audioManager.playMenuMusic();
+        Gdx.app.log("AudioManager", "AudioManager initialized and menu music should play.");
+
 
         TextButton.TextButtonStyle playButtonStyle = new TextButton.TextButtonStyle();
         playButtonStyle.font = new BitmapFont(Gdx.files.internal("fonts/MyFont.fnt"));
@@ -59,9 +64,8 @@ public class MainMenuScreen implements Screen {
         quitButtonStyle.down = quitButtonStyle.up;
         quitButtonStyle.over = quitButtonStyle.up;
 
-        Color hoverColor = new Color(82/255f, 113/255f, 255/255f, 1);
-        Color clickedColor = new Color(122/255f, 151/255f, 255/255f, 1);
-
+        Color hoverColor = new Color(82 / 255f, 113 / 255f, 255 / 255f, 1);
+        Color clickedColor = new Color(122 / 255f, 151 / 255f, 255 / 255f, 1);
 
         playButtonStyle.fontColor = Color.WHITE;
         playButtonStyle.downFontColor = clickedColor;
@@ -95,6 +99,7 @@ public class MainMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("MainMenuScreen", "Options button clicked, opening options menu...");
+                game.setScreen(new OptionScreenMenu(game));
             }
         });
 
@@ -111,12 +116,11 @@ public class MainMenuScreen implements Screen {
         table.add(playButton).fillX().uniformX().pad(20).minHeight(50);
         table.row().pad(15, 0, 10, 0);
         table.add(optionsButton).fillX().uniformX().pad(20).minHeight(50);
-        table.row();
+        table.row().pad(15, 0, 10, 0);
         table.add(quitButton).fillX().uniformX().pad(20).minHeight(50);
 
         stage.addActor(table);
         Gdx.input.setInputProcessor(stage);
-
 
     }
 
@@ -170,6 +174,8 @@ public class MainMenuScreen implements Screen {
     @Override
     public void hide() {
         Gdx.input.setInputProcessor(null);
+        audioManager.stopAllMusic();
+
     }
 
     @Override
@@ -177,6 +183,8 @@ public class MainMenuScreen implements Screen {
         stage.dispose();
         backgroundTexture.dispose();
         font.dispose();
+        audioManager.dispose();
+
     }
 
     public Main getGame() {
