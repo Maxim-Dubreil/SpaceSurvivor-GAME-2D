@@ -31,7 +31,7 @@ public class Player extends Movable {
     private float maxHp = 200;
     private int xp = 0;
     private int level = 1;
-    private static int score = 0;
+    public static int score = 0;
     public static float posX = 950 * Map.getUnitScale();
     public static float posY = 800 * Map.getUnitScale();
     private boolean canTakeDamage = true;
@@ -235,6 +235,18 @@ public class Player extends Movable {
         }
     }
 
+    public void dispose() {
+        for (Weapon weapon : new ArrayList<>(weapons)) {
+            weapon.stopShooting();
+        }
+        weapons.clear();
+        Player.posX = 950 * Map.getUnitScale();
+        Player.posY = 800 * Map.getUnitScale();
+        Player.score = 0;
+        this.xp = 0;
+        this.hp = 100;
+    }
+
     public void isDead() {
         if (this.hp <= 0) {
             entities.remove(this);
@@ -271,7 +283,7 @@ public class Player extends Movable {
     // ====================== GETTERS ======================
 
     public int getScore() {
-        return this.score;
+        return Player.score;
     }
 
     public int getLevel() {

@@ -12,7 +12,6 @@ import io.github.spaceSurvivor.Player;
 import io.github.spaceSurvivor.managers.CollisionManager;
 import io.github.spaceSurvivor.Map;
 import io.github.spaceSurvivor.projectiles.BossProjectiles;
-import io.github.spaceSurvivor.projectiles.PewpewProjectile;
 
 public class Boss extends Monster {
     private Animation<TextureRegion> walkLeftAnimation;
@@ -49,14 +48,13 @@ public class Boss extends Monster {
             walkLeftFrames.add(frames[3][i]);
         }
 
-        for (int i = 0; i < 4; i++){
+        for (int i = 0; i < 4; i++) {
             walkDownFrames.add(frames[2][i]);
         }
 
         walkRightAnimation = new Animation<>(0.2f, walkRightFrames);
         walkLeftAnimation = new Animation<>(0.2f, walkLeftFrames);
         walkDownAnimation = new Animation<>(0.2f, walkDownFrames);
-
 
         currentFrame = walkRightAnimation.getKeyFrame(0);
     }
@@ -70,7 +68,7 @@ public class Boss extends Monster {
         if (this.getPosX() < target.getPosX()) {
             // Moving right
             currentFrame = walkLeftAnimation.getKeyFrame(stateTime, true);
-        } else if (this.getPosX() == target.getPosX()){
+        } else if (this.getPosX() == target.getPosX()) {
             currentFrame = walkDownAnimation.getKeyFrame(stateTime, true);
         } else {
             // Moving left
@@ -112,6 +110,5 @@ public class Boss extends Monster {
         float centerY = this.posY + sizeY / 3;
         return new Rectangle(centerX - hitboxWidth / 3, centerY - hitboxHeight / 3, hitboxWidth, hitboxHeight);
     }
-
 
 }

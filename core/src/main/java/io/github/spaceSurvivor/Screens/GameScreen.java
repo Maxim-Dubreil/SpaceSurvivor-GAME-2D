@@ -23,21 +23,12 @@ import io.github.spaceSurvivor.*;
 
 import io.github.spaceSurvivor.managers.CollisionManager;
 import io.github.spaceSurvivor.managers.ProgressionManager;
-import io.github.spaceSurvivor.Entity;
-import io.github.spaceSurvivor.Main;
-import io.github.spaceSurvivor.Map;
-import io.github.spaceSurvivor.Player;
-import io.github.spaceSurvivor.dropable.FireSpeedBuff;
-import io.github.spaceSurvivor.dropable.HealBuff;
-import io.github.spaceSurvivor.dropable.MoveSpeedBuff;
 
 import io.github.spaceSurvivor.managers.AudioManager;
-import io.github.spaceSurvivor.managers.CollisionManager;
 import io.github.spaceSurvivor.monsters.Boss;
 
 import io.github.spaceSurvivor.monsters.Monster;
-import io.github.spaceSurvivor.monsters.Trouille;
-import io.github.spaceSurvivor.monsters.Xela;
+
 import io.github.spaceSurvivor.projectiles.Projectile;
 import io.github.spaceSurvivor.weapons.Weapon;
 
@@ -53,8 +44,6 @@ public class GameScreen implements Screen {
 
     private ProgressionManager progressionManager;
 
-    private final List<Trouille> trouilles = new ArrayList<>();
-    private final List<Xela> xelas = new ArrayList<>();
     private final Boss boss;
     private ShapeRenderer shapeRenderer;
     private boolean showHitboxes = false;
@@ -85,8 +74,6 @@ public class GameScreen implements Screen {
         shapeRenderer = new ShapeRenderer();
 
         this.progressionManager = new ProgressionManager(player, this);
-
-        // ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
 
         audioManager = game.getAudioManager();
         audioManager.playGameMusic();
@@ -155,7 +142,7 @@ public class GameScreen implements Screen {
         }
 
         if (player.getIsDead()) {
-            game.setScreen(new GameOverScreen(game, this));
+            game.setScreen(new GameOverScreen(game));
         }
 
         progressionManager.update(delta);
@@ -179,7 +166,6 @@ public class GameScreen implements Screen {
         batch.begin();
         for (Entity entity : entitiesCopy) {
             if (entity instanceof Player) {
-                Player player = (Player) entity;
                 ((Player) entity).render(batch);
                 // batch.draw(player.getCurrentFrame(), player.getPosX(), player.getPosY(),
                 // player.getSizeX(),
@@ -280,17 +266,29 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
-        for (Entity entity : Entity.entities) {
+        List<Entity> entitiesCopy = new ArrayList<>(Entity.entities);
+        for (Entity entity : entitiesCopy) {
             entity.dispose();
         }
         Entity.entities.clear();
+        Player.posX = 950 * Map.getUnitScale();
+        Player.posY = 800 * Map.getUnitScale();
+        Player.score = 0;
+
+        for (Weapon weapon : new ArrayList<>(Weapon.weapons)) {
+            weapon.stopShooting();
+        }
+        Weapon.weapons.clear();
+
+        if (boss != null) {
+            boss.stopShooting();
+        }
+
         stage.dispose();
         skin.dispose();
-        batch.dispose();
         map.dispose();
         shapeRenderer.dispose();
         audioManager.dispose();
-
     }
 
     public void resetGame() {
