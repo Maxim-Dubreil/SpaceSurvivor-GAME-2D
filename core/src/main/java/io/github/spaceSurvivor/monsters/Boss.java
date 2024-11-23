@@ -6,9 +6,13 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Timer;
+import com.badlogic.gdx.utils.Timer.Task;
 import io.github.spaceSurvivor.Player;
 import io.github.spaceSurvivor.managers.CollisionManager;
 import io.github.spaceSurvivor.Map;
+import io.github.spaceSurvivor.projectiles.BossProjectiles;
+import io.github.spaceSurvivor.projectiles.PewpewProjectile;
 
 public class Boss extends Monster {
     private Animation<TextureRegion> walkLeftAnimation;
@@ -16,10 +20,13 @@ public class Boss extends Monster {
     private Animation<TextureRegion> walkDownAnimation;
     private TextureRegion currentFrame;
     private float stateTime = 0f;
+    private Timer.Task shootingTask;
+    private float shootingRate = 1.0f;
 
-    public Boss(float posX, float posY) {
+    public Boss(float posX, float posY, Player player) {
         super(new Texture("Monster/GolemSprite.png"), posX, posY, 120, 120, 60, 10000, 20, 100);
         loadAnimations(new Texture("Monster/GolemSprite.png"));
+        startShooting(player);
     }
 
     private void loadAnimations(Texture spriteSheet) {
@@ -71,8 +78,31 @@ public class Boss extends Monster {
         }
     }
 
+    public void shotProjectile(Player player) {
+        new BossProjectiles((this.posX + 1.6f), (this.posY + 1f), this, player);
+        System.out.println("Boss life: " + this.getHp());
+
+    }
+
     public TextureRegion getCurrentFrame() {
         return currentFrame;
+    }
+
+    public void startShooting(Player player) {
+        shootingTask = new Task() {
+            @Override
+            public void run() {
+                shotProjectile(player);
+            }
+        };
+        Timer.schedule(shootingTask, 0, shootingRate);
+    }
+
+    public void stopShooting() {
+        if (shootingTask != null) {
+            shootingTask.cancel();
+            shootingTask = null;
+        }
     }
 
     public Rectangle getHitBox() {

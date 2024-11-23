@@ -81,7 +81,7 @@ public class GameScreen implements Screen {
         this.stage = new Stage();
         this.skin = new Skin(Gdx.files.internal("uiskin.json"));
         this.player = new Player();
-        this.boss = new Boss(900, 900);
+        this.boss = new Boss(900, 900, player);
         shapeRenderer = new ShapeRenderer();
 
         this.progressionManager = new ProgressionManager(player, this);
@@ -258,6 +258,7 @@ public class GameScreen implements Screen {
             for (Weapon weapon : Weapon.weapons) {
                 weapon.stopShooting();
             }
+            boss.stopShooting();
             game.setScreen(new PauseScreen(game));
         }
     }
@@ -296,6 +297,7 @@ public class GameScreen implements Screen {
         for (Weapon weapon : Weapon.weapons) {
             weapon.stopShooting();
         }
+        boss.stopShooting();
     }
 
     public Player getPlayer() {

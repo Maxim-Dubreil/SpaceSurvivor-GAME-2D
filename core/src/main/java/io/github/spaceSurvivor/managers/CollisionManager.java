@@ -7,6 +7,7 @@ import io.github.spaceSurvivor.Movable;
 import io.github.spaceSurvivor.Player;
 import io.github.spaceSurvivor.monsters.Boss;
 import io.github.spaceSurvivor.monsters.Monster;
+import io.github.spaceSurvivor.projectiles.BossProjectiles;
 import io.github.spaceSurvivor.projectiles.Projectile;
 import io.github.spaceSurvivor.dropable.Xp;
 import io.github.spaceSurvivor.Map;
@@ -50,6 +51,12 @@ public class CollisionManager {
     private void handleProjectileMonsterCollision(Projectile projectile, Monster monster) {
         monster.takeDamage(projectile.getDamage());
         Player.addScore(28);
+        Entity.entities.remove(projectile);
+        projectile.dispose();
+    }
+
+    private void handleBossProjectilePlayerCollision(Projectile projectile, Player player) {
+        player.takeDamage(projectile.getDamage());
         Entity.entities.remove(projectile);
         projectile.dispose();
     }
@@ -138,11 +145,20 @@ public class CollisionManager {
             Player player = (entityA instanceof Player) ? (Player) entityA : (Player) entityB;
             Monster monster = (entityA instanceof Monster) ? (Monster) entityA : (Monster) entityB;
             handlePlayerMonsterCollision(player, monster);
+        } else if ((entityA instanceof Projectile && entityB instanceof Player) ||
+                (entityA instanceof Player && entityB instanceof Projectile)) {
+            Projectile projectile = (entityA instanceof Projectile) ? (Projectile) entityA : (Projectile) entityB;
+            Player player = (entityA instanceof Player) ? (Player) entityA : (Player) entityB;
+            if (projectile instanceof BossProjectiles) {
+                handleBossProjectilePlayerCollision(projectile, player);
+            }
         } else if ((entityA instanceof Projectile && entityB instanceof Monster) ||
                 (entityA instanceof Monster && entityB instanceof Projectile)) {
             Projectile projectile = (entityA instanceof Projectile) ? (Projectile) entityA : (Projectile) entityB;
             Monster monster = (entityA instanceof Monster) ? (Monster) entityA : (Monster) entityB;
-            handleProjectileMonsterCollision(projectile, monster);
+            if (!(projectile instanceof BossProjectiles)) {
+                handleProjectileMonsterCollision(projectile, monster);
+            }
         } else if (entityA instanceof Monster && entityB instanceof Monster) {
             Monster monster1 = (Monster) entityA;
             Monster monster2 = (Monster) entityB;
