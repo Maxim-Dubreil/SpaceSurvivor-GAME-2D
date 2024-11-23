@@ -1,33 +1,80 @@
-# SpaceSurvivor
+# 🌌 **Space Survivor** 🌌
 
-A [libGDX](https://libgdx.com/) project generated with [gdx-liftoff](https://github.com/libgdx/gdx-liftoff).
+**_An epic pixel art journey through the cosmos, where survival is your only mission!_**
 
-This project was generated with a template including simple application launchers and an `ApplicationAdapter` extension that draws libGDX logo.
+<div align="center">
+  <img src="gamescreenShot.png" alt="Space Survivor Preview" width="600">
+  <br>
+  <em>An exclusive glimpse into your galactic adventure!</em>
+</div>
 
-## Platforms
+---
 
-- `core`: Main module with the application logic shared by all platforms.
-- `lwjgl3`: Primary desktop platform using LWJGL3; was called 'desktop' in older docs.
+## 🚀 **About the Project**
 
-## Gradle
+**Space Survivor** is a 2D survival game set in a retro pixel art universe. Face endless waves of cosmic monsters while upgrading your arsenal. With each level, challenges intensify, testing your strategy and reflexes to the limit.
 
-This project uses [Gradle](https://gradle.org/) to manage dependencies.
-The Gradle wrapper was included, so you can run Gradle tasks using `gradlew.bat` or `./gradlew` commands.
-Useful Gradle tasks and flags:
+🌠 **Key Features:**
 
-- `--continue`: when using this flag, errors will not stop the tasks from running.
-- `--daemon`: thanks to this flag, Gradle daemon will be used to run chosen tasks.
-- `--offline`: when using this flag, cached dependency archives will be used.
-- `--refresh-dependencies`: this flag forces validation of all dependencies. Useful for snapshot versions.
-- `build`: builds sources and archives of every project.
-- `cleanEclipse`: removes Eclipse project data.
-- `cleanIdea`: removes IntelliJ project data.
-- `clean`: removes `build` folders, which store compiled classes and built archives.
-- `eclipse`: generates Eclipse project data.
-- `idea`: generates IntelliJ project data.
-- `lwjgl3:jar`: builds application's runnable jar, which can be found at `lwjgl3/build/libs`.
-- `lwjgl3:run`: starts the application.
-- `test`: runs unit tests (if any).
+- Retro-inspired pixel art graphics.
+- Dynamically generated endless monster waves.
+- Progression system to unlock weapons and enhance your skills.
+- Immersive space-themed soundtrack.
 
-Note that most tasks that are not specific to a single project can be run with `name:` prefix, where the `name` should be replaced with the ID of a specific project.
-For example, `core:clean` removes `build` folder only from the `core` project.
+---
+
+## 🎮 **Gameplay Overview**
+
+> **Objective:** Survive as many waves as possible! Collect bonuses, upgrade your weapons, and confront epic bosses!
+
+---
+
+# 💾 **Installation and Launch Guide**
+
+### 📋 **Prerequisites**
+
+Ensure you have the following installed on your machine:
+
+- [Docker](https://www.docker.com/)
+- Java (JDK 17 or higher)
+- Gradle
+
+### 🚀 **Launching the Project**
+
+1. **Clone the repository:**
+
+   ```bash
+   git clone <git@github.com:EpitechMscProPromo2027/T-JAV-501-REN_3.git>
+   cd T-JAV-501-REN_3
+   ```
+
+## Start the Docker environment:
+
+**Navigate to the docker directory**
+
+```bash
+cd docker
+Run docker compose up:
+```
+
+**Once Docker is up and running, return to the root directory**
+
+```bash
+cd ..
+```
+
+**Run the game**
+
+Execute Gradle to launch the project:
+
+```bash
+sudo ./gradlew run
+```
+
+**Enjoy the game! 🌟**
+
+## 📜 Credits
+
+- Developed by: Maxime, Yannis and Theo.
+
+Join the cosmic adventure! 🚀
