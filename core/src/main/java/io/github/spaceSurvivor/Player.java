@@ -48,7 +48,7 @@ public class Player extends Movable {
     public Player() {
         super(new Texture("Player/SpaceMarineSprites.png"), posX, posY, 85, 85, 150);
         loadAnimations(new Texture("Player/SpaceMarineSprites.png"));
-        Player.weapons.add(new Pewpew(this));
+        Player.weapons.add(new AutoNoob(this));
         this.initialX = (int) posX;
         this.initialY = (int) posY;
     }
@@ -154,13 +154,13 @@ public class Player extends Movable {
     }
 
     private void checkWeaponUnlocks() {
-        if (level >= 2 && !hasWeapon(StoneThrown.class)) {
-            Player.weapons.add(new StoneThrown(this));
-            System.out.println("Nouvelle arme débloquée : StoneThrown !");
+        if (level >= 10 && !hasWeapon(Pewpew.class)) {
+            Player.weapons.add(new Pewpew(this));
+            System.out.println("New weapon : Pewpew !");
         }
-        if (level >= 3 && !hasWeapon(AutoNoob.class)) {
-            Player.weapons.add(new AutoNoob(this));
-            System.out.println("Nouvelle arme débloquée : AutoNoob !");
+        if (level >= 20 && !hasWeapon(StoneThrown.class)) {
+            Player.weapons.add(new StoneThrown(this));
+            System.out.println("New weapon : StoneThrown !");
         }
     }
 
