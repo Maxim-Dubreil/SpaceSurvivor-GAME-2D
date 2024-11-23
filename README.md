@@ -54,7 +54,7 @@ Ensure you have the following installed on your machine:
 
 ```bash
 cd docker
-Run docker compose up:
+Run docker compose up
 ```
 
 **Once Docker is up and running, return to the root directory**
@@ -75,6 +75,6 @@ sudo ./gradlew run
 
 ## 📜 Credits
 
-- Developed by: Maxime, Yannis and Theo.
+- Developed by: Maxim, Yannis and Theo. At Epitech Rennes.
 
 Join the cosmic adventure! 🚀
