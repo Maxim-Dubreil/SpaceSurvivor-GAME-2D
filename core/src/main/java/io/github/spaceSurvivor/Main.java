@@ -47,12 +47,16 @@ public class Main extends Game {
     }
 
     public void setFullScreen() {
-        Graphics.DisplayMode displayMode = Gdx.graphics.getDisplayMode();
-        Gdx.graphics.setFullscreenMode(displayMode);
+        if (!Gdx.graphics.isFullscreen()) {
+            Graphics.DisplayMode currentMode = Gdx.graphics.getDisplayMode();
+            Gdx.graphics.setFullscreenMode(currentMode);
+        }
     }
 
     public void setWindowedMode() {
-        Gdx.graphics.setWindowedMode(1280, 720); // Taille de la fenêtre (par exemple 800x600)
+        if (Gdx.graphics.isFullscreen()) {
+            Gdx.graphics.setWindowedMode(1920, 1080);
+        }
     }
 
     public void MainMenuScreen() {
