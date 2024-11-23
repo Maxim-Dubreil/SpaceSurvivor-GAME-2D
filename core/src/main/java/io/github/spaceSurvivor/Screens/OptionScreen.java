@@ -2,7 +2,10 @@ package io.github.spaceSurvivor.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -15,6 +18,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.Screen;
 import io.github.spaceSurvivor.Main;
 import io.github.spaceSurvivor.managers.AudioManager;
+import org.w3c.dom.Text;
 
 public class OptionScreen implements Screen {
     private final Stage stage;
@@ -23,8 +27,10 @@ public class OptionScreen implements Screen {
     private final SpriteBatch batch;
 
     private AudioManager audioManager;
-    private Slider volumeSlider;
     private Skin skin;
+
+    private BitmapFont MyFont;
+    private Label VolumLabel;
 
 
     public OptionScreen(Main game) {
@@ -32,21 +38,37 @@ public class OptionScreen implements Screen {
         this.stage = new Stage();
         this.batch = new SpriteBatch();
         backgroundOption = new Texture("Background/Option.png");
-        this.skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
+
+        this.skin = new Skin();
+        TextureAtlas Atlas = new TextureAtlas(Gdx.files.internal("Skin/Star-soldier/star-soldier-ui.atlas"));
+        skin.addRegions(Atlas);
+        skin.load(Gdx.files.internal("Skin/Star-soldier/star-soldier-ui.json"));
+
+        //SLIDER
         this.audioManager = game.getAudioManager();
-        this.volumeSlider = new Slider(0f, 1f, 0.1f, false, skin);
-        volumeSlider.setSize(400, 50);
-
-        volumeSlider.setValue(audioManager.getMusicVolume());
-
-        volumeSlider.addListener(new ChangeListener() {
+        Slider.SliderStyle sliderStyle = skin.get("default-horizontal", Slider.SliderStyle.class);
+        Slider slider = new Slider(0, 100, 1, false, sliderStyle);
+        slider.setValue(audioManager.getMusicVolume());
+        slider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
-                float volume = volumeSlider.getValue();
+                float volume = slider.getValue();
                 audioManager.setMusicVolume(volume);
                 Gdx.app.log("OptionScreen", "Volume changé à: " + volume);
             }
         });
+
+        //LABEL
+        MyFont = new BitmapFont(Gdx.files.internal("fonts/MyFont.fnt"));
+
+        Label.LabelStyle labelStyle = new Label.LabelStyle();
+        labelStyle.font = MyFont;
+
+        VolumLabel = new Label("Music volume", labelStyle);
+        VolumLabel.setPosition(100, 240); // Position x, y sur l'écran
+
+
+
 
         //BUTTON
         Texture backTexture = new Texture(Gdx.files.internal("buttons/back_up.png"));
@@ -70,11 +92,14 @@ public class OptionScreen implements Screen {
         Table table = new Table();
         table.setFillParent(true);
         table.center();
-        table.add(volumeSlider).padTop(20);
+        table.add(VolumLabel).padTop(20);
+        table.row();
+        table.add(slider).width(400).padTop(20).padBottom(50);
         table.row();
         table.add(backButton).padTop(20);
 
         stage.addActor(table);
+        stage.setDebugAll(true);
         Gdx.input.setInputProcessor(stage);
 
     }

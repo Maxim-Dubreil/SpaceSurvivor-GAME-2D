@@ -52,7 +52,7 @@ public class Main extends Game {
     }
 
     public void setWindowedMode() {
-        Gdx.graphics.setWindowedMode(800, 600); // Taille de la fenêtre (par exemple 800x600)
+        Gdx.graphics.setWindowedMode(1280, 720); // Taille de la fenêtre (par exemple 800x600)
     }
 
     public void MainMenuScreen() {
