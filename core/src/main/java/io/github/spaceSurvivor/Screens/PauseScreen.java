@@ -3,7 +3,6 @@ package io.github.spaceSurvivor.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -92,9 +91,8 @@ public class PauseScreen implements Screen {
         pauseWindow.setBackground(createBackgroundDrawable("Background/Pause.png"));
         pauseWindow.add(table).expand().fill();
 
-
         pauseWindow.setSize(stage.getViewport().getWorldWidth(), stage.getViewport().getWorldHeight());
-        pauseWindow.setSize(800, 600);  // Taille de la fenêtre (ajuste selon tes besoins)
+        pauseWindow.setSize(800, 600); // Taille de la fenêtre (ajuste selon tes besoins)
 
         centerActor(pauseWindow);
         stage.addActor(pauseWindow);
@@ -128,7 +126,6 @@ public class PauseScreen implements Screen {
         Gdx.app.log("PauseScreen", "Actor size: " + actorWidth + "x" + actorHeight);
     }
 
-
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
@@ -157,7 +154,6 @@ public class PauseScreen implements Screen {
 
     }
 
-
     @Override
     public void pause() {
 
@@ -177,7 +173,7 @@ public class PauseScreen implements Screen {
                 weapon.startShooting(player);
             }
             game.setScreen(gameScreen);
-        }else {
+        } else {
             game.MainMenuScreen();
             Gdx.app.log("PauseScreen", "GameScreen is null, cannot resume game.");
         }

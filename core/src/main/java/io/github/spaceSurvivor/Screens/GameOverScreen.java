@@ -1,6 +1,5 @@
 package io.github.spaceSurvivor.Screens;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
@@ -17,19 +16,17 @@ import io.github.spaceSurvivor.Main;
 
 public class GameOverScreen implements Screen {
     private final Main game;
-    private final  Stage stage;
-    private final GameScreen gameScreen;
+    private final Stage stage;
     private final Texture backgroundGameOver;
     private final SpriteBatch batch;
 
-    public GameOverScreen(Main game, GameScreen gameScreen) {
+    public GameOverScreen(Main game) {
         this.game = game;
-        this.gameScreen = gameScreen;
         this.stage = new Stage();
         this.batch = new SpriteBatch();
         backgroundGameOver = new Texture("Background/GameOver.png");
 
-        //TEXTURES BUTTONS
+        // TEXTURES BUTTONS
         Texture yesTexture = new Texture(Gdx.files.internal("buttons/yes_up.png"));
         Texture yesOverTexture = new Texture(Gdx.files.internal("buttons/yes_over.png"));
         Texture yesPressedTexture = new Texture(Gdx.files.internal("buttons/yes_down.png"));
@@ -69,7 +66,6 @@ public class GameOverScreen implements Screen {
         table.center();
         table.setFillParent(true);
 
-
         table.add(yesButton).pad(20);
         table.add(noButton).pad(20);
 
@@ -101,9 +97,6 @@ public class GameOverScreen implements Screen {
     public void returnToMainMenu() {
         game.MainMenuScreen();
     }
-
-
-
 
     @Override
     public void resize(int i, int i1) {
