@@ -6,16 +6,14 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -58,6 +56,9 @@ public class GameScreen implements Screen {
 
     private AudioManager audioManager;
 
+    private ProgressBar healthBar;
+    private Skin skinHealthBar;
+
     public GameScreen(Main game, SpriteBatch batch) {
         Gdx.app.log("GameScreen", "New instance of GameScreen created !");
 
@@ -72,8 +73,11 @@ public class GameScreen implements Screen {
         this.player = new Player();
         this.boss = new Boss(900, 900, player);
         shapeRenderer = new ShapeRenderer();
-
         this.progressionManager = new ProgressionManager(player, this);
+        this.skinHealthBar = new Skin(Gdx.files.internal("Skin/Pixthulhu/pixthulhu-ui.json"),
+                             new TextureAtlas(Gdx.files.internal("Skin/Pixthulhu/pixthulhu-ui.atlas"))
+        );
+        initializeHealthBar();
 
         audioManager = game.getAudioManager();
         audioManager.playGameMusic();
@@ -117,13 +121,29 @@ public class GameScreen implements Screen {
         stage.addActor(scoreLabel);
     }
 
+    //HEALTH BAR
+    public void initializeHealthBar(){
+        ProgressBar.ProgressBarStyle progressHealthBarStyle = skinHealthBar.get ("health", ProgressBar.ProgressBarStyle.class);
+        healthBar = new ProgressBar(0, player.getMaxHp(), 1, false, progressHealthBarStyle);
+        healthBar.setValue(player.getHp());
+
+        float screenWidth = stage.getViewport().getWorldWidth();
+        float screenHeight = stage.getViewport().getWorldHeight();
+        float barWidth = screenWidth * 0.3f; // 30% de la largeur de l'écran
+        float barHeight = screenHeight * 0.03f; // 3% de la hauteur de l'écran
+
+        healthBar.setSize(barWidth, barHeight);
+        healthBar.setPosition(40, screenHeight - barHeight - 40);
+
+        stage.addActor(healthBar);
+    }
+
     public void displayWaveMessage(String message) {
         waveMessageLabel.setText(message);
         waveMessageLabel.pack();
         float stageWidth = stage.getViewport().getWorldWidth();
         float stageHeight = stage.getViewport().getWorldHeight();
         waveMessageLabel.setPosition(stageWidth / 2f - waveMessageLabel.getWidth() / 2f, stageHeight - 50);
-
     }
 
     public void setPaused(boolean isPaused) {
@@ -160,6 +180,13 @@ public class GameScreen implements Screen {
                 ((Projectile) entity).move(collisionManager, map);
             }
         }
+
+        //HEALTH BAR RENDER
+            if (healthBar == null) {
+                initializeHealthBar();
+            }
+        healthBar.setValue(player.getHp());
+        healthBar.setRange(0, player.getMaxHp());
 
         batch.setProjectionMatrix(map.getCamera().combined);
         batch.begin();
