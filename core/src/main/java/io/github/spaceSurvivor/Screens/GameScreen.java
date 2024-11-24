@@ -100,7 +100,7 @@ public class GameScreen implements Screen {
         this.map.initCamera();
         this.stage = new Stage();
         this.skin = new Skin(Gdx.files.internal("uiskin.json"));
-        this.player = new Player();
+        this.player = new Player(this);
         // Removed direct instantiation of the boss
         this.boss = null;
         shapeRenderer = new ShapeRenderer();

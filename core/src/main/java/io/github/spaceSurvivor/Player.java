@@ -16,6 +16,7 @@ import io.github.spaceSurvivor.weapons.Pewpew;
 import io.github.spaceSurvivor.weapons.StoneThrown;
 import io.github.spaceSurvivor.weapons.AutoNoob;
 import io.github.spaceSurvivor.weapons.Weapon;
+import io.github.spaceSurvivor.Screens.GameScreen;
 import io.github.spaceSurvivor.managers.CollisionManager;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
@@ -56,6 +57,8 @@ public class Player extends Movable {
     /** Initial Y position of the player. */
     private int initialY;
 
+    private GameScreen gameScreen;
+
     /** Animation for walking right. */
     private Animation<TextureRegion> walkRightAnimation;
     /** Animation for walking left. */
@@ -72,12 +75,13 @@ public class Player extends Movable {
      * Constructs a new Player instance with default attributes and initializes
      * animations.
      */
-    public Player() {
+    public Player(GameScreen gameScreen) {
         super(new Texture("Player/SpaceMarineSprites.png"), posX, posY, 85, 85, 150);
         loadAnimations(new Texture("Player/SpaceMarineSprites.png"));
         Player.weapons.add(new AutoNoob(this));
         this.initialX = (int) posX;
         this.initialY = (int) posY;
+        this.gameScreen = gameScreen;
     }
 
     /**
@@ -202,11 +206,12 @@ public class Player extends Movable {
     public void checkWeaponUnlocks() {
         if (level >= 5 && !hasWeapon(Pewpew.class)) {
             Player.weapons.add(new Pewpew(this));
-            System.out.println("New weapon : Pewpew !");
+            gameScreen.displayWaveMessage("New weapon : Pewpew !");
         }
         if (level >= 10 && !hasWeapon(StoneThrown.class)) {
             Player.weapons.add(new StoneThrown(this));
-            System.out.println("New weapon : StoneThrown !");
+            gameScreen.displayWaveMessage("New weapon : StoneThrown !");
+
         }
     }
 
