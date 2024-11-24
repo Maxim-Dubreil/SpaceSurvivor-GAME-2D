@@ -83,6 +83,9 @@ public class GameScreen implements Screen {
     /** Skin for the health bar UI elements. */
     private Skin skinHealthBar;
 
+    private float xpBarWidth = 200;
+    private float xpBarHeight = 20;
+
     /**
      * Constructs a new GameScreen instance.
      *
@@ -91,7 +94,6 @@ public class GameScreen implements Screen {
      */
     public GameScreen(Main game, SpriteBatch batch) {
         Gdx.app.log("GameScreen", "New instance of GameScreen created!");
-
         this.game = game;
         this.batch = batch;
         this.collisionManager = new CollisionManager();
@@ -138,7 +140,6 @@ public class GameScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
         stage.addActor(table);
 
-        // Initialize custom font
         myFont = new BitmapFont(Gdx.files.internal("fonts/MyFont.fnt"));
 
         // Initialize labels for score and wave messages
@@ -284,6 +285,7 @@ public class GameScreen implements Screen {
             }
         }
         batch.end();
+        /*renderXpBar();**/
 
         if (showHitboxes) {
             shapeRenderer.setProjectionMatrix(map.getCamera().combined);
@@ -303,6 +305,43 @@ public class GameScreen implements Screen {
         stage.act(delta);
         stage.draw();
     }
+
+    /*private void renderXpBar(){
+        float screenWidth = stage.getViewport().getWorldWidth();
+        float screenHeight = stage.getViewport().getWorldHeight();
+
+        float xpBarWidth = 300f;
+        float xpBarHeight = 20f;
+
+        shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+
+        float barX = (screenWidth - xpBarWidth) / 2;
+        float barY = screenHeight - 40f;
+
+        shapeRenderer.setColor(Color.RED); // Color the empty background bar in red
+        shapeRenderer.rect(barX, barY, xpBarWidth, xpBarHeight);
+
+        int level = Math.max(player.getLevel(), 1);
+        float xpThreshold = level * 100; // XP needed to level up.
+        float xpRatio = Math.min(Math.max((float) player.getXp() / xpThreshold, 0), 1); // Normalize XP ratio
+
+        shapeRenderer.setColor(Color.GREEN);
+        float filledWidth = xpBarWidth * xpRatio;
+        shapeRenderer.rect(barX, barY, filledWidth, xpBarHeight);
+        System.out.println("Level: " + level + " XP: " + player.getXp() + " XP Threshold: " + xpThreshold);
+        System.out.println("XP Ratio: " + xpRatio);
+        shapeRenderer.end();
+
+        batch.begin();
+        String levelText = "Level: " + level + "  XP: " + player.getXp() + "/" + (level * 100);
+        myFont.draw(batch, levelText, barX + 10, barY + xpBarHeight / 2);
+        batch.end();
+
+        System.out.println("XP Bar Position: " + barX + ", " + barY);
+        System.out.println("XP Ratio: " + xpRatio);
+
+    }**/
 
     /**
      * Checks for all collisions in the game and handles them.
