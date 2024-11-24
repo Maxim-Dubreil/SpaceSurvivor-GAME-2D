@@ -16,36 +16,71 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Manages the game's progression by spawning waves of monsters and buffs.
+ */
 public class ProgressionManager {
+
+    /** The player instance. */
     private Player player;
+
+    /** The game screen where the game is rendered. */
     private GameScreen gameScreen;
+
+    /** The current wave number. */
     private int currentWave = 0;
 
+    /** Spawn boundaries for monsters and buffs. */
     private final float spawnMinX = 220f;
     private final float spawnMaxX = 1600f;
     private final float spawnMinY = 500f;
     private final float spawnMaxY = 1350f;
 
+    /** Total number of monsters in the current wave. */
     private int totalMonstersInCurrentWave = 0;
+
+    /** List of monsters in the current wave. */
     private List<Monster> currentWaveMonsters = new ArrayList<>();
 
+    /**
+     * Constructs a new ProgressionManager.
+     *
+     * @param player     The player instance.
+     * @param gameScreen The game screen.
+     */
     public ProgressionManager(Player player, GameScreen gameScreen) {
         this.player = player;
         this.gameScreen = gameScreen;
     }
 
+    /**
+     * Updates the progression manager, checking if a new wave should be spawned.
+     *
+     * @param deltaTime The time elapsed since the last update.
+     */
     public void update(float deltaTime) {
         if (shouldSpawnNewWave()) {
             spawnWave();
         }
     }
 
+    /**
+     * Determines if a new wave should be spawned based on the number of live
+     * monsters.
+     *
+     * @return True if a new wave should be spawned, false otherwise.
+     */
     private boolean shouldSpawnNewWave() {
         int liveMonsters = getLiveMonstersCount();
         int threshold = Math.max(1, (int) (totalMonstersInCurrentWave * 0.25f));
         return liveMonsters <= threshold;
     }
 
+    /**
+     * Counts the number of live monsters in the current wave.
+     *
+     * @return The number of live monsters.
+     */
     private int getLiveMonstersCount() {
         int count = 0;
         for (Monster monster : currentWaveMonsters) {
@@ -56,6 +91,9 @@ public class ProgressionManager {
         return count;
     }
 
+    /**
+     * Spawns a new wave of monsters and possibly a buff.
+     */
     private void spawnWave() {
         currentWave++;
         System.out.println("Spawning wave " + currentWave);
@@ -71,6 +109,11 @@ public class ProgressionManager {
         }
     }
 
+    /**
+     * Creates monsters for the specified wave.
+     *
+     * @param waveNumber The wave number.
+     */
     private void createMonstersForWave(int waveNumber) {
         int numberOfMonsters = waveNumber * 5;
         totalMonstersInCurrentWave = numberOfMonsters;
@@ -87,6 +130,11 @@ public class ProgressionManager {
         }
     }
 
+    /**
+     * Generates a random monster at a random spawn position.
+     *
+     * @return A new Monster instance.
+     */
     private Monster generateRandomMonster() {
         float[] spawnPosition = getRandomSpawnPosition();
         double randomValue = Math.random();
@@ -97,6 +145,11 @@ public class ProgressionManager {
         }
     }
 
+    /**
+     * Generates a random spawn position outside the camera view.
+     *
+     * @return An array containing the X and Y coordinates.
+     */
     private float[] getRandomSpawnPosition() {
         float x, y;
         int attempts = 0;
@@ -111,6 +164,13 @@ public class ProgressionManager {
         return new float[] { x, y };
     }
 
+    /**
+     * Checks if a position is inside the camera's current view.
+     *
+     * @param x The X coordinate.
+     * @param y The Y coordinate.
+     * @return True if the position is inside the camera view, false otherwise.
+     */
     private boolean isInsideCameraView(float x, float y) {
         OrthographicCamera camera = Map.camera;
 
@@ -122,6 +182,11 @@ public class ProgressionManager {
         return x >= cameraLeft && x <= cameraRight && y >= cameraBottom && y <= cameraTop;
     }
 
+    /**
+     * Generates a random buff at a random spawn position.
+     *
+     * @return A new Entity representing the buff.
+     */
     private Entity generateRandomBuff() {
         float[] spawnPosition = getRandomSpawnPosition();
         double randomValue = Math.random();
