@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Rectangle;
 import io.github.spaceSurvivor.Entity;
 import io.github.spaceSurvivor.Movable;
 import io.github.spaceSurvivor.Player;
+import io.github.spaceSurvivor.monsters.Boss;
 import io.github.spaceSurvivor.monsters.Monster;
 import io.github.spaceSurvivor.projectiles.BossProjectiles;
 import io.github.spaceSurvivor.projectiles.Projectile;
@@ -83,6 +84,9 @@ public class CollisionManager {
      */
     private void handleProjectileMonsterCollision(Projectile projectile, Monster monster) {
         monster.takeDamage(projectile.getDamage());
+        if (monster instanceof Boss) {
+            monster.isDead();
+        }
         Player.addScore(28);
         Entity.entities.remove(projectile);
         projectile.dispose();
