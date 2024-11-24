@@ -8,8 +8,9 @@ import io.github.spaceSurvivor.monsters.Boss;
 
 public class BossProjectiles extends Projectile {
     public BossProjectiles(float posX, float posY, Boss boss, Player player) {
-        super(new Texture("Projectile/BossFireProjectile.png"), posX * Map.getTileSize(), posY * Map.getTileSize(), 30, 30,
-            500, boss, new float[] { 0, 0 });
+        super(new Texture("Projectile/BossFireProjectile.png"), posX * Map.getTileSize(), posY * Map.getTileSize(), 30,
+                30,
+                300, boss, new float[] { 0, 0 });
 
         float playerX = player.getPosX();
         float playerY = player.getPosY();
