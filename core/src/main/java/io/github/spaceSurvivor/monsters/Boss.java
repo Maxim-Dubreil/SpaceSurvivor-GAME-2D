@@ -42,12 +42,12 @@ public class Boss extends Monster {
      * @param player The player instance to target.
      */
     public Boss(float posX, float posY, Player player) {
-        super(new Texture("Monster/GolemSprite.png"), posX, posY, 120, 120, 30, 6500, 75, 1000);
+        super(new Texture("Monster/GolemSprite.png"), posX, posY, 120, 120, 30, 5000, 75, 1000);
         loadAnimations(new Texture("Monster/GolemSprite.png"));
         startShooting(player);
     }
 
-    /**
+    /**gi
      * Loads animations from the provided sprite sheet.
      *
      * @param spriteSheet The texture containing the sprite animations.
