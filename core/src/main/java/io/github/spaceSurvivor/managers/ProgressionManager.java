@@ -1,5 +1,6 @@
 package io.github.spaceSurvivor.managers;
 
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import io.github.spaceSurvivor.Player;
 import io.github.spaceSurvivor.monsters.Monster;
 import io.github.spaceSurvivor.Entity;
@@ -98,7 +99,14 @@ public class ProgressionManager {
         System.out.println("Spawning wave " + currentWave);
         createMonstersForWave(currentWave);
 
-        gameScreen.displayWaveMessage("WAVE " + currentWave);
+        if (currentWave == 1) {
+            gameScreen.getStage().addAction(Actions.sequence(
+                Actions.delay(0.5f),
+                Actions.run(() -> gameScreen.displayWaveMessage("WAVE " + currentWave))
+            ));
+        } else {
+            gameScreen.displayWaveMessage("WAVE " + currentWave);
+        }
     }
 
     /**
