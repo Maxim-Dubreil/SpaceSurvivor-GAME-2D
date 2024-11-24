@@ -9,6 +9,7 @@ import io.github.spaceSurvivor.Entity;
 import io.github.spaceSurvivor.Movable;
 import io.github.spaceSurvivor.managers.CollisionManager;
 import io.github.spaceSurvivor.Map;
+import io.github.spaceSurvivor.monsters.Boss;
 import io.github.spaceSurvivor.weapons.Weapon;
 
 public abstract class Projectile extends Movable {
@@ -16,6 +17,7 @@ public abstract class Projectile extends Movable {
     protected float directionX;
     protected float directionY;
     private Weapon weapon;
+    private Boss boss;
 
     public Projectile(Texture texture, float posX, float posY, float sizeX, float sizeY, float speed, Weapon weapon,
             float[] direction) {
@@ -23,6 +25,13 @@ public abstract class Projectile extends Movable {
         this.directionX = direction[0];
         this.directionY = direction[1];
         this.weapon = weapon;
+    }
+
+    public Projectile(Texture texture, float posX, float posY, float sizeX, float sizeY, float speed, Boss boss, float[] direction) {
+        super(texture, posX, posY, sizeX, sizeY, speed);
+        this.directionX = direction[0];
+        this.directionY = direction[1];
+        this.boss = boss;
     }
 
     public void move(CollisionManager collisionManager, Map map) {
@@ -36,8 +45,6 @@ public abstract class Projectile extends Movable {
         } else if (collisionManager.handleEntityMapCollision(this, map)) {
             Entity.entities.remove(this);
             this.dispose();
-            System.out.println(Entity.entities);
-
         }
     }
 
@@ -45,7 +52,19 @@ public abstract class Projectile extends Movable {
         return this.weapon;
     }
 
-    public float getDamage() {
-        return this.weapon.getDamages();
+    public Boss getBoss() {
+        return this.boss;
     }
+
+    public float getDamage() {
+        if (this.weapon != null) {
+            return this.weapon.getDamages();
+        } else if (this.boss != null) {
+            return this.boss.getDamages();
+        } else {
+            // Gérer le cas où ni weapon ni boss ne sont définis, par exemple en retournant 0
+            return 0;
+        }
+    }
+
 }
