@@ -9,7 +9,7 @@ import com.badlogic.gdx.audio.Music;
 public class AudioManager {
 
     /** The music track played during the game. */
-    private Music gameMusic;
+    private final Music gameMusic;
 
     /** The music track played in the main menu. */
     private final Music menuMusic;

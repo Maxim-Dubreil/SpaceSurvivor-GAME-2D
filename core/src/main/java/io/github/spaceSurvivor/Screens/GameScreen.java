@@ -114,6 +114,8 @@ public class GameScreen implements Screen {
 
         audioManager = game.getAudioManager();
         audioManager.playGameMusic();
+        Gdx.app.log("AudioManager", "AudioManager initialized and game music should play.");
+
 
         // Initialize pause button
         ImageButtonStyle style = new ImageButtonStyle();
@@ -421,6 +423,8 @@ public class GameScreen implements Screen {
     @Override
     public void hide() {
         Gdx.input.setInputProcessor(null);
+        audioManager.stopAllMusic();
+
     }
 
     /**
