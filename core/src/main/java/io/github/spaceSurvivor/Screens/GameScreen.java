@@ -35,12 +35,7 @@ import io.github.spaceSurvivor.weapons.Weapon;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * The main game screen where gameplay occurs.
- * Handles rendering, input processing, and game logic.
- */
 public class GameScreen implements Screen {
-
     private final Main game;
     private final SpriteBatch batch;
     private Player player;
@@ -63,20 +58,11 @@ public class GameScreen implements Screen {
 
     private AudioManager audioManager;
 
-
-    /**
-     * Constructs a new GameScreen instance.
-     *
-     * @param game  The main game instance.
-     * @param batch The SpriteBatch used for rendering.
-     */
-
     private ProgressBar healthBar;
     private Skin skinHealthBar;
 
-
     public GameScreen(Main game, SpriteBatch batch) {
-        Gdx.app.log("GameScreen", "New instance of GameScreen created!");
+        Gdx.app.log("GameScreen", "New instance of GameScreen created !");
 
         this.game = game;
         this.batch = batch;
@@ -91,16 +77,15 @@ public class GameScreen implements Screen {
         shapeRenderer = new ShapeRenderer();
         this.progressionManager = new ProgressionManager(player, this);
         this.skinHealthBar = new Skin(Gdx.files.internal("Skin/Pixthulhu/pixthulhu-ui.json"),
-                             new TextureAtlas(Gdx.files.internal("Skin/Pixthulhu/pixthulhu-ui.atlas"))
-        );
+                new TextureAtlas(Gdx.files.internal("Skin/Pixthulhu/pixthulhu-ui.atlas")));
 
         initializeHealthBar();
 
         audioManager = game.getAudioManager();
         audioManager.playGameMusic();
 
-        // Initialize pause button
         ImageButtonStyle style = new ImageButtonStyle();
+
         Texture pauseTextureNormal = new Texture(Gdx.files.internal("buttons/pauseButton.png"));
         Texture pauseTextureDown = new Texture(Gdx.files.internal("buttons/pauseButtonDown.png"));
         style.up = new TextureRegionDrawable(new TextureRegion(pauseTextureNormal));
@@ -114,7 +99,6 @@ public class GameScreen implements Screen {
             }
         });
 
-        // Set up UI layout
         Table table = new Table();
         table.top().right();
         table.setFillParent(true);
@@ -122,11 +106,10 @@ public class GameScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
         stage.addActor(table);
 
-
-        //FONT
+        // FONT
         myFont = new BitmapFont(Gdx.files.internal("fonts/MyFont.fnt"));
 
-        //LABELS SCORE/WAVE/HP
+        // LABELS SCORE/WAVE/HP
         Label.LabelStyle labelCustom = new Label.LabelStyle();
         labelCustom.font = myFont;
 
@@ -141,19 +124,15 @@ public class GameScreen implements Screen {
         scoreLabel.setColor(Color.YELLOW);
         stage.addActor(scoreLabel);
 
-        //hpLabel = new Label("", skin);
-        //hpLabel.setFontScale(2f);
-        //stage.addActor(hpLabel);
+        // hpLabel = new Label("", skin);
+        // hpLabel.setFontScale(2f);
+        // stage.addActor(hpLabel);
     }
 
-    /**
-     * Displays a wave message on the screen.
-     *
-     * @param message The message to display.
-     */
-    //HEALTH BAR
-    public void initializeHealthBar(){
-        ProgressBar.ProgressBarStyle progressHealthBarStyle = skinHealthBar.get ("health", ProgressBar.ProgressBarStyle.class);
+    // HEALTH BAR
+    public void initializeHealthBar() {
+        ProgressBar.ProgressBarStyle progressHealthBarStyle = skinHealthBar.get("health",
+                ProgressBar.ProgressBarStyle.class);
         healthBar = new ProgressBar(0, player.getMaxHp(), 1, false, progressHealthBarStyle);
         healthBar.setValue(player.getHp());
 
@@ -168,20 +147,10 @@ public class GameScreen implements Screen {
         stage.addActor(healthBar);
     }
 
-    /**
-     * Sets the paused state of the game.
-     *
-     * @param isPaused True to pause the game, false to resume.
-     */
     public void setPaused(boolean isPaused) {
         this.isPaused = isPaused;
     }
 
-    /**
-     * Renders the game screen.
-     *
-     * @param delta The time in seconds since the last render.
-     */
     @Override
     public void render(float delta) {
         handleInput();
@@ -215,10 +184,10 @@ public class GameScreen implements Screen {
             }
         }
 
-        //HEALTH BAR RENDER
-            if (healthBar == null) {
-                initializeHealthBar();
-            }
+        // HEALTH BAR RENDER
+        if (healthBar == null) {
+            initializeHealthBar();
+        }
         healthBar.setValue(player.getHp());
         healthBar.setRange(0, player.getMaxHp());
 
@@ -227,9 +196,13 @@ public class GameScreen implements Screen {
         for (Entity entity : entitiesCopy) {
             if (entity instanceof Player) {
                 ((Player) entity).render(batch);
+                // batch.draw(player.getCurrentFrame(), player.getPosX(), player.getPosY(),
+                // player.getSizeX(),
+                // player.getSizeY());
             }
             if (entity instanceof Boss) {
                 batch.draw(boss.getCurrentFrame(), boss.getPosX(), boss.getPosY(), boss.getSizeX(), boss.getSizeY());
+
             } else {
                 entity.renderEntity(batch);
             }
@@ -254,14 +227,10 @@ public class GameScreen implements Screen {
         stage.act(delta);
         stage.draw();
     }
+
     public void displayWaveMessage(String message) {
         waveMessageLabel.setText(message);
         waveMessageLabel.pack();
-
-    /**
-     * Updates the UI labels for HP and score.
-     */
-    private void updateLabels() {
 
         float stageWidth = stage.getViewport().getWorldWidth();
         float stageHeight = stage.getViewport().getWorldHeight();
@@ -273,13 +242,11 @@ public class GameScreen implements Screen {
 
         waveMessageLabel.clearActions();
         waveMessageLabel.addAction(Actions.sequence(
-            Actions.alpha(0f),
-            Actions.fadeIn(1f),
-            Actions.delay(2f),
-            Actions.fadeOut(0.5f),
-            Actions.run(() -> waveMessageLabel.setVisible(false))
-        ));
-
+                Actions.alpha(0f),
+                Actions.fadeIn(1f),
+                Actions.delay(2f),
+                Actions.fadeOut(0.5f),
+                Actions.run(() -> waveMessageLabel.setVisible(false))));
 
     }
 
@@ -288,20 +255,17 @@ public class GameScreen implements Screen {
         float stageHeight = stage.getViewport().getWorldHeight();
 
         // Mise à jour du score
-        scoreLabel.setText("Score :"+ player.getScore());
+        scoreLabel.setText("Score :" + player.getScore());
         scoreLabel.pack();
         scoreLabel.setPosition(
-            stageWidth / 2f - scoreLabel.getWidth() / 2f,
-            stageHeight - scoreLabel.getHeight() - 40);
+                stageWidth / 2f - scoreLabel.getWidth() / 2f,
+                stageHeight - scoreLabel.getHeight() - 40);
 
-        //hpLabel.setText("HP: " + (int) player.getHp());
-        //hpLabel.pack();
-        //hpLabel.setPosition(10, stageHeight - hpLabel.getHeight() - 10);
+        // hpLabel.setText("HP: " + (int) player.getHp());
+        // hpLabel.pack();
+        // hpLabel.setPosition(10, stageHeight - hpLabel.getHeight() - 10);
     }
 
-    /**
-     * Checks for all collisions in the game and handles them.
-     */
     private void checkAllCollisions() {
         collisionManager.handleEntityMapCollision(player, map);
         collisionManager.handleEntityMapCollision(boss, map);
@@ -309,6 +273,7 @@ public class GameScreen implements Screen {
             if (entity instanceof Movable && entity != player) {
                 collisionManager.handleEntityMapCollision((Movable) entity, map);
             }
+
         }
 
         for (int i = 0; i < Entity.entities.size(); i++) {
@@ -323,9 +288,6 @@ public class GameScreen implements Screen {
         }
     }
 
-    /**
-     * Pauses the game and transitions to the pause screen.
-     */
     @Override
     public void pause() {
         if (!isPaused) {
@@ -339,36 +301,21 @@ public class GameScreen implements Screen {
         }
     }
 
-    /**
-     * Called when the screen is shown.
-     */
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
     }
 
-    /**
-     * Resizes the stage viewport when the window size changes.
-     *
-     * @param width  The new window width.
-     * @param height The new window height.
-     */
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
     }
 
-    /**
-     * Called when the screen is hidden.
-     */
     @Override
     public void hide() {
         Gdx.input.setInputProcessor(null);
     }
 
-    /**
-     * Disposes of resources when the screen is no longer needed.
-     */
     @Override
     public void dispose() {
         List<Entity> entitiesCopy = new ArrayList<>(Entity.entities);
@@ -395,9 +342,6 @@ public class GameScreen implements Screen {
         audioManager.dispose();
     }
 
-    /**
-     * Resets the game state.
-     */
     public void resetGame() {
         for (Weapon weapon : Weapon.weapons) {
             weapon.stopShooting();
@@ -405,26 +349,14 @@ public class GameScreen implements Screen {
         boss.stopShooting();
     }
 
-    /**
-     * Retrieves the player instance.
-     *
-     * @return The player.
-     */
     public Player getPlayer() {
         return player;
     }
 
-    /**
-     * Resumes the game from a paused state.
-     */
     @Override
     public void resume() {
-        // Implement if needed
     }
 
-    /**
-     * Handles input processing.
-     */
     private void handleInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.H)) {
             showHitboxes = !showHitboxes;
@@ -434,6 +366,5 @@ public class GameScreen implements Screen {
     public Stage getStage() {
         return stage;
     }
-
 
 }
