@@ -73,7 +73,7 @@ public class ProgressionManager {
      */
     private boolean shouldSpawnNewWave() {
         int liveMonsters = getLiveMonstersCount();
-        if (currentWave == 5) {
+        if (currentWave == 10) {
             // Wait until the boss is defeated
             return liveMonsters == 0;
         } else {
@@ -104,7 +104,7 @@ public class ProgressionManager {
         currentWave++;
         System.out.println("Spawning wave " + currentWave);
 
-        if (currentWave == 5) {
+        if (currentWave == 10) {
             Boss boss = new Boss(900, 900, player);
             Entity.entities.add(boss);
             gameScreen.setBoss(boss);
@@ -119,8 +119,8 @@ public class ProgressionManager {
             gameScreen.getStage().addAction(Actions.sequence(
                     Actions.delay(0.5f),
                     Actions.run(() -> gameScreen.displayWaveMessage("WAVE " + currentWave))));
-        } else if (currentWave == 5) {
-            gameScreen.displayWaveMessage("WAVE 5 : BOSS ");
+        } else if (currentWave == 10) {
+            gameScreen.displayWaveMessage("WAVE 10 : BOSS ");
         } else {
             gameScreen.displayWaveMessage("WAVE " + currentWave);
         }
