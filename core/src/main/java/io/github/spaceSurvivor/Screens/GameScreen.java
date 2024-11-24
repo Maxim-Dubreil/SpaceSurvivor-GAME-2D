@@ -5,12 +5,14 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -51,8 +53,9 @@ public class GameScreen implements Screen {
     private final Skin skin;
 
     private Label waveMessageLabel;
-    private Label hpLabel;
+    //private Label hpLabel;
     private Label scoreLabel;
+    private BitmapFont myFont;
 
     private AudioManager audioManager;
 
@@ -101,24 +104,28 @@ public class GameScreen implements Screen {
         table.top().right();
         table.setFillParent(true);
         table.add(pauseButton).padTop(35).padRight(35);
-
         Gdx.input.setInputProcessor(stage);
         stage.addActor(table);
 
-        table.setDebug(true);
+        //FONT
+        myFont = new BitmapFont(Gdx.files.internal("fonts/MyFont.fnt"));
 
-        waveMessageLabel = new Label("", skin);
+        //LABELS SCORE/WAVE/HP
+        Label.LabelStyle labelCustom = new Label.LabelStyle();
+        labelCustom.font = myFont;
+
+        waveMessageLabel = new Label("", labelCustom);
         waveMessageLabel.setFontScale(2f);
         waveMessageLabel.setVisible(true);
         stage.addActor(waveMessageLabel);
 
-        hpLabel = new Label("", skin);
-        hpLabel.setFontScale(2f);
-        stage.addActor(hpLabel);
-
-        scoreLabel = new Label("", skin);
+        scoreLabel = new Label("", labelCustom);
         scoreLabel.setFontScale(2f);
         stage.addActor(scoreLabel);
+
+        //hpLabel = new Label("", skin);
+        //hpLabel.setFontScale(2f);
+        //stage.addActor(hpLabel);
     }
 
     //HEALTH BAR
@@ -136,14 +143,6 @@ public class GameScreen implements Screen {
         healthBar.setPosition(40, screenHeight - barHeight - 40);
 
         stage.addActor(healthBar);
-    }
-
-    public void displayWaveMessage(String message) {
-        waveMessageLabel.setText(message);
-        waveMessageLabel.pack();
-        float stageWidth = stage.getViewport().getWorldWidth();
-        float stageHeight = stage.getViewport().getWorldHeight();
-        waveMessageLabel.setPosition(stageWidth / 2f - waveMessageLabel.getWidth() / 2f, stageHeight - 50);
     }
 
     public void setPaused(boolean isPaused) {
@@ -224,20 +223,43 @@ public class GameScreen implements Screen {
         stage.act(delta);
         stage.draw();
     }
+    public void displayWaveMessage(String message) {
+        waveMessageLabel.setText(message);
+        waveMessageLabel.pack();
+
+        float stageWidth = stage.getViewport().getWorldWidth();
+        float stageHeight = stage.getViewport().getWorldHeight();
+        float labelX = stageWidth / 2f - waveMessageLabel.getWidth() / 2f;
+        float labelY = stageHeight / 2f - waveMessageLabel.getHeight() / 2f;
+
+        waveMessageLabel.setPosition(labelX, labelY);
+        waveMessageLabel.setVisible(true);
+
+        waveMessageLabel.clearActions();
+        waveMessageLabel.addAction(Actions.sequence(
+            Actions.alpha(1f),
+            Actions.delay(2f),
+            Actions.fadeOut(1f),
+            Actions.run(() -> waveMessageLabel.setVisible(false))
+        ));
+
+
+    }
 
     private void updateLabels() {
         float stageWidth = stage.getViewport().getWorldWidth();
         float stageHeight = stage.getViewport().getWorldHeight();
 
-        waveMessageLabel.setPosition(stageWidth / 2f - waveMessageLabel.getWidth() / 2f, stageHeight - 50);
-
-        hpLabel.setText("HP: " + (int) player.getHp());
-        hpLabel.pack();
-        hpLabel.setPosition(10, stageHeight - hpLabel.getHeight() - 10);
-
+        // Mise à jour du score
         scoreLabel.setText("Score: " + player.getScore());
         scoreLabel.pack();
-        scoreLabel.setPosition(stageWidth - scoreLabel.getWidth() - 10, stageHeight - scoreLabel.getHeight() - 10);
+        scoreLabel.setPosition(
+            stageWidth / 2f - scoreLabel.getWidth() / 2f,
+            stageHeight - scoreLabel.getHeight() - 40);
+
+        //hpLabel.setText("HP: " + (int) player.getHp());
+        //hpLabel.pack();
+        //hpLabel.setPosition(10, stageHeight - hpLabel.getHeight() - 10);
     }
 
     private void checkAllCollisions() {
@@ -337,4 +359,9 @@ public class GameScreen implements Screen {
             showHitboxes = !showHitboxes;
         }
     }
+
+    public Stage getStage() {
+        return stage;
+    }
+
 }
