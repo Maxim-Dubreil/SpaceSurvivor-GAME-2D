@@ -53,7 +53,6 @@ public class GameScreen implements Screen {
     private final Skin skin;
 
     private Label waveMessageLabel;
-    //private Label hpLabel;
     private Label scoreLabel;
     private BitmapFont myFont;
 
@@ -80,6 +79,7 @@ public class GameScreen implements Screen {
         this.skinHealthBar = new Skin(Gdx.files.internal("Skin/Pixthulhu/pixthulhu-ui.json"),
                              new TextureAtlas(Gdx.files.internal("Skin/Pixthulhu/pixthulhu-ui.atlas"))
         );
+
         initializeHealthBar();
 
         audioManager = game.getAudioManager();
@@ -115,12 +115,14 @@ public class GameScreen implements Screen {
         labelCustom.font = myFont;
 
         waveMessageLabel = new Label("", labelCustom);
-        waveMessageLabel.setFontScale(2f);
+        waveMessageLabel.setFontScale(1.5f);
+        waveMessageLabel.setColor(Color.WHITE);
         waveMessageLabel.setVisible(true);
         stage.addActor(waveMessageLabel);
 
         scoreLabel = new Label("", labelCustom);
-        scoreLabel.setFontScale(2f);
+        scoreLabel.setFontScale(0.8f);
+        scoreLabel.setColor(Color.YELLOW);
         stage.addActor(scoreLabel);
 
         //hpLabel = new Label("", skin);
@@ -136,8 +138,8 @@ public class GameScreen implements Screen {
 
         float screenWidth = stage.getViewport().getWorldWidth();
         float screenHeight = stage.getViewport().getWorldHeight();
-        float barWidth = screenWidth * 0.3f; // 30% de la largeur de l'écran
-        float barHeight = screenHeight * 0.03f; // 3% de la hauteur de l'écran
+        float barWidth = screenWidth * 0.3f;
+        float barHeight = screenHeight * 0.03f;
 
         healthBar.setSize(barWidth, barHeight);
         healthBar.setPosition(40, screenHeight - barHeight - 40);
@@ -160,6 +162,8 @@ public class GameScreen implements Screen {
         }
 
         if (player.getIsDead()) {
+            System.out.println("Player is dead. Score before GameOverScreen: " + player.getScore());
+
             game.setScreen(new GameOverScreen(game));
         }
 
@@ -230,16 +234,17 @@ public class GameScreen implements Screen {
         float stageWidth = stage.getViewport().getWorldWidth();
         float stageHeight = stage.getViewport().getWorldHeight();
         float labelX = stageWidth / 2f - waveMessageLabel.getWidth() / 2f;
-        float labelY = stageHeight / 2f - waveMessageLabel.getHeight() / 2f;
+        float labelY = stageHeight / 2f + (stageHeight / 4f) - waveMessageLabel.getHeight() / 2f;
 
         waveMessageLabel.setPosition(labelX, labelY);
         waveMessageLabel.setVisible(true);
 
         waveMessageLabel.clearActions();
         waveMessageLabel.addAction(Actions.sequence(
-            Actions.alpha(1f),
+            Actions.alpha(0f),
+            Actions.fadeIn(1f),
             Actions.delay(2f),
-            Actions.fadeOut(1f),
+            Actions.fadeOut(0.5f),
             Actions.run(() -> waveMessageLabel.setVisible(false))
         ));
 
@@ -251,7 +256,7 @@ public class GameScreen implements Screen {
         float stageHeight = stage.getViewport().getWorldHeight();
 
         // Mise à jour du score
-        scoreLabel.setText("Score: " + player.getScore());
+        scoreLabel.setText("Score :"+ player.getScore());
         scoreLabel.pack();
         scoreLabel.setPosition(
             stageWidth / 2f - scoreLabel.getWidth() / 2f,
@@ -321,7 +326,6 @@ public class GameScreen implements Screen {
         Entity.entities.clear();
         Player.posX = 950 * Map.getUnitScale();
         Player.posY = 800 * Map.getUnitScale();
-        Player.score = 0;
 
         for (Weapon weapon : new ArrayList<>(Weapon.weapons)) {
             weapon.stopShooting();
@@ -363,5 +367,6 @@ public class GameScreen implements Screen {
     public Stage getStage() {
         return stage;
     }
+
 
 }

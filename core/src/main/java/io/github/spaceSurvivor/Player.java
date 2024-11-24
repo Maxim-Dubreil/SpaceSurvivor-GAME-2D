@@ -242,7 +242,6 @@ public class Player extends Movable {
         weapons.clear();
         Player.posX = 950 * Map.getUnitScale();
         Player.posY = 800 * Map.getUnitScale();
-        Player.score = 0;
         this.xp = 0;
         this.hp = 100;
     }
