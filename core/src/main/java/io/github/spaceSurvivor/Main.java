@@ -31,6 +31,7 @@ public class Main extends Game {
         gameScreen = new GameScreen(this, batch);
         pauseScreen = new PauseScreen(this);
         this.setScreen(gameScreen);
+        Player.score = 0;
     }
 
     @Override
