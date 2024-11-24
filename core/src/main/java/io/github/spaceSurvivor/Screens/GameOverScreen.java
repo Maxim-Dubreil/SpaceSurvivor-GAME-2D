@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -87,6 +88,10 @@ public class GameOverScreen implements Screen {
 
         stage.addActor(table);
         Gdx.input.setInputProcessor(stage);
+
+        scoreLabel.clearActions();
+        scoreLabel.getColor().a = 0;
+        scoreLabel.addAction(Actions.fadeIn(2f));
     }
 
     @Override
