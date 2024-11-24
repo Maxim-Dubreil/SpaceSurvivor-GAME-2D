@@ -2,17 +2,21 @@ package io.github.spaceSurvivor.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import io.github.spaceSurvivor.Main;
+import io.github.spaceSurvivor.Player;
 
 public class GameOverScreen implements Screen {
     private final Main game;
@@ -20,11 +24,21 @@ public class GameOverScreen implements Screen {
     private final Texture backgroundGameOver;
     private final SpriteBatch batch;
 
+    private Label scoreLabel;
+    private BitmapFont font;
+
     public GameOverScreen(Main game) {
         this.game = game;
         this.stage = new Stage();
         this.batch = new SpriteBatch();
+
+        font = new BitmapFont(Gdx.files.internal("fonts/MyFont.fnt"));
         backgroundGameOver = new Texture("Background/GameOver.png");
+
+        //SCORE LABEL
+        System.out.println("Score passed to GameOverScreen: " + Player.score);
+
+        scoreLabel = new Label("Your score: " + Player.score, new Label.LabelStyle(font, Color.YELLOW));
 
         // TEXTURES BUTTONS
         Texture yesTexture = new Texture(Gdx.files.internal("buttons/yes_up.png"));
@@ -66,8 +80,10 @@ public class GameOverScreen implements Screen {
         table.center();
         table.setFillParent(true);
 
-        table.add(yesButton).pad(20);
-        table.add(noButton).pad(20);
+        table.add(yesButton).pad(20).padTop(200);
+        table.add(noButton).pad(20).padTop(200);
+        table.row();
+        table.add(scoreLabel).pad(20).colspan(2).padTop(80);
 
         stage.addActor(table);
         Gdx.input.setInputProcessor(stage);
@@ -91,10 +107,12 @@ public class GameOverScreen implements Screen {
     }
 
     public void replayed() {
+        Player.score = 0;
         game.startGame();
     }
 
     public void returnToMainMenu() {
+        Player.score = 0;
         game.MainMenuScreen();
     }
 
@@ -115,13 +133,14 @@ public class GameOverScreen implements Screen {
 
     @Override
     public void hide() {
-
     }
 
     @Override
     public void dispose() {
         stage.dispose();
+        Player.score = 0;
         backgroundGameOver.dispose();
         batch.dispose();
+
     }
 }
