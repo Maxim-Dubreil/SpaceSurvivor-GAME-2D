@@ -200,11 +200,11 @@ public class Player extends Movable {
      * Checks and unlocks new weapons based on the player's level.
      */
     public void checkWeaponUnlocks() {
-        if (level >= 10 && !hasWeapon(Pewpew.class)) {
+        if (level >= 5 && !hasWeapon(Pewpew.class)) {
             Player.weapons.add(new Pewpew(this));
             System.out.println("New weapon : Pewpew !");
         }
-        if (level >= 20 && !hasWeapon(StoneThrown.class)) {
+        if (level >= 10 && !hasWeapon(StoneThrown.class)) {
             Player.weapons.add(new StoneThrown(this));
             System.out.println("New weapon : StoneThrown !");
         }

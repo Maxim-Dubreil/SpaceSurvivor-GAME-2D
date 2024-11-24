@@ -55,7 +55,7 @@ public class GameScreen implements Screen {
     private ProgressionManager progressionManager;
 
     /** The boss enemy. */
-    private final Boss boss;
+    private Boss boss;
     /** Used for rendering shapes like hitboxes. */
     private ShapeRenderer shapeRenderer;
     /** Flag to indicate whether to show hitboxes. */
@@ -101,7 +101,8 @@ public class GameScreen implements Screen {
         this.stage = new Stage();
         this.skin = new Skin(Gdx.files.internal("uiskin.json"));
         this.player = new Player();
-        this.boss = new Boss(900, 900, player);
+        // Removed direct instantiation of the boss
+        this.boss = null;
         shapeRenderer = new ShapeRenderer();
         this.progressionManager = new ProgressionManager(player, this);
         this.skinHealthBar = new Skin(Gdx.files.internal("Skin/Pixthulhu/pixthulhu-ui.json"),
@@ -128,10 +129,12 @@ public class GameScreen implements Screen {
             }
         });
 
+        // Set up UI layout
         Table table = new Table();
         table.top().right();
         table.setFillParent(true);
         table.add(pauseButton).padTop(35).padRight(35);
+
         Gdx.input.setInputProcessor(stage);
         stage.addActor(table);
 
@@ -175,12 +178,53 @@ public class GameScreen implements Screen {
     }
 
     /**
-     * Sets the paused state of the game.
+     * Sets the boss instance in the game screen.
      *
-     * @param isPaused True to pause the game, false to resume.
+     * @param boss The boss to set.
      */
-    public void setPaused(boolean isPaused) {
-        this.isPaused = isPaused;
+    public void setBoss(Boss boss) {
+        this.boss = boss;
+    }
+
+    /**
+     * Displays a wave message on the screen with a fade-in and fade-out effect.
+     *
+     * @param message The message to display.
+     */
+    public void displayWaveMessage(String message) {
+        waveMessageLabel.setText(message);
+        waveMessageLabel.pack();
+
+        float stageWidth = stage.getViewport().getWorldWidth();
+        float stageHeight = stage.getViewport().getWorldHeight();
+        float labelX = stageWidth / 2f - waveMessageLabel.getWidth() / 2f;
+        float labelY = stageHeight / 2f + (stageHeight / 4f) - waveMessageLabel.getHeight() / 2f;
+
+        waveMessageLabel.setPosition(labelX, labelY);
+        waveMessageLabel.setVisible(true);
+
+        waveMessageLabel.clearActions();
+        waveMessageLabel.addAction(Actions.sequence(
+                Actions.alpha(0f),
+                Actions.fadeIn(1f),
+                Actions.delay(2f),
+                Actions.fadeOut(0.5f),
+                Actions.run(() -> waveMessageLabel.setVisible(false))));
+    }
+
+    /**
+     * Updates the UI labels such as the score.
+     */
+    private void updateLabels() {
+        float stageWidth = stage.getViewport().getWorldWidth();
+        float stageHeight = stage.getViewport().getWorldHeight();
+
+        // Update score label
+        scoreLabel.setText("Score: " + player.getScore());
+        scoreLabel.pack();
+        scoreLabel.setPosition(
+                stageWidth / 2f - scoreLabel.getWidth() / 2f,
+                stageHeight - scoreLabel.getHeight() - 40);
     }
 
     /**
@@ -232,9 +276,9 @@ public class GameScreen implements Screen {
         for (Entity entity : entitiesCopy) {
             if (entity instanceof Player) {
                 ((Player) entity).render(batch);
-            }
-            if (entity instanceof Boss) {
-                batch.draw(boss.getCurrentFrame(), boss.getPosX(), boss.getPosY(), boss.getSizeX(), boss.getSizeY());
+            } else if (entity instanceof Boss) {
+                batch.draw(((Boss) entity).getCurrentFrame(), entity.getPosX(), entity.getPosY(),
+                        entity.getSizeX(), entity.getSizeY());
             } else {
                 entity.renderEntity(batch);
             }
@@ -261,52 +305,13 @@ public class GameScreen implements Screen {
     }
 
     /**
-     * Displays a wave message on the screen with a fade-in and fade-out effect.
-     *
-     * @param message The message to display.
-     */
-    public void displayWaveMessage(String message) {
-        waveMessageLabel.setText(message);
-        waveMessageLabel.pack();
-
-        float stageWidth = stage.getViewport().getWorldWidth();
-        float stageHeight = stage.getViewport().getWorldHeight();
-        float labelX = stageWidth / 2f - waveMessageLabel.getWidth() / 2f;
-        float labelY = stageHeight / 2f + (stageHeight / 4f) - waveMessageLabel.getHeight() / 2f;
-
-        waveMessageLabel.setPosition(labelX, labelY);
-        waveMessageLabel.setVisible(true);
-
-        waveMessageLabel.clearActions();
-        waveMessageLabel.addAction(Actions.sequence(
-                Actions.alpha(0f),
-                Actions.fadeIn(1f),
-                Actions.delay(2f),
-                Actions.fadeOut(0.5f),
-                Actions.run(() -> waveMessageLabel.setVisible(false))));
-    }
-
-    /**
-     * Updates UI labels such as the score.
-     */
-    private void updateLabels() {
-        float stageWidth = stage.getViewport().getWorldWidth();
-        float stageHeight = stage.getViewport().getWorldHeight();
-
-        // Update score label
-        scoreLabel.setText("Score: " + player.getScore());
-        scoreLabel.pack();
-        scoreLabel.setPosition(
-                stageWidth / 2f - scoreLabel.getWidth() / 2f,
-                stageHeight - scoreLabel.getHeight() - 40);
-    }
-
-    /**
      * Checks for all collisions in the game and handles them.
      */
     private void checkAllCollisions() {
         collisionManager.handleEntityMapCollision(player, map);
-        collisionManager.handleEntityMapCollision(boss, map);
+        if (boss != null) {
+            collisionManager.handleEntityMapCollision(boss, map);
+        }
         for (Entity entity : Entity.entities) {
             if (entity instanceof Movable && entity != player) {
                 collisionManager.handleEntityMapCollision((Movable) entity, map);
@@ -326,6 +331,15 @@ public class GameScreen implements Screen {
     }
 
     /**
+     * Sets the paused state of the game.
+     *
+     * @param isPaused True to pause the game, false to resume.
+     */
+    public void setPaused(boolean isPaused) {
+        this.isPaused = isPaused;
+    }
+
+    /**
      * Pauses the game and transitions to the pause screen.
      */
     @Override
@@ -336,7 +350,9 @@ public class GameScreen implements Screen {
             for (Weapon weapon : Weapon.weapons) {
                 weapon.stopShooting();
             }
-            boss.stopShooting();
+            if (boss != null) {
+                boss.stopShooting();
+            }
             game.setScreen(new PauseScreen(game));
         }
     }
@@ -388,6 +404,7 @@ public class GameScreen implements Screen {
 
         if (boss != null) {
             boss.stopShooting();
+            boss.dispose();
         }
 
         stage.dispose();
@@ -404,7 +421,9 @@ public class GameScreen implements Screen {
         for (Weapon weapon : Weapon.weapons) {
             weapon.stopShooting();
         }
-        boss.stopShooting();
+        if (boss != null) {
+            boss.stopShooting();
+        }
     }
 
     /**

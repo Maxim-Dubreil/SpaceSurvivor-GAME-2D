@@ -2,6 +2,7 @@ package io.github.spaceSurvivor.managers;
 
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import io.github.spaceSurvivor.Player;
+import io.github.spaceSurvivor.monsters.Boss;
 import io.github.spaceSurvivor.monsters.Monster;
 import io.github.spaceSurvivor.Entity;
 import io.github.spaceSurvivor.monsters.Trouille;
@@ -72,8 +73,13 @@ public class ProgressionManager {
      */
     private boolean shouldSpawnNewWave() {
         int liveMonsters = getLiveMonstersCount();
-        int threshold = Math.max(1, (int) (totalMonstersInCurrentWave * 0.25f));
-        return liveMonsters <= threshold;
+        if (currentWave == 5) {
+            // Wait until the boss is defeated
+            return liveMonsters == 0;
+        } else {
+            int threshold = Math.max(1, (int) (totalMonstersInCurrentWave * 0.25f));
+            return liveMonsters <= threshold;
+        }
     }
 
     /**
@@ -92,18 +98,29 @@ public class ProgressionManager {
     }
 
     /**
-     * Spawns a new wave of monsters and possibly a buff.
+     * Spawns a new wave of monsters and possibly a boss at wave 5.
      */
     private void spawnWave() {
         currentWave++;
         System.out.println("Spawning wave " + currentWave);
-        createMonstersForWave(currentWave);
+
+        if (currentWave == 5) {
+            Boss boss = new Boss(900, 900, player);
+            Entity.entities.add(boss);
+            gameScreen.setBoss(boss);
+            currentWaveMonsters.clear();
+            currentWaveMonsters.add(boss);
+            totalMonstersInCurrentWave = 1;
+        } else {
+            createMonstersForWave(currentWave);
+        }
 
         if (currentWave == 1) {
             gameScreen.getStage().addAction(Actions.sequence(
-                Actions.delay(0.5f),
-                Actions.run(() -> gameScreen.displayWaveMessage("WAVE " + currentWave))
-            ));
+                    Actions.delay(0.5f),
+                    Actions.run(() -> gameScreen.displayWaveMessage("WAVE " + currentWave))));
+        } else if (currentWave == 5) {
+            gameScreen.displayWaveMessage("WAVE 5 : BOSS ");
         } else {
             gameScreen.displayWaveMessage("WAVE " + currentWave);
         }
