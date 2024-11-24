@@ -153,7 +153,7 @@ public class Player extends Movable {
         checkWeaponUnlocks();
     }
 
-    private void checkWeaponUnlocks() {
+    public void checkWeaponUnlocks() {
         if (level >= 10 && !hasWeapon(Pewpew.class)) {
             Player.weapons.add(new Pewpew(this));
             System.out.println("New weapon : Pewpew !");
@@ -164,7 +164,7 @@ public class Player extends Movable {
         }
     }
 
-    private boolean hasWeapon(Class<? extends Weapon> weaponClass) {
+    public boolean hasWeapon(Class<? extends Weapon> weaponClass) {
         for (Weapon weapon : Player.weapons) {
             if (weaponClass.isInstance(weapon)) {
                 return true;
